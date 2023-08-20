@@ -2,75 +2,29 @@ import "@/styles/components/footer.scss";
 
 export default function Footer() {
     return (
-        <footer className="footer snipcss-ljcEi w-full">
+        <footer className="footer w-full">
             <div className="wrapper-footer">
-                <div className="adress-tablet">
-                    <a
-                        href="/"
-                        aria-current="page"
-                        className="footer-logo w-inline-block w--current"
-                    >
-                        <img
-                            src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/603817f177ff9a977b86ba02_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82.svg"
-                            loading="lazy"
-                            width="187"
-                            height="28"
-                            alt="Awesomic logo"
-                        />
-                    </a>
-                    <div className="text-adress">
-                        <p className="text-style-m _80">Awesomic.Inc</p>
-                    </div>
-                    <div className="footer-phone-link">
-                        <div className="footer-phone-text">(415) 707-2976</div>
-                    </div>
-                    <div className="contact-text">
-                        <p className="text-style-m _80">
-                            535 Mission St, 14th Floor
-                            <br />
-                            San Francisco, CA 94105
-                        </p>
-                    </div>
-                    <div className="contact-text footer-link">
-                        <p className="text-style-m _80">
-                            <a
-                                href="https://support.awesomic.com/en/"
-                                target="_blank"
-                                className="footer-link contact"
-                            >
-                                Awesomic Help Center
-                            </a>
-                        </p>
-                    </div>
-                    <div className="contact-text footer-link">
-                        <p className="text-style-m _80">
-                            <a href="mailto:help@awesomic.io" className="footer-link contact">
-                                help@awesomic.io
-                            </a>
-                        </p>
-                    </div>
-                </div>
                 <div className="footer-menu">
                     <div className="adress">
                         <a
                             href="/"
                             aria-current="page"
-                            className="footer-logo w-inline-block w--current"
+                            className="footer-logo w-full inline-block w--current"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/603817f177ff9a977b86ba02_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82.svg"
                                 loading="lazy"
-                                alt="Awesomic logo"
+                                alt="ovioo logo"
                                 className="footer__logo"
                             />
                         </a>
                         <div className="footer__contacts">
                             <div className="menu-adress-left">
                                 <div className="text-adress">
-                                    <p className="text-style-m _80">Awesomic Inc.</p>
+                                    <p className="text-style-m">ovioo Inc.</p>
                                 </div>
                                 <div className="contact-text street">
-                                    <p className="text-style-m _80">
+                                    <p className="text-style-m">
                                         535 Mission St, 14th Floor
                                         <br />
                                         San Francisco, CA 94105
@@ -78,21 +32,21 @@ export default function Footer() {
                                 </div>
                             </div>
                             <div className="menu-adress-right">
-                                <div className="contact-text">
-                                    <p className="text-style-m _80">(415) 707-2976</p>
+                                <div className="contact-text phone">
+                                    <p className="text-style-m">(415) 707-2976</p>
                                 </div>
                                 <a
-                                    href="mailto:hi@awesomic.io"
-                                    className="contact-text phone w-inline-block"
+                                    href="mailto:hi@ovioo.io"
+                                    className="contact-text email w-full inline-block"
                                 >
-                                    <p className="text-style-m">help@awesomic.io</p>
+                                    <p className="text-style-m">help@ovioo.io</p>
                                 </a>
                                 <a
-                                    href="https://support.awesomic.com/en/"
+                                    href="/"
                                     target="_blank"
-                                    className="contact-text address w-inline-block"
+                                    className="contact-text help-center w-full inline-block"
                                 >
-                                    <p className="text-style-m">Awesomic Help Center</p>
+                                    <p className="text-style-m">ovioo Help Center</p>
                                 </a>
                             </div>
                         </div>
@@ -128,7 +82,7 @@ export default function Footer() {
                             </div>
                             <div className="link_footer top-margin mob">
                                 <a
-                                    href="https://awesomic.crew.work/jobs"
+                                    href="/"
                                     className="footer_nav-text"
                                 >
                                     Hiring 🔥
@@ -148,7 +102,7 @@ export default function Footer() {
                             </div>
                             <div className="link_footer top-margin mob">
                                 <a href="/talents" className="footer_nav-text">
-                                    Awesomic for Designers
+                                    ovioo for Designers
                                 </a>
                             </div>
                         </div>
@@ -161,7 +115,7 @@ export default function Footer() {
                                 </div>
                                 <div className="link_footer">
                                     <a
-                                        href="https://awesomic.crew.work/jobs"
+                                        href="/"
                                         className="footer_nav-text"
                                     >
                                         Hiring 🔥
@@ -170,7 +124,7 @@ export default function Footer() {
                             </div>
                             <div className="link_footer last">
                                 <a href="/talents" className="footer_nav-text">
-                                    Awesomic for Designers
+                                    ovioo for Designers
                                 </a>
                             </div>
                         </div>
@@ -178,18 +132,18 @@ export default function Footer() {
                     <div className="menu-wrapper-mobile">
                         <div className="_1-footer-menu">
                             <div className="col_footer">
-                                <a href="/portfolio" className="link_footer w-inline-block">
+                                <a href="/portfolio" className="link_footer w-full inline-block">
                                     <p className="footer_nav-text">Portfolio</p>
                                 </a>
                                 <a
                                     href="/pricing"
-                                    className="link_footer top-margin w-inline-block"
+                                    className="link_footer top-margin w-full inline-block"
                                 >
                                     <p className="footer_nav-text">Pricing</p>
                                 </a>
                                 <a
                                     href="/about-us"
-                                    className="link_footer top-margin w-inline-block"
+                                    className="link_footer top-margin w-full inline-block"
                                 >
                                     <p className="footer_nav-text">About Us</p>
                                 </a>
@@ -203,32 +157,35 @@ export default function Footer() {
                                 </div>
                             </div>
                             <div className="_2-menu">
-                                <a href="/case-study" className="link_footer w-inline-block">
+                                <a href="/case-study" className="link_footer w-full inline-block">
                                     <p className="footer_nav-text">Case Study</p>
                                 </a>
                                 <a
                                     href="/how-it-works"
-                                    className="link_footer top-margin w-inline-block"
+                                    className="link_footer top-margin w-full inline-block"
                                 >
                                     <p className="footer_nav-text">What You Get</p>
                                 </a>
                                 <a
                                     href="/terms-of-service"
-                                    className="link_footer top-margin w-inline-block"
+                                    className="link_footer top-margin w-full inline-block"
                                 >
                                     <p className="footer_nav-text">Terms &amp; Policies</p>
                                 </a>
                                 <div className="link_footer top-margin mob">
                                     <a
-                                        href="https://awesomic.crew.work/jobs"
+                                        href="/"
                                         className="footer_nav-text"
                                     >
                                         Hiring 🔥
                                     </a>
                                 </div>
                             </div>
-                            <a href="/talents" className="link_footer top-margin w-inline-block">
-                                <p className="footer_nav-text">Awesomic for Designers</p>
+                            <a
+                                href="/talents"
+                                className="link_footer top-margin w-full inline-block"
+                            >
+                                <p className="footer_nav-text">ovioo for Designers</p>
                             </a>
                         </div>
                     </div>
@@ -238,118 +195,78 @@ export default function Footer() {
                     <div className="container-social">
                         <a
                             data-w-id="00be8c05-2a40-df03-0938-7a2eda4ad09c"
-                            href="https://dribbble.com/awesomic"
+                            href="/"
                             target="_blank"
-                            className="social-logo w-inline-block"
+                            className="social-logo w-full inline-block"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f594bc8d5c926e95cc7e_dribble_icon_footer.svg"
                                 loading="lazy"
                                 alt=""
-                                className="ico-img style-aF5Mo"
-                                id="style-aF5Mo"
-                            />
-                            <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f59442284b5b1d3850d9_dribble_icon_footer_hover.svg"
-                                loading="lazy"
-                                alt=""
-                                className="ico-img-2 style-mRhOJ"
-                                id="style-mRhOJ"
+                                className="ico-img"
                             />
                         </a>
                         <a
                             data-w-id="05257713-93c8-4f1a-cca5-fada0299f3f2"
-                            href="https://www.behance.net/awesomic"
+                            href="/"
                             target="_blank"
-                            className="social-logo w-inline-block"
+                            className="social-logo w-full inline-block"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f59551838414ca33a4f8_behance_footer_icon.svg"
                                 loading="lazy"
                                 alt=""
-                                className="ico-img style-vlorb"
-                                id="style-vlorb"
-                            />
-                            <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f5951edf286636326bbe_behance_footer_icon_hover.svg"
-                                loading="lazy"
-                                alt=""
-                                className="ico-img-2 style-EXR7Q"
-                                id="style-EXR7Q"
+                                className="ico-img"
                             />
                         </a>
                         <a
                             data-w-id="1ccbbd5b-0043-722d-e5b7-cf334eeaa30a"
-                            href="https://www.facebook.com/awesomicinc"
+                            href="/"
                             target="_blank"
-                            className="social-logo w-inline-block"
+                            className="social-logo w-full inline-block"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f59454c5161e8047b306_fb_footer_icon.svg"
                                 loading="lazy"
                                 alt=""
-                                className="ico-img style-aqJJK"
-                                id="style-aqJJK"
-                            />
-                            <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f5958eb56d049b840f37_fb_footer_icon_hover.svg"
-                                loading="lazy"
-                                alt=""
-                                className="ico-img-2 style-AkgwR"
-                                id="style-AkgwR"
+                                className="ico-img "
                             />
                         </a>
                         <a
                             data-w-id="eaef8f78-daa9-1285-06f1-d6eaee53138a"
-                            href="https://www.instagram.com/awesomic/"
+                            href="/"
                             target="_blank"
-                            className="social-logo w-inline-block"
+                            className="social-logo w-full inline-block"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f595e167344e6fda7bd5_insta_footer_icon.svg"
                                 loading="lazy"
                                 alt=""
-                                className="ico-img style-M5iTt"
-                                id="style-M5iTt"
-                            />
-                            <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f595d9e05eae5a92b9d9_insta_footer_icon_hover.svg"
-                                loading="lazy"
-                                alt=""
-                                className="ico-img-2 style-AHpxG"
-                                id="style-AHpxG"
+                                className="ico-img"
                             />
                         </a>
                         <a
                             data-w-id="ae77bc4e-f01f-292c-9c9c-e496c8db9764"
-                            href="http://twitter.com/awesomic"
+                            href="/"
                             target="_blank"
-                            className="social-logo w-inline-block"
+                            className="social-logo w-full inline-block"
                         >
                             <img
                                 src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/63e0fdc5e62bc2048c037d64_twitter-icon-gradient.svg"
                                 loading="lazy"
                                 alt=""
-                                className="ico-img style-cqmoh"
-                                id="style-cqmoh"
-                            />
-                            <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/63e0fdd6af2c87600673019b_twitter-icon-yellow.svg"
-                                loading="lazy"
-                                alt=""
-                                className="ico-img-2 style-1bHkV"
-                                id="style-1bHkV"
+                                className="ico-img"
                             />
                         </a>
                     </div>
                     <div className="footer-motto">
                         <p className="text-style-m center mob-ver">
-                            Awesomic - awesome
+                            ovioo - awesome
                             <br />
                             on a cosmic level
                         </p>
                         <p className="text-style-m center desk">
-                            Awesomic - awesome on a cosmic level
+                            ovioo - awesome on a cosmic level
                         </p>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 export default function Home() {
   return (
-     <div>home page</div>
+     <div style={{minHeight:'750px'}}>home page</div>
   )
 }

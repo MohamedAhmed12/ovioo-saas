@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "fonts";
+
 :root {
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
@@ -16,12 +18,24 @@
     }
 }
 
-body {
-    color: rgb(var(--foreground-rgb));
-    background-image: url(https://uploads-ssl.webflow.com/602d59da29b66668b8758391/634eabb82ebb9a2b6b8c71b9_new-home-glow-desktop-ver-2-bottom.svg),
-        url(https://uploads-ssl.webflow.com/602d59da29b66668b8758391/611d759b3b085577561bf81a_new-home-stars-13.svg);
+* {
+    box-sizing: border-box;
+}
 
-    background-position: 50% 100%,50% 100%;
-    background-repeat: no-repeat,no-repeat;
-    background-size: 2800px 1958px,1440px 1202px;
+html {
+    height: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100%;
+    color: #fff;
+    background-color: #222236;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 300;
+    font-family: E ukraine, sans-serif;
 }
