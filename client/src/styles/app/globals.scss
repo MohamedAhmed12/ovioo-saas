@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background-image: url(https://uploads-ssl.webflow.com/602d59da29b66668b8758391/634eabb82ebb9a2b6b8c71b9_new-home-glow-desktop-ver-2-bottom.svg),
+        url(https://uploads-ssl.webflow.com/602d59da29b66668b8758391/611d759b3b085577561bf81a_new-home-stars-13.svg);
+
+    background-position: 50% 100%,50% 100%;
+    background-repeat: no-repeat,no-repeat;
+    background-size: 2800px 1958px,1440px 1202px;
+}

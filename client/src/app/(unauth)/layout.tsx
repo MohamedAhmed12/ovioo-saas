@@ -1,4 +1,4 @@
-import "@/styles/app/globals.scss";
+import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -10,8 +10,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
-            <body className={inter.className}>{children}</body>
-        </html>
+        <main className="flex min-h-screen flex-col items-center justify-between">
+            {children}
+            <Footer  />
+        </main>
     );
 }
