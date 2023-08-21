@@ -21,19 +21,19 @@ export default function Footer() {
                         <div className="footer__contacts">
                             <div className="menu-adress-left">
                                 <div className="text-adress">
-                                    <p className="text-style-m">ovioo Inc.</p>
+                                    <p className="text-style-m">Ovioo Inc.</p>
                                 </div>
                                 <div className="contact-text street">
                                     <p className="text-style-m">
-                                        535 Mission St, 14th Floor
+                                        Ovioo is headquartered
                                         <br />
-                                        San Francisco, CA 94105
+                                        in Dubai, UAE.
                                     </p>
                                 </div>
                             </div>
-                            <div className="menu-adress-right">
+                            <div className="menu-adress-right justify-end">
                                 <div className="contact-text phone">
-                                    <p className="text-style-m">(415) 707-2976</p>
+                                    <p className="text-style-m"></p>
                                 </div>
                                 <a
                                     href="mailto:hi@ovioo.io"
@@ -70,21 +70,8 @@ export default function Footer() {
                             </div>
                         </div>
                         <div className="col_footer">
-                            <div className="link_footer">
-                                <a href="/case-study" className="footer_nav-text">
-                                    Case Study
-                                </a>
-                            </div>
-                            <div className="link_footer top-margin">
-                                <a href="/affiliate-program" className="footer_nav-text">
-                                    Affiliates
-                                </a>
-                            </div>
                             <div className="link_footer top-margin mob">
-                                <a
-                                    href="/"
-                                    className="footer_nav-text"
-                                >
+                                <a href="/" className="footer_nav-text">
                                     Hiring 🔥
                                 </a>
                             </div>
@@ -96,35 +83,22 @@ export default function Footer() {
                                 </a>
                             </div>
                             <div className="link_footer top-margin">
-                                <a href="/terms-of-service" className="footer_nav-text">
-                                    Terms &amp; Policies
-                                </a>
-                            </div>
-                            <div className="link_footer top-margin mob">
-                                <a href="/talents" className="footer_nav-text">
-                                    ovioo for Designers
+                                <a href="/about-us" className="footer_nav-text">
+                                    About Us
                                 </a>
                             </div>
                         </div>
                         <div className="col_footer last">
                             <div className="row-footer">
                                 <div className="link_footer">
-                                    <a href="/about-us" className="footer_nav-text">
-                                        About Us
-                                    </a>
-                                </div>
-                                <div className="link_footer">
-                                    <a
-                                        href="/"
-                                        className="footer_nav-text"
-                                    >
+                                    <a href="/" className="footer_nav-text">
                                         Hiring 🔥
                                     </a>
                                 </div>
                             </div>
                             <div className="link_footer last">
-                                <a href="/talents" className="footer_nav-text">
-                                    ovioo for Designers
+                                <a href="/terms-of-service" className="footer_nav-text">
+                                    Terms &amp; Policies
                                 </a>
                             </div>
                         </div>
@@ -157,9 +131,6 @@ export default function Footer() {
                                 </div>
                             </div>
                             <div className="_2-menu">
-                                <a href="/case-study" className="link_footer w-full inline-block">
-                                    <p className="footer_nav-text">Case Study</p>
-                                </a>
                                 <a
                                     href="/how-it-works"
                                     className="link_footer top-margin w-full inline-block"
@@ -173,20 +144,11 @@ export default function Footer() {
                                     <p className="footer_nav-text">Terms &amp; Policies</p>
                                 </a>
                                 <div className="link_footer top-margin mob">
-                                    <a
-                                        href="/"
-                                        className="footer_nav-text"
-                                    >
+                                    <a href="/" className="footer_nav-text">
                                         Hiring 🔥
                                     </a>
                                 </div>
                             </div>
-                            <a
-                                href="/talents"
-                                className="link_footer top-margin w-full inline-block"
-                            >
-                                <p className="footer_nav-text">ovioo for Designers</p>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -261,12 +223,12 @@ export default function Footer() {
                     </div>
                     <div className="footer-motto">
                         <p className="text-style-m center mob-ver">
-                            ovioo - awesome
+                            Ovioo - awesome
                             <br />
                             on a cosmic level
                         </p>
                         <p className="text-style-m center desk">
-                            ovioo - awesome on a cosmic level
+                            Ovioo - awesome on a cosmic level
                         </p>
                     </div>
                 </div>
