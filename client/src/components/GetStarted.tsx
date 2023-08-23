@@ -6,7 +6,7 @@ export default function GetStarted() {
             <div className="cta_banner-wrap">
                 <div className="dog_wrapper">
                     <img
-                        src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/60e37a1e3bf7f815da084a1c_new-moris-awesomic-dog.png"
+                        src="svg/dog.png"
                         loading="lazy"
                         width="295"
                         height="228"

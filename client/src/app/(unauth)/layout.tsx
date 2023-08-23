@@ -1,5 +1,6 @@
 import BottomWrapper from "@/components/BottomWrapper";
-import "@/styles/app/unauth/home.scss"
+import NavBar from "@/components/Navbar/NavBar";
+import "@/styles/app/unauth/home.scss";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between home-main">
+            <NavBar/>
             {children}
             <BottomWrapper  />
         </main>

@@ -12,7 +12,7 @@ export default function Footer() {
                             className="footer-logo w-full inline-block w--current"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/603817f177ff9a977b86ba02_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82.svg"
+                                src="/svg/footer-logo.svg"
                                 loading="lazy"
                                 alt="ovioo logo"
                                 className="footer__logo"
