@@ -60,18 +60,31 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 66px 199px;
+                padding: 38px 0;
                 display: flex;
+                text-align: center;
                 .cta__heading-wrapper {
                     text-align: center;
                     flex-direction: column;
                     align-items: center;
                     display: flex;
+                    @media screen and (max-width: 479px) {
+                        max-width: 290px;
+                    }
                     .cta_heading {
                         max-width: 720px;
                         font-size: 40px;
                         font-weight: 300;
                         line-height: 60px;
+                        @media screen and (max-width: 479px) {
+                            padding-left: 0;
+                            padding-right: 0;
+                            font-size: 28px;
+                            line-height: 1.6em;
+                            margin-bottom: 16px;
+                            font-weight: 500;
+                            max-width: 720px;
+                        }
                     }
                 }
                 .cta_btn-container {
@@ -86,6 +99,13 @@
                     bottom: auto;
                     left: 0%;
                     right: 0%;
+                    @media screen and (max-width: 767px) {
+                        max-width: 271px;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        margin-top: 36px;
+                        bottom: 0;
+                    }
                     .ghost-button-wrap {
                         width: 100%;
                         max-width: 280px;
@@ -99,6 +119,11 @@
                         line-height: 20px;
                         text-decoration: none;
                         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                        @media screen and (max-width: 767px) {
+                            max-width: 271px;
+                            margin-bottom: 32px;
+                            margin-right: 0;
+                        }
                         &.w-inline-block {
                             max-width: 100%;
                             display: inline-block;
@@ -128,6 +153,9 @@
                     .button-wrapper.book-demo {
                         width: 100%;
                         max-width: 288px;
+                        @media screen and (max-width: 767px) {
+                            max-width: 260px;
+                        }
                         .button-outline {
                             border-radius: 6px;
                             display: inline-block;
@@ -157,6 +185,11 @@
                                     transform: translate3d(12px, -12px, 0px) scale3d(1, 1, 1)
                                         rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
                                     transform-style: preserve-3d;
+                                    @media screen and (max-width: 767px) {
+                                        min-width: 260px;
+                                        padding-left: 20px;
+                                        padding-right: 20px;
+                                    }
                                 }
                             }
                         }
