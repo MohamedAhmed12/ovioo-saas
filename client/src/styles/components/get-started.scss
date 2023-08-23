@@ -207,6 +207,9 @@
                 }
             }
         }
+        @media screen and (max-width: 767px) {
+            max-width: 360px;
+        }
     }
     @media screen and (max-width: 479px) {
         padding-bottom: 238px;
