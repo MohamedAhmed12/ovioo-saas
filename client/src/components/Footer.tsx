@@ -4,7 +4,7 @@ export default function Footer() {
     return (
         <footer className="footer w-full">
             <div className="wrapper-footer">
-                <div className="footer-menu">
+                <div className="footer-menu flex-col lg:flex-row">
                     <div className="adress">
                         <a
                             href="/"
@@ -18,8 +18,8 @@ export default function Footer() {
                                 className="footer__logo"
                             />
                         </a>
-                        <div className="footer__contacts">
-                            <div className="menu-adress-left">
+                        <div className="footer__contacts flex flex-col lg:flex-row">
+                            <div className="menu-adress-left ">
                                 <div className="text-adress">
                                     <p className="text-style-m">Ovioo Inc.</p>
                                 </div>
@@ -37,42 +37,30 @@ export default function Footer() {
                                 </div>
                                 <a
                                     href="mailto:hi@ovioo.io"
-                                    className="contact-text email w-full inline-block"
+                                    className="contact-text email w-full inline-block mt-4 lg:mt-6"
                                 >
                                     <p className="text-style-m">help@ovioo.io</p>
                                 </a>
                                 <a
                                     href="/"
                                     target="_blank"
-                                    className="contact-text help-center w-full inline-block"
+                                    className="contact-text help-center w-full inline-block mt-4 lg:mt-0"
                                 >
                                     <p className="text-style-m">ovioo Help Center</p>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div className="menu-wrapper_footer">
+                    <div className="menu-wrapper_footer hidden lg:flex pt-14">
                         <div className="col_footer">
                             <div className="link_footer">
                                 <a href="/portfolio" className="footer_nav-text">
                                     Portfolio
                                 </a>
                             </div>
-                            <div className="link_footer top-margin">
+                            <div className="link_footer mt-7">
                                 <a href="/pricing" className="footer_nav-text">
                                     Pricing
-                                </a>
-                            </div>
-                            <div className="link_footer top-margin mob">
-                                <a href="/about-us" className="footer_nav-text">
-                                    About Us
-                                </a>
-                            </div>
-                        </div>
-                        <div className="col_footer">
-                            <div className="link_footer top-margin mob">
-                                <a href="/" className="footer_nav-text">
-                                    Hiring 🔥
                                 </a>
                             </div>
                         </div>
@@ -82,7 +70,7 @@ export default function Footer() {
                                     How it Works
                                 </a>
                             </div>
-                            <div className="link_footer top-margin">
+                            <div className="link_footer mt-7">
                                 <a href="/about-us" className="footer_nav-text">
                                     About Us
                                 </a>
@@ -103,25 +91,25 @@ export default function Footer() {
                             </div>
                         </div>
                     </div>
-                    <div className="menu-wrapper-mobile">
-                        <div className="_1-footer-menu">
+                    <div className="menu-wrapper-mobile flex lg:hidden mt-20 flex-col w-full">
+                        <div className="footer-menu flex flex-wrap">
                             <div className="col_footer">
                                 <a href="/portfolio" className="link_footer w-full inline-block">
                                     <p className="footer_nav-text">Portfolio</p>
                                 </a>
                                 <a
                                     href="/pricing"
-                                    className="link_footer top-margin w-full inline-block"
+                                    className="link_footer mt-7 w-full inline-block"
                                 >
                                     <p className="footer_nav-text">Pricing</p>
                                 </a>
                                 <a
                                     href="/about-us"
-                                    className="link_footer top-margin w-full inline-block"
+                                    className="link_footer mt-7 w-full inline-block"
                                 >
                                     <p className="footer_nav-text">About Us</p>
                                 </a>
-                                <div className="link_footer top-margin">
+                                <div className="link_footer mt-7">
                                     <a
                                         href="/affiliate-terms-conditions"
                                         className="footer_nav-text"
@@ -133,17 +121,17 @@ export default function Footer() {
                             <div className="_2-menu">
                                 <a
                                     href="/how-it-works"
-                                    className="link_footer top-margin w-full inline-block"
+                                    className="link_footer w-full inline-block mt-7 sm:mt-0"
                                 >
                                     <p className="footer_nav-text">What You Get</p>
                                 </a>
                                 <a
                                     href="/terms-of-service"
-                                    className="link_footer top-margin w-full inline-block"
+                                    className="link_footer mt-7 w-full inline-block"
                                 >
                                     <p className="footer_nav-text">Terms &amp; Policies</p>
                                 </a>
-                                <div className="link_footer top-margin mob">
+                                <div className="link_footer mt-7 mob">
                                     <a href="/" className="footer_nav-text">
                                         Hiring 🔥
                                     </a>

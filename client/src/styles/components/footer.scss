@@ -12,7 +12,7 @@
         background-color: transparent;
         a {
             background-color: transparent;
-            text-decoration: underline;
+            text-decoration: none;
             &:active,
             &:hover {
                 outline: 0;
@@ -48,7 +48,6 @@
                     .contact-text {
                         font-size: 16px;
                         line-height: 26px;
-                        text-decoration: none;
                     }
                     .menu-adress-left {
                         width: auto;
@@ -64,47 +63,38 @@
                         display: flex;
                         .contact-text {
                             &.email {
-                                margin-top: 24px;
-                                text-decoration: none;
                                 transition: all 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
                             }
 
                             &.help-center {
-                                text-decoration: none;
                                 transition: all 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
                             }
                         }
                     }
                 }
             }
-            .menu-wrapper_footer {
+            .menu-wrapper_footer,
+            .menu-wrapper-mobile {
                 justify-content: flex-end;
                 align-items: flex-start;
-                padding-top: 64px;
-                display: flex;
                 .col_footer {
                     flex-direction: column;
                     justify-content: flex-end;
                     margin-right: 44px;
                     display: block;
+                    p {
+                        margin-bottom: 0;
+                    }
                     &.last {
                         margin-right: 0;
                     }
                     .link_footer {
-                        &.top-margin {
-                            margin-top: 28px;
-                        }
-
-                        &.top-margin.mob {
-                            display: none;
-                        }
                         &.last {
                             margin-top: 28px;
                         }
                         .footer_nav-text {
                             font-size: 16px;
                             line-height: 20px;
-                            text-decoration: none;
                             transition: all 0.25s;
 
                             &:hover {
@@ -117,20 +107,24 @@
                         justify-content: space-between;
                         display: flex;
                     }
+                    @media screen and (max-width: 479px) {
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        margin-right: 0;
+                        display: flex;
+                    }
                 }
             }
             .menu-wrapper-mobile {
-                width: 776px;
-                justify-content: space-between;
-                margin-top: 14px;
-                margin-left: 234px;
-                display: none;
-                .col_footer {
-                    ._2-menu {
-                        flex-direction: column;
-                        justify-content: flex-end;
-                        margin-right: 44px;
-                        display: block;
+                width: 100%;
+                margin-left: 0;
+                ._2-menu {
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    margin-right: 44px;
+                    display: block;
+                    p {
+                        margin-bottom: 0;
                     }
                 }
             }
@@ -154,16 +148,40 @@
                     width: 58px;
                     height: 58px;
                 }
+                @media screen and (max-width: 479px) {
+                    justify-content: space-between;
+                    left: 0;
+                }
             }
             .footer-motto {
                 justify-content: center;
                 align-items: center;
+                display: flex;
+                @media screen and (max-width: 479px) {
+                    width: 70%;
+                    margin-top: 20px;
+                }
+                .desk {
+                    @media screen and (max-width: 479px) {
+                        text-align: center;
+                    }
+                }
+            }
+            @media screen and (max-width: 479px) {
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+                margin-bottom: 28px;
                 display: flex;
             }
         }
 
         .text-style-m.center.mob-ver {
             display: none;
+        }
+
+        @media screen and (max-width: 479px) {
+            max-width: 320px;
         }
     }
 }
