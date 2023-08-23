@@ -119,11 +119,6 @@
                         line-height: 20px;
                         text-decoration: none;
                         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                        @media screen and (max-width: 767px) {
-                            max-width: 271px;
-                            margin-bottom: 32px;
-                            margin-right: 0;
-                        }
                         &.w-inline-block {
                             max-width: 100%;
                             display: inline-block;
@@ -149,13 +144,15 @@
                                 padding-bottom: 18px;
                             }
                         }
+                        @media screen and (max-width: 767px) {
+                            max-width: 271px;
+                            margin-bottom: 32px;
+                            margin-right: 0;
+                        }
                     }
                     .button-wrapper.book-demo {
                         width: 100%;
                         max-width: 288px;
-                        @media screen and (max-width: 767px) {
-                            max-width: 260px;
-                        }
                         .button-outline {
                             border-radius: 6px;
                             display: inline-block;
@@ -193,6 +190,9 @@
                                 }
                             }
                         }
+                        @media screen and (max-width: 767px) {
+                            max-width: 260px;
+                        }
                     }
                     .buttons-l {
                         margin-top: 0;
@@ -207,5 +207,8 @@
                 }
             }
         }
+    }
+    @media screen and (max-width: 479px) {
+        padding-bottom: 238px;
     }
 }
