@@ -1,5 +1,5 @@
 import BottomWrapper from "@/components/BottomWrapper";
-import NavBar from "@/components/Navbar/NavBar";
+import NavBar from "@/components/NavBar";
 import "@/styles/app/unauth/home.scss";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

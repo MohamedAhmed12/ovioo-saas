@@ -6,7 +6,7 @@ export default function GetStarted() {
             <div className="cta_banner-wrap">
                 <div className="dog_wrapper">
                     <img
-                        src="svg/dog.png"
+                        src="svg/dog.svg"
                         loading="lazy"
                         width="295"
                         height="228"
