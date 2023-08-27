@@ -2,7 +2,6 @@
 
 import { Route as RouteInterface } from "@/inerfaces/route";
 import { MouseEvent, useEffect, useState } from "react";
-import HideOnScroll from "../HideOnScroll";
 import Desktop from "./Desktop";
 import Mobile from "./Mobile";
 

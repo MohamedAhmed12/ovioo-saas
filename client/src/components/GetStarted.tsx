@@ -1,4 +1,5 @@
 import "@/styles/components/get-started.scss";
+import GetStartedBtns from "./GetStartedBtns";
 
 export default function GetStarted() {
     return (
@@ -25,23 +26,7 @@ export default function GetStarted() {
                                 <strong className="font-medium"> Not Weeks</strong>.
                             </h2>
                         </div>
-                        <div className="cta_btn-container">
-                            <a
-                                href="/register"
-                                className="ghost-button-wrap new-cta_7for7 hidden w-inline-block"
-                            >
-                                <div className="ghost-button new-cta">
-                                    <div className="buttons-l">Get started</div>
-                                </div>
-                            </a>
-                            <a href="/demo" className="button-wrapper book-demo w-inline-block">
-                                <div className="button-outline">
-                                    <div className="cta book-demo">
-                                        <p className="buttons-l dark">Book a Demo</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                       <GetStartedBtns />
                     </div>
                 </div>
             </div>
