@@ -7,15 +7,15 @@ import "swiper/css/pagination";
 
 import Box from "@mui/material/Box";
 import { ReactElement } from "react";
-import { FreeMode, Navigation } from "swiper/modules";
+import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 const steps = [
     "https://picsum.photos/id/1/400/400",
-    "https://picsum.photos/id/2/400/400",
-    "https://picsum.photos/id/3/400/400",
-    "https://picsum.photos/id/4/400/400",
-    "https://picsum.photos/id/5/400/400",
-    "https://picsum.photos/id/6/400/400",
+    "https://picsum.photos/id/12/400/400",
+    "https://picsum.photos/id/33/400/400",
+    "https://picsum.photos/id/45/400/400",
+    "https://picsum.photos/id/51/400/400",
+    "https://picsum.photos/id/66/400/400",
 ];
 
 export default function Carousel({ title }: { title: ReactElement | string }) {
@@ -23,15 +23,14 @@ export default function Carousel({ title }: { title: ReactElement | string }) {
         <Box className="carousel w-full flex flex-col items-center mt-20">
             <Box className="w-full flex justify-between mb-10 title">{title}</Box>
             <Swiper
-                slidesPerView={3.5}
+                slidesPerView={4}
                 spaceBetween={30}
                 freeMode={true}
                 pagination={{
                     clickable: true,
                 }}
                 grabCursor={true}
-                navigation={true}
-                modules={[FreeMode, Navigation]}
+                modules={[FreeMode]}
             >
                 {steps.map((step) => (
                     <SwiperSlide>
