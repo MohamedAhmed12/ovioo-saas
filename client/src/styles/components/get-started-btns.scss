@@ -61,9 +61,9 @@
             margin-right: 0;
         }
     }
-    .button-wrapper.book-demo {
+    .button-wrapper {
         width: 100%;
-        max-width: 288px;
+        max-width: 250px;
         .button-outline {
             border-radius: 6px;
             display: inline-block;
@@ -89,10 +89,15 @@
                 transition: opacity 0.3s;
                 display: flex;
                 &.book-demo {
-                    min-width: 288px;
                     transform: translate3d(12px, -12px, 0px) scale3d(1, 1, 1)
                         rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
                     transform-style: preserve-3d;
+                    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+                    &:hover{
+                        transform: translate3d(6px, -6px, 0px) scale3d(1, 1, 1)
+                        rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+                        transform-style: preserve-3d;
+                    }
                     @media screen and (max-width: 767px) {
                         min-width: 260px;
                         padding-left: 20px;
