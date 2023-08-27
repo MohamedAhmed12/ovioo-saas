@@ -1,52 +1,44 @@
 "use client";
 
-import Box from "@mui/material/Box";
-import { useTheme } from "@mui/material/styles";
-import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import { useState } from "react";
+import "@/styles/components/home/carousel.scss";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/pagination";
 
+import Box from "@mui/material/Box";
+import { ReactElement } from "react";
+import { FreeMode, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 const steps = [
-    "https://picsum.photos/id/1/200/300",
-    "https://picsum.photos/id/2/200/300",
-    "https://picsum.photos/id/3/200/300",
+    "https://picsum.photos/id/1/400/400",
+    "https://picsum.photos/id/2/400/400",
+    "https://picsum.photos/id/3/400/400",
+    "https://picsum.photos/id/4/400/400",
+    "https://picsum.photos/id/5/400/400",
+    "https://picsum.photos/id/6/400/400",
 ];
 
-export default function Carousel() {
-    const theme = useTheme();
-    const [activeStep, setActiveStep] = useState<number>(0);
-    const maxSteps = steps.length;
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
-    };
-
+export default function Carousel({ title }: { title: ReactElement | string }) {
     return (
-        <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
-            <Box className="w-full flex justify-between">
-                <h3 className="carousel-title" >
-                    PRO plan – $99 <span>/ day</span>
-                </h3>
-                <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                    {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                    Back
-                </Button>
-                <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-                    Next
-                    {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                </Button>
-            </Box>
-            <Box sx={{ height: 255, maxWidth: 400, width: "100%", p: 2 }}>
-                <img src={steps[activeStep]} />
-            </Box>
+        <Box className="carousel w-full flex flex-col items-center mt-20">
+            <Box className="w-full flex justify-between mb-10 title">{title}</Box>
+            <Swiper
+                slidesPerView={3.5}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                    clickable: true,
+                }}
+                grabCursor={true}
+                navigation={true}
+                modules={[FreeMode, Navigation]}
+            >
+                {steps.map((step) => (
+                    <SwiperSlide>
+                        <img src={step} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </Box>
     );
 }

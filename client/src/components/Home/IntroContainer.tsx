@@ -5,10 +5,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import GetStartedBtns from "../GetStartedBtns";
 
 export const IntroContainer = () => (
-    <div className="container intro-container text-center">
+    <div className="xl:container intro-container text-center">
         <h1 className="title font-bold uppercase">
             all of your
-            <span className="gradient-h1">design tasks</span> <br />
+            <span className="gradient-h1"> design tasks</span> <br />
             <strong>for one fixed monthly fee</strong>
         </h1>
         <p className="subtitle mt-5">
