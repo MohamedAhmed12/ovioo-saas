@@ -1,0 +1,35 @@
+.carousel {
+    width: 100%;
+    position: relative;
+    .title {
+        max-width: 1200px;
+        h3 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 50px;
+        }
+    }
+    .swiper {
+        width: 100rem;
+        height: 100%;
+        .swiper-slide {
+            width: 360px;
+            height: 280px;
+            background-color: transparent!important;
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            img {
+                border-radius: 6px;
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+}

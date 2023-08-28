@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "fonts";
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+body {
+    min-height: 100%;
+    color: #fff;
+    background-color: #222236;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 300;
+    font-family: E ukraine, sans-serif;
+    padding: 0!important;
+    overflow: visible!important;
+    .section {
+        flex-direction: column;
+        align-items: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        position: relative;
+    }
+}
