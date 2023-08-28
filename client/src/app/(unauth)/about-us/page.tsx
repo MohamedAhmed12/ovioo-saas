@@ -12,7 +12,7 @@ export default function Home() {
             <div className="h1 test-hero">
               <strong className="text-gradient-h1">awesomic</strong>
               <span className="hero-title-span">=</span>
-              <strong>Awesome</strong> companies{' '}
+              <strong>Awesome</strong> companies
               <span className="hero-title-span">+</span>
               <strong>cosmic</strong> designers
             </div>
