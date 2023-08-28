@@ -5,14 +5,14 @@ export default function GetStarted() {
     return (
         <div className="section get-started">
             <div className="cta_banner-wrap">
-                <div className="dog_wrapper">
+                <div className="cat_wrapper">
                     <img
-                        src="svg/dog.svg"
+                        src="svg/cat.svg"
                         loading="lazy"
                         width="295"
                         height="228"
-                        alt="ovioo dog"
-                        className="ovioo-dog"
+                        alt="ovioo cat"
+                        className="ovioo-cat"
                     />
                 </div>
             </div>
