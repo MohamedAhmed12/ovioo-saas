@@ -18,5 +18,7 @@ export const IntroContainer = () => (
         <div className="btns-wrapper mt-20">
             <GetStartedBtns />
         </div>
+        <img src="/svg/astronauts.svg" alt="astronauts" className="mt-11" />
+
     </div>
 );
