@@ -2,8 +2,11 @@ import "@/styles/components/footer.scss";
 
 export default function Footer() {
     return (
-        <footer className="footer w-full">
-            <div className="wrapper-footer">
+        <footer className="footer w-full relative">
+                <div className="rocket-wrapper absolute">
+                    <img src="/svg/rocket.svg" alt="rocket" loading="lazy" width="360" height="463" />
+                </div>
+            <div className="wrapper-footer ">
                 <div className="footer-menu flex-col lg:flex-row">
                     <div className="adress">
                         <a
@@ -12,7 +15,7 @@ export default function Footer() {
                             className="footer-logo w-full inline-block w--current"
                         >
                             <img
-                                src="/svg/footer-logo.svg"
+                                src="/svg/footer-logoa.svg"
                                 loading="lazy"
                                 alt="ovioo logo"
                                 className="footer__logo"
@@ -97,10 +100,7 @@ export default function Footer() {
                                 <a href="/portfolio" className="link_footer w-full inline-block">
                                     <p className="footer_nav-text">Portfolio</p>
                                 </a>
-                                <a
-                                    href="/pricing"
-                                    className="link_footer mt-7 w-full inline-block"
-                                >
+                                <a href="/pricing" className="link_footer mt-7 w-full inline-block">
                                     <p className="footer_nav-text">Pricing</p>
                                 </a>
                                 <a
@@ -150,7 +150,7 @@ export default function Footer() {
                             className="social-logo w-full inline-block"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f594bc8d5c926e95cc7e_dribble_icon_footer.svg"
+                                src="/icons/website-icon.svg"
                                 loading="lazy"
                                 alt=""
                                 className="ico-img"
@@ -163,7 +163,7 @@ export default function Footer() {
                             className="social-logo w-full inline-block"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f59551838414ca33a4f8_behance_footer_icon.svg"
+                                src="/icons/behance-icon.svg"
                                 loading="lazy"
                                 alt=""
                                 className="ico-img"
@@ -176,7 +176,7 @@ export default function Footer() {
                             className="social-logo w-full inline-block"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f59454c5161e8047b306_fb_footer_icon.svg"
+                                src="/icons/fb-icon.svg"
                                 loading="lazy"
                                 alt=""
                                 className="ico-img "
@@ -189,7 +189,7 @@ export default function Footer() {
                             className="social-logo w-full inline-block"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/6448f595e167344e6fda7bd5_insta_footer_icon.svg"
+                                src="/icons/instagram-icon.svg"
                                 loading="lazy"
                                 alt=""
                                 className="ico-img"
@@ -202,7 +202,7 @@ export default function Footer() {
                             className="social-logo w-full inline-block"
                         >
                             <img
-                                src="https://uploads-ssl.webflow.com/602d59da29b66668b8758391/63e0fdc5e62bc2048c037d64_twitter-icon-gradient.svg"
+                                src="/icons/twitter-icon.svg"
                                 loading="lazy"
                                 alt=""
                                 className="ico-img"
