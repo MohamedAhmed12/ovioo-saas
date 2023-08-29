@@ -1,4 +1,5 @@
 import Carousel from "@/components/Home/Carousel";
+import { FindDesigner } from "@/components/Home/FindDesigner";
 import { IntroContainer } from "@/components/Home/IntroContainer";
 import { Stats } from "@/components/Home/Stats";
 import "@/styles/app/unauth/home.scss";
@@ -8,6 +9,7 @@ export default function Home() {
         <div className="home-main items-center flex flex-col">
             <IntroContainer />
             <Stats/>
+            <FindDesigner/>
             <Carousel
                 title={
                     <h3 className="carousel-title">
