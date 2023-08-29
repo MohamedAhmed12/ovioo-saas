@@ -1,29 +1,17 @@
 import Carousel from "@/components/Home/Carousel";
-import { FindDesigner } from "@/components/Home/FindDesigner";
+import { FindDesignerSection } from "@/components/Home/FindDesignerSection";
 import { IntroContainer } from "@/components/Home/IntroContainer";
-import { Stats } from "@/components/Home/Stats";
+import { PortfolioSection } from "@/components/Home/PortfolioSection";
+import { StatsSection } from "@/components/Home/StatsSection";
 import "@/styles/app/unauth/home.scss";
 
 export default function Home() {
     return (
         <div className="home-main items-center flex flex-col">
             <IntroContainer />
-            <Stats/>
-            <FindDesigner/>
-            <Carousel
-                title={
-                    <h3 className="carousel-title">
-                        Light plan – $35<small> / day</small>
-                    </h3>
-                }
-            />
-              <Carousel
-                title={
-                    <h3 className="carousel-title">
-                        Pro plan – $99<small> / day</small>
-                    </h3>
-                }
-            />
+            <StatsSection />
+            <FindDesignerSection />
+            <PortfolioSection />
         </div>
     );
 }
