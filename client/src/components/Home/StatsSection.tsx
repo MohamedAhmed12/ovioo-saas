@@ -2,7 +2,7 @@
 
 import "@/styles/components/home/intro-container.scss";
 
-export const Stats = () => (
+export const StatsSection = () => (
     <div
         className="xl:container stats-container flex flex-col lg:flex-row mt-10 mb-10 pr-20 pl-20"
         style={{ color: "#fee4a5" }}

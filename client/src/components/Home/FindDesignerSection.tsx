@@ -3,7 +3,7 @@
 import "@/styles/components/home/find-designer.scss";
 import Image from "next/image";
 
-export const FindDesigner = () => (
+export const FindDesignerSection = () => (
     <div className="container find-designer flex flex-col lg:flex-row mt-10 mb-10 pr-20 pl-20">
         <h2 className="text-4xl basis-1/2 font-bold">
             Finding a <span className="text-secondary">designer</span> can be quite challenging. Doing it over and over again <br />
