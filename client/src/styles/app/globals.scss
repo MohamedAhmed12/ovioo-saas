@@ -8,6 +8,7 @@
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
+    --secondary: #fae8bc;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,8 +27,8 @@ body {
     line-height: 22px;
     font-weight: 300;
     font-family: E ukraine, sans-serif;
-    padding: 0!important;
-    overflow: visible!important;
+    padding: 0 !important;
+    overflow: visible !important;
     .section {
         flex-direction: column;
         align-items: center;
@@ -35,5 +36,8 @@ body {
         padding-right: 10px;
         display: flex;
         position: relative;
+    }
+    .text-secondary {
+        color: var(--secondary);
     }
 }
