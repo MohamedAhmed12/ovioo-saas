@@ -1,0 +1,33 @@
+.adv-section__stars-bg {
+    background-image: url(/svg/background/section-stars.svg),
+        url(/svg/background/section-stars2.svg);
+    background-repeat: repeat;
+    background-size: 1052px 504px;
+    background-position: 40% 31%;
+    .adv-section {
+        .MuiCard-root {
+            background: transparent !important;
+            .card-content {
+                height: auto;
+                img {
+                    z-index: 100;
+                    object-fit: cover;
+                }
+            }
+        }
+        .paper-box {
+            display: grid;
+            gap: 16px;
+            .MuiPaper-root {
+                background-color: rgb(47 46 72);
+                color: white;
+                padding: 16px 22px 16px 12px;
+                height: 60px;
+                line-height: 28px;
+                font-weight: 200;
+                font-size: 20px;
+                max-width: 478px;
+            }
+        }
+    }
+}

@@ -32,8 +32,8 @@ export default function Carousel({ title }: { title: ReactElement | string }) {
                 grabCursor={true}
                 modules={[FreeMode]}
             >
-                {steps.map((step) => (
-                    <SwiperSlide>
+                {steps.map((step, index) => (
+                    <SwiperSlide key={index}>
                         <img src={step} />
                     </SwiperSlide>
                 ))}

@@ -1,0 +1,53 @@
+.pyramid-section__stars-bg {
+    background-image: url(/svg/background/section-stars.svg),
+        url(/svg/background/section-stars2.svg);
+    background-repeat: repeat;
+    background-size: 950px 375px;
+    background-position: 31% 50%;
+    .pyramid-section {
+        .MuiBreadcrumbs-ol {
+            color: white;
+            .MuiBreadcrumbs-li {
+                cursor: pointer;
+                &:hover {
+                    color: var(--secondary);
+                }
+            }
+            .MuiBreadcrumbs-separator {
+                padding: 0 10px;
+                font-size: 30px;
+            }
+        }
+        .description-box {
+            min-height: 100px;
+            max-width: 330px;
+            .MuiTypography-root {
+                font-size: 17px;
+                font-weight: 300;
+                line-height: 26px;
+            }
+        }
+        .MuiMobileStepper-root {
+            max-width: 300px;
+            padding: 0;
+            background: transparent;
+            color: white;
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 40px;
+            button {
+                color: inherit;
+                border: 2px solid white;
+                height: 50px;
+                min-width: 50px;
+                padding: 0;
+                cursor: pointer;
+                z-index: 9999;
+                &:hover {
+                    color: #fee4a5;
+                    border: 2px solid #fee4a5;
+                }
+            }
+        }
+    }
+}
