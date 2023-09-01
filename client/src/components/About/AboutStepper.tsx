@@ -1,8 +1,8 @@
-import "@/styles/components/about/stepper.scss";
+import "@/styles/components/about/about-stepper.scss";
 import Image from "next/image";
 import ReactHtmlParser from "react-html-parser";
 
-export default function Stepper() {
+export default function AboutStepper() {
     const steps: { year: number; text: string }[] = [
         {
             year: 2021,
@@ -19,18 +19,16 @@ export default function Stepper() {
     ];
 
     return (
-        <div className="steppers-wrapper flex flex-col lg:flex-row w-full mt-40 mb-40 justify-center lg:justify-between items-center">
+        <div className="about-steppers-wrapper flex flex-col lg:flex-row w-full mt-40 mb-40 justify-center lg:justify-between items-center">
             {steps.map(({ year, text }, index) => (
                 <>
                     <div className="stepper-wrapper" key={index}>
-                        <div>
-                            <div className="about-us-stepper-figure">{year}</div>
-                        </div>
+                        <div className="about-us-stepper-figure">{year}</div>
                         <div className="about-us-steppers-eclipse">
                             <Image
                                 height={61}
                                 width={61}
-                                src="/images/stepper-icon.png"
+                                src="/icons/stepper-icon.png"
                                 loading="lazy"
                                 alt="timeline"
                                 className="hidden lg:block"
@@ -39,9 +37,7 @@ export default function Stepper() {
                                 <div className="about-us-steppers-line hidden lg:block"></div>
                             )}
                         </div>
-                        <div>
-                            <div className=" mt-4 lg:m-0">{ReactHtmlParser(text)}</div>
-                        </div>
+                        <div className=" mt-4 lg:m-0">{ReactHtmlParser(text)}</div>
                     </div>
                     {steps.length !== index + 1 && (
                         <div className="about-us-steppers-vertical-line block lg:hidden"></div>

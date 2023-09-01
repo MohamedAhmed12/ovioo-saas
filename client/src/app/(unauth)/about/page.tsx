@@ -1,6 +1,6 @@
 "use client";
 
-import Stepper from "@/components/about/Stepper";
+import AboutStepper from "@/components/About/AboutStepper";
 import "@/styles/app/unauth/about-us.scss";
 import { Typography } from "@mui/material";
 import Image from "next/image";
@@ -27,7 +27,7 @@ export default function Home() {
                     </Typography>
                 </div>
 
-                <Stepper />
+                <AboutStepper />
             </div>
             <div className="info container w-full flex-col lg:flex-row flex items-center justify-between mb-10 pr-2 pl-2 lg:pr-11 lg:pl-11">
                 <h2 className="text-[40px] lg:text-5xl font-medium leading-snug basis-1/2 text-center lg:text-left p-0 lg:pr-20">

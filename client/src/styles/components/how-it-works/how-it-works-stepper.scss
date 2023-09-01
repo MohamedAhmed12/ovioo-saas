@@ -1,0 +1,20 @@
+.how-it-works__steppers-wrapper {
+    max-width: 1200px;
+    margin-top: 160px;
+    .stepper-wrapper {
+        flex: none;
+        .about-us-steppers-line {
+            width: 190px;
+            height: 1px;
+        }
+    }
+    .about-us-steppers-line,
+    .about-us-steppers-vertical-line {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .about-us-steppers-vertical-line {
+        width: 1px;
+        height: 40px;
+        margin: 24px 0;
+    }
+}
