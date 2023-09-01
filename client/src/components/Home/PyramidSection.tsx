@@ -52,6 +52,7 @@ export const PyramidSection = () => {
                             {titles.map((title, index) => (
                                 <Typography
                                     variant="h5"
+                                    key={index}
                                     className={
                                         activeStep == index
                                             ? "selected text-secondary underline underline-offset-[20px]"

@@ -8,9 +8,9 @@ import ReactHtmlParser from "react-html-parser";
 
 export default function Home() {
     const statistics: string[] = [
-        "<p>Enthusiastic<br />and <strong className='h6'>devoted</strong></p>",
-        "<p><strong className='h6'>Brave</strong>to express<br />ourselves</p>",
-        "<p><strong className='h6'>Sincere</strong>&amp;<br />straightforward</p>",
+        "<p>Enthusiastic<br />and <strong>devoted</strong></p>",
+        "<p><strong>Brave</strong>to express<br />ourselves</p>",
+        "<p><strong>Sincere</strong>&amp;<br />straightforward</p>",
     ];
 
     return (

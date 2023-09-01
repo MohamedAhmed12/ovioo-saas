@@ -41,8 +41,8 @@ export default function HamburgerMenu({
                     </div>
                     <div className="menu-container w-full">
                         {pages.map(({ url, title }, index) => (
-                            <>
-                                <Link key={title} href={url} className="navlink block">
+                            <span key={index}>
+                                <Link href={url} className="navlink block">
                                     {title}
                                 </Link>
 
@@ -54,7 +54,7 @@ export default function HamburgerMenu({
                                         className="list-none list-divider mb-6 mt-6"
                                     />
                                 )}
-                            </>
+                            </span>
                         ))}
 
                         <div className="book-btn flex w-full mt-40 justify-center border-2 rounded-md">
