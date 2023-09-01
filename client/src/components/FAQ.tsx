@@ -14,7 +14,7 @@ export default function FAQ() {
     };
 
     return (
-        <div className="section faq">
+        <div className="faq flex pr-8 pl-8 lg:p-0 justify-center">
             <div className="container max-w-4xl">
                 <div>
                     <h2 className="faq-title text-center">FAQ</h2>
