@@ -42,8 +42,8 @@ export const PyramidSection = () => {
 
     return (
         <div className="pyramid-section__stars-bg flex w-full justify-center">
-            <div className="container pyramid-section flex flex-col lg:flex-row mt-10 mb-10 pr-20 pl-20">
-                <div className="text-3xl basis-2/3">
+            <div className="container pyramid-section flex flex-col lg:flex-row mt-10 mb-5 lg:mb-10 pr-20 pl-20">
+                <div className="text-3xl basis-2/3 mb-14 lg:mb-0">
                     <Image src="/svg/smile.jpg" alt="smile" width={610} height={700} />
                 </div>
                 <div className="text-4xl basis-1/3 font-bold">

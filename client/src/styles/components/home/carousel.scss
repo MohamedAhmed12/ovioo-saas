@@ -7,15 +7,19 @@
             font-size: 32px;
             font-weight: 500;
             line-height: 50px;
+            @media screen and (max-width: 991px) {
+                font-size: 25px;
+                line-height: 30px;
+            }
         }
     }
     .swiper {
         width: 100rem;
         height: 100%;
         .swiper-slide {
-            width: 360px;
-            height: 280px;
-            background-color: transparent!important;
+            max-width: 360px;
+            max-height: 280px;
+            background-color: transparent !important;
             text-align: center;
             font-size: 18px;
             background: #fff;
@@ -29,6 +33,10 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+            }
+            @media screen and (max-width: 991px) {
+                max-width: 300px;
+                max-height: 245px;
             }
         }
     }

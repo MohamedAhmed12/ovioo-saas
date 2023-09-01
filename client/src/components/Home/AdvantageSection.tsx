@@ -25,11 +25,11 @@ export const AdvantageSection = () => {
             >
                 <div className="flex flex-col basis-1/2">
                     <Card className="w-full h-full p-0">
-                        <CardContent className="card-content">
-                            <h1 className="text-white text-5xl font-bold mb-5">
+                        <CardContent className="card-content pr-10 pl-10 lg:p-0">
+                            <h1 className="text-white text-3xl lg:text-5xl font-bold mb-5">
                                 Your design work should be simple
                             </h1>
-                            <p className="text-2xl text-white">Say goodbye to...</p>
+                            <p className="text-lg lg:text-2xl text-white">Say goodbye to...</p>
                             <Image
                                 src="/svg/astronuat-sleeping.svg"
                                 loading="lazy"
@@ -40,7 +40,7 @@ export const AdvantageSection = () => {
                         </CardContent>
                     </Card>
                 </div>
-                <Box className="flex flex-col basis-1/2 paper-box justify-end content-start">
+                <Box className="flex flex-col basis-1/2 paper-box justify-center lg:justify-end content-start">
                     {disAdvantages.map((disAdv, index) => (
                         <Paper key={index} elevation={5} className="flex items-center rounded-md">
                             <CloseIcon className="mr-2" color="error" />

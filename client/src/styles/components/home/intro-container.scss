@@ -25,4 +25,10 @@
         font-weight: 200;
         line-height: 28px;
     }
+    .btns-wrapper {
+        @media screen and (max-width: 991px) {
+            display: flex;
+           justify-content: center;
+        }
+    }
 }

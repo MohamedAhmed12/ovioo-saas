@@ -15,7 +15,7 @@ export const IntroContainer = () => (
             We match your business with a pro designer. You get design tasks done every business
             day. <FavoriteIcon color="error" />
         </p>
-        <div className="btns-wrapper mt-20">
+        <div className="btns-wrapper mt-20 ">
             <GetStartedBtns />
         </div>
         <img src="/svg/astronauts.svg" alt="astronauts" className="mt-11" />
