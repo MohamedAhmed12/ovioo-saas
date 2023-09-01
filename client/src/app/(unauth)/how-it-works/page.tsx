@@ -18,42 +18,42 @@ export default function HowItWorks() {
 
     const itemData = [
         {
-            img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+            img: '/images/smile.jpg',
             title: 'Breakfast',
             rows: 2,
             cols: 2,
         },
         {
-            img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+            img: '/images/smile.jpg',
             title: 'Burger',
         },
         {
-            img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+            img: '/images/smile.jpg',
             title: 'Camera',
         },
         {
-            img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+            img: '/images/smile.jpg',
             title: 'Coffee',
             cols: 2,
         },
         {
-            img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+            img: '/images/smile.jpg',
             title: 'Hats',
             cols: 2,
         },
         {
-            img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+            img: '/images/smile.jpg',
             title: 'Honey',
             author: '@arwinneil',
             rows: 2,
             cols: 2,
         },
         {
-            img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+            img: '/images/smile.jpg',
             title: 'Basketball',
         },
         {
-            img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
+            img: '/images/smile.jpg',
             title: 'Fern',
         },
     ];
@@ -146,7 +146,7 @@ export default function HowItWorks() {
                     cols={4}
                     grid-column-gap='60px'
                     grid-row-gap='60px'
-                    gap={60}
+                    gap={30}
                 >
                     {itemData.map((item) => (
                         <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
@@ -155,6 +155,8 @@ export default function HowItWorks() {
                                 alt={item.title}
                                 loading="lazy"
                                 className="img"
+                                width={100}
+                                height={100}
                             />
                         </ImageListItem>
                     ))}

@@ -35,7 +35,7 @@ export default function Home() {
                     designers.
                 </h2>
                 <div className="basis-1/2 mt-8 lg:mt-0">
-                    <Image src="/svg/smile.jpg" alt="smile" width={610} height={500} />
+                    <Image src="/images/smile.jpg" alt="smile" width={610} height={500} />
                 </div>
             </div>
             <div className="section mt-25 mb-20">
@@ -44,11 +44,11 @@ export default function Home() {
                 </div>
                 <div className="values container w-full flex-col  flex items-center justify-between">
                     <div className="basis-1/2 mt-8">
-                        <Image src="/svg/smile.jpg" alt="smile" width={800} height={720} />
+                        <Image src="/images/smile.jpg" alt="smile" width={800} height={720} />
                     </div>
                     <div className="statistics-container flex flex-col lg:flex-row mt-10">
                         {statistics.map((stat, index) => (
-                            <div className="statistics-figures flex mt-8 lg:mt0">
+                            <div className="statistics-figures flex mt-8 lg:mt0" key={index}>
                                 <div className="statistics-number mr-7 lg:mr-4">
                                     <div className="about-figure">{index + 1}</div>
                                 </div>

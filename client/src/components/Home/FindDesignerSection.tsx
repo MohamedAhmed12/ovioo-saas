@@ -13,7 +13,7 @@ export const FindDesignerSection = () => (
             Sit back and relax with <span className="text-secondary">Ovioo</span>. We got you.
         </h2>
         <div className="text-3xl basis-1/2">
-            <Image src="/svg/smile.jpg" alt="smile" width={610} height={700}/>
+            <Image src="/images/smile.jpg" alt="smile" width={610} height={700}/>
         </div>
     </div>
 );
