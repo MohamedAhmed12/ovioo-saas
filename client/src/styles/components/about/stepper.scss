@@ -1,0 +1,38 @@
+.steppers-wrapper {
+    max-width: 906px;
+    margin-top: 160px;
+    .stepper-wrapper {
+        width: 188px;
+        flex-direction: column;
+        text-align: center;
+        flex: none;
+        align-items: center;
+        display: flex;
+        .about-us-stepper-figure {
+            color: #fae8bc;
+            text-shadow: 0 8px 40px rgba(254, 228, 165, 0.2);
+            font-size: 56px;
+            line-height: 100%;
+        }
+        .about-us-steppers-eclipse {
+            align-items: center;
+            display: flex;
+            position: relative;
+        }
+        .about-us-steppers-line {
+            position: absolute;
+            width: 310px;
+            height: 1px;
+            left: 56px;
+        }
+    }
+    .about-us-steppers-line,
+    .about-us-steppers-vertical-line {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .about-us-steppers-vertical-line {
+        width: 1px;
+        height: 40px;
+        margin: 24px 0;
+    }
+}

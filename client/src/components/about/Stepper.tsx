@@ -1,3 +1,4 @@
+import "@/styles/components/about/stepper.scss";
 import Image from "next/image";
 import ReactHtmlParser from "react-html-parser";
 
@@ -18,26 +19,34 @@ export default function Stepper() {
     ];
 
     return (
-        <div className="facts-wrapper flex flex-row w-full mt-40 mb-40 justify-between">
+        <div className="steppers-wrapper flex flex-col lg:flex-row w-full mt-40 mb-40 justify-center lg:justify-between items-center">
             {steps.map(({ year, text }, index) => (
-                <div className="fact-wrapper" key={index}>
-                    <div>
-                        <div className="about-us-fact-figure">{year}</div>
+                <>
+                    <div className="stepper-wrapper" key={index}>
+                        <div>
+                            <div className="about-us-stepper-figure">{year}</div>
+                        </div>
+                        <div className="about-us-steppers-eclipse">
+                            <Image
+                                height={61}
+                                width={61}
+                                src="/images/stepper-icon.png"
+                                loading="lazy"
+                                alt="timeline"
+                                className="hidden lg:block"
+                            />
+                            {steps.length !== index + 1 && (
+                                <div className="about-us-steppers-line hidden lg:block"></div>
+                            )}
+                        </div>
+                        <div>
+                            <div className=" mt-4 lg:m-0">{ReactHtmlParser(text)}</div>
+                        </div>
                     </div>
-                    <div className="about-us-facts-eclipse">
-                        <Image
-                            height={61}
-                            width={61}
-                            src="/images/stepper-icon.png"
-                            loading="lazy"
-                            alt="timeline"
-                        />
-                        {steps.length !== index + 1 && <div className="about-us-facts-line"></div>}
-                    </div>
-                    <div>
-                        <div className="body-text-l">{ReactHtmlParser(text)}</div>
-                    </div>
-                </div>
+                    {steps.length !== index + 1 && (
+                        <div className="about-us-steppers-vertical-line block lg:hidden"></div>
+                    )}
+                </>
             ))}
         </div>
     );
