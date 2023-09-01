@@ -1,4 +1,9 @@
 .about {
+    background-image: url(/svg/background/section-stars.svg),
+        url(/svg/background/section-stars2.svg);
+    background-repeat: repeat;
+    background-size: 950px 375px;
+    background-position: 31% 50%;
     .intro {
         align-items: center;
         margin-bottom: 57px;
