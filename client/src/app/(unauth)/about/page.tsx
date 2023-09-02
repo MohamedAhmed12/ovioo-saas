@@ -18,11 +18,11 @@ export default function Home() {
             <div className="intro flex flex-col">
                 <div className="container title uppercase text-center">
                     <Typography variant="h2">
-                        <span className="text-gradient-h1">
-                            <strong>awesomic</strong>
+                        <span className="text-gradient">
+                            <strong>ovioo</strong>
                         </span>
                         <span className="title-span ml-4 mr-4">=</span>
-                        <strong>awesome</strong> companies
+                        <strong>amazing</strong> companies
                         <br />+ <strong>cosmic</strong> designers
                     </Typography>
                 </div>

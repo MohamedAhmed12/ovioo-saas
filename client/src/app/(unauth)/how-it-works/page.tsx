@@ -94,16 +94,13 @@ export default function HowItWorks() {
             <div className="what-you-get text-[40px] font-medium text-center mt-36 mb-20 flex  flex-col items-center">
                 <h2 className="mb-20">What You Get With Ovioo</h2>
                 <ImageList
+                    className="w-full pr-5 pl-5 "
                     sx={{ gridAutoColumns: 1 }}
                     variant="quilted"
                     cols={4}
-                    grid-column-gap="60px"
-                    grid-row-gap="60px"
-                    gap={60}
-                    className="w-full pr-5 pl-5"
                 >
-                    {itemData.map((item) => (
-                        <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+                    {itemData.map((item, index) => (
+                        <ImageListItem key={index} cols={item.cols || 1} rows={item.rows || 1}>
                             <Image
                                 {...srcset(item.img, 121, item.rows, item.cols)}
                                 alt={item.title}

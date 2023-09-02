@@ -21,8 +21,8 @@ export default function AboutStepper() {
     return (
         <div className="about-steppers-wrapper flex flex-col lg:flex-row w-full mt-40 mb-40 justify-center lg:justify-between items-center">
             {steps.map(({ year, text }, index) => (
-                <>
-                    <div className="stepper-wrapper" key={index}>
+                <span key={index}>
+                    <div className="stepper-wrapper">
                         <div className="about-us-stepper-figure">{year}</div>
                         <div className="about-us-steppers-eclipse">
                             <Image
@@ -42,7 +42,7 @@ export default function AboutStepper() {
                     {steps.length !== index + 1 && (
                         <div className="about-us-steppers-vertical-line block lg:hidden"></div>
                     )}
-                </>
+                </span>
             ))}
         </div>
     );

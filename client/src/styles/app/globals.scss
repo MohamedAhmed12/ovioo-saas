@@ -43,4 +43,16 @@ body {
     .MuiTypography-root{
         font-family: E ukraine, sans-serif;
     }
+    .text-gradient {
+        -webkit-text-fill-color: transparent;
+        background-image: radial-gradient(
+            circle at 0 0,
+            #f79393,
+            #fee4a5 38%,
+            #9ae8b0 75%,
+            #5ba5d0
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
 }

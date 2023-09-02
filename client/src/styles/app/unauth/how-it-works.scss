@@ -10,18 +10,6 @@
                 font-size: 52px;
                 letter-spacing: 3px;
                 line-height: 83px !important;
-                .text-gradient {
-                    -webkit-text-fill-color: transparent;
-                    background-image: radial-gradient(
-                        circle at 0 0,
-                        #f79393,
-                        #fee4a5 38%,
-                        #9ae8b0 75%,
-                        #5ba5d0
-                    );
-                    -webkit-background-clip: text;
-                    background-clip: text;
-                }
                 @media screen and (max-width: 991px) {
                     font-size: 34px;
                     line-height: 48px !important;
@@ -50,12 +38,16 @@
     }
     .what-you-get {
         .MuiImageList-root {
+            gap: 55px!important;
             .MuiImageListItem-root {
                 img {
                     width: 100%;
                     height: 100%;
                     border-radius: 8px;
                 }
+            }
+            @media screen and (max-width: 991px) {
+                gap: 30px!important;
             }
         }
     }

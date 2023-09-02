@@ -21,11 +21,8 @@ export default function HowItWorksStepper() {
     return (
         <div className="how-it-works__steppers-wrapper flex flex-col lg:flex-row w-full mt-40 mb-40 justify-center lg:justify-between items-center">
             {steps.map(({ iconSrc, text }, index) => (
-                <>
-                    <div
-                        className="stepper-wrapper flex flex-col items-center text-center"
-                        key={index}
-                    >
+                <span key={index}>
+                    <div className="stepper-wrapper flex flex-col items-center text-center">
                         <div className="how-it-works__steppers-item flex relative items-center flex-row">
                             <div className="flex flex-col items-center">
                                 <Image
@@ -46,7 +43,7 @@ export default function HowItWorksStepper() {
                     {steps.length !== index + 1 && (
                         <div className="about-us-steppers-vertical-line block lg:hidden"></div>
                     )}
-                </>
+                </span>
             ))}
         </div>
     );

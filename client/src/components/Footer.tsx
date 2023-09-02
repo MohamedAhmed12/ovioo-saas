@@ -15,7 +15,7 @@ export default function Footer() {
                             className="footer-logo w-full inline-block w--current"
                         >
                             <img
-                                src="/svg/footer-logoa.svg"
+                                src="/svg/footer-logo.svg"
                                 loading="lazy"
                                 alt="ovioo logo"
                                 className="footer__logo"

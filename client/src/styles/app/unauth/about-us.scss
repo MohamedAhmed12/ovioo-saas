@@ -19,18 +19,6 @@
                 font-size: 52px;
                 letter-spacing: 3px;
                 line-height: 83px !important;
-                .text-gradient-h1 {
-                    -webkit-text-fill-color: transparent;
-                    background-image: radial-gradient(
-                        circle at 0 0,
-                        #f79393,
-                        #fee4a5 38%,
-                        #9ae8b0 75%,
-                        #5ba5d0
-                    );
-                    -webkit-background-clip: text;
-                    background-clip: text;
-                }
                 @media screen and (max-width: 991px) {
                     font-size: 30px;
                     line-height: 48px !important;
