@@ -10,7 +10,6 @@ export default function BottomWrapper() {
         <div className="bottom-wrapper w-full">
             <FAQ />
             <GetStarted />
-            <Footer />
         </div>
     );
 }

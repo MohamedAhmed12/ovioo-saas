@@ -1,3 +1,5 @@
+"use client";
+
 import "@/styles/components/faq.scss";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";

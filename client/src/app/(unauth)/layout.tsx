@@ -1,6 +1,6 @@
 import "@/styles/app/unauth/layout.scss";
 
-import BottomWrapper from "@/components/BottomWrapper";
+import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex min-h-screen flex-col items-center justify-between main-layout">
             <NavBar/>
             {children}
-            <BottomWrapper  />
+            <Footer />
         </main>
     );
 }

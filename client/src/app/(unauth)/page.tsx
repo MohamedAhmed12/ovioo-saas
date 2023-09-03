@@ -5,6 +5,7 @@ import { PortfolioSection } from "@/components/Home/PortfolioSection";
 import { PyramidSection } from "@/components/Home/PyramidSection";
 import { StatsSection } from "@/components/Home/StatsSection";
 import "@/styles/app/unauth/home.scss";
+import BottomWrapper from '../../components/BottomWrapper';
 
 export default function Home() {
     return (
@@ -15,6 +16,7 @@ export default function Home() {
             <PortfolioSection />
             <AdvantageSection />
             <PyramidSection/>
+            <BottomWrapper />
         </div>
     );
 }
