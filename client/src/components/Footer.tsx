@@ -1,4 +1,5 @@
 import "@/styles/components/footer.scss";
+import Image from "next/image";
 
 export default function Footer() {
     return (
@@ -14,11 +15,13 @@ export default function Footer() {
                             aria-current="page"
                             className="footer-logo w-full inline-block w--current"
                         >
-                            <img
+                            <Image
                                 src="/svg/footer-logo.svg"
                                 loading="lazy"
                                 alt="ovioo logo"
                                 className="footer__logo"
+                                width="160"
+                                height={35}
                             />
                         </a>
                         <div className="footer__contacts flex flex-col lg:flex-row">

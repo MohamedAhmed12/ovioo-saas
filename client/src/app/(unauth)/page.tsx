@@ -28,10 +28,7 @@ export default function Home() {
             <PortfolioSection />
             <AdvantageSection />
             <PyramidSection />
-            <BottomWrapper
-                faq={faq}
-                getStartedContent="Add a <strong class='font-medium'>Pro Designer</strong> to Your Team <strong class='font-medium'>in Minutes</strong>, <strong class='font-medium'> Not Weeks</strong>."
-            />
+            <BottomWrapper faq={faq} />
         </div>
     );
 }

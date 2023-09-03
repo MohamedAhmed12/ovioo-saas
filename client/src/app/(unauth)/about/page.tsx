@@ -5,8 +5,21 @@ import "@/styles/app/unauth/about-us.scss";
 import { Typography } from "@mui/material";
 import Image from "next/image";
 import ReactHtmlParser from "react-html-parser";
+import BottomWrapper from "@/components/BottomWrapper";
+import { FAQ as FAQInterface } from "@/interfaces";
 
 export default function Home() {
+    const faq: FAQInterface[] = [
+        {
+            question: "Every day business updates - what’s that?",
+            answer: "Every business day, your designer will provide you with an update on your task, or switch to a new one when it's completed.",
+        },
+        {
+            question: "How many designs do I get in a month?",
+            answer: "This depends on the complexity and number of iterations for each task. Every task is different, but we guarantee you will receive daily design updates.",
+        },
+    ];
+
     const statistics: string[] = [
         "<p>Enthusiastic<br />and <strong>devoted</strong></p>",
         "<p><strong>Brave</strong>to express<br />ourselves</p>",
@@ -18,12 +31,10 @@ export default function Home() {
             <div className="intro flex flex-col">
                 <div className="container title uppercase text-center">
                     <Typography variant="h2">
-                        <span className="text-gradient">
-                            <strong>ovioo</strong>
-                        </span>
+                        <span className="text-gradient font-bold">ovioo</span>
                         <span className="title-span ml-4 mr-4">=</span>
-                        <strong>amazing</strong> companies
-                        <br />+ <strong>cosmic</strong> designers
+                        <span className="font-bold">amazing</span> companies
+                        <br />+ <span className="font-bold">cosmic</span> designers
                     </Typography>
                 </div>
 
@@ -63,6 +74,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            <BottomWrapper faq={faq} />
         </div>
     );
 }
