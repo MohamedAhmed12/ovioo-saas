@@ -1,0 +1,36 @@
+.plans__help-card {
+    background-image: linear-gradient(135deg, #2d2d48 17%, #25253b);
+    flex-direction: row;
+    padding: 40px 50px;
+    .pricing__add-ons {
+        flex-direction: column;
+        .MuiChip-root {
+            span {
+                font-weight: 600;
+                -webkit-text-fill-color: transparent;
+                background-image: radial-gradient(
+                    circle at 0 0,
+                    #f79393,
+                    #fee4a5 38%,
+                    #9ae8b0 75%,
+                    #5ba5d0
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+        }
+    }
+    .pricing__not-sure {
+        flex-direction: column;
+        h2 {
+            font-size: 33px;
+            font-weight: 600;
+            line-height: 45px;
+        }
+        p {
+            font-size: 20px;
+            font-weight: 200;
+            line-height: 27px;
+        }
+    }
+}
