@@ -76,11 +76,10 @@ export default function HowItWorks() {
         <div className="how-it-works">
             <div className="intro flex flex-col items-center pr-[10px] pl-[10px] relative">
                 <div className="container title uppercase text-center">
-                    <Typography variant="h2">
-                        <strong>get daily, </strong>
-                        <strong className="text-gradient">high-end design</strong>
+                    <Typography variant="h2" className="font-bold">
+                        get daily, <span className="text-gradient">high-end design</span>
                         <br />
-                        <strong>done with ovioo</strong>
+                        done with ovioo
                     </Typography>
                 </div>
 
@@ -105,28 +104,33 @@ export default function HowItWorks() {
                     variant="quilted"
                     cols={4}
                 >
-                    {itemData.map((
-                        { img, alt, cols = 1, rows = 1 }: { img: string, alt: string, cols?: number, rows?: number }
-                        , index
-                    ) => (
-                        <ImageListItem key={index} cols={cols} rows={rows}>
-                            <Image
-                                src={`${img}?w=${121 * cols}&h=${121 * rows
+                    {itemData.map(
+                        (
+                            {
+                                img,
+                                alt,
+                                cols = 1,
+                                rows = 1,
+                            }: { img: string; alt: string; cols?: number; rows?: number },
+                            index
+                        ) => (
+                            <ImageListItem key={index} cols={cols} rows={rows}>
+                                <Image
+                                    src={`${img}?w=${121 * cols}&h=${
+                                        121 * rows
                                     }&fit=crop&auto=format`}
-                                alt={alt}
-                                loading="lazy"
-                                className="img"
-                                width={100}
-                                height={100}
-                            />
-                        </ImageListItem>
-                    ))}
+                                    alt={alt}
+                                    loading="lazy"
+                                    className="img"
+                                    width={100}
+                                    height={100}
+                                />
+                            </ImageListItem>
+                        )
+                    )}
                 </ImageList>
             </div>
-            <BottomWrapper
-                faq={faq}
-                getStartedContent="Add a <strong class='font-medium'>Pro Designer</strong> to Your Team <strong class='font-medium'>in Minutes</strong>, <strong class='font-medium'> Not Weeks</strong>."
-            />
+            <BottomWrapper faq={faq} />
         </div>
     );
 }
