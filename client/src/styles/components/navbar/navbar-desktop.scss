@@ -32,8 +32,9 @@
                 &hover {
                     outline: 0;
                 }
-                .navbar_logo {
-                    max-width: 233px;
+                &.main-logo{
+                    width: 160px;
+                    height: auto;
                 }
                 @media (min-width: 900px) {
                     display: flex;

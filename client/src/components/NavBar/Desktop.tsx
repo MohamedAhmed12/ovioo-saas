@@ -1,6 +1,6 @@
 import "@/styles/components/navbar/navbar-desktop.scss";
 
-import { Route as RouteInterface } from "@/inerfaces/route";
+import { Route as RouteInterface } from "@/interfaces";
 import { AppBar, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import Link from "next/link";
@@ -27,10 +27,8 @@ export default function Desktop({
                 <Toolbar disableGutters className="w-full justify-center h-full">
                     <div className="navbar-desktop-bg w-full h-full justify-center items-center flex">
                         <div className="navbar-desktop hidden lg:flex">
-                            <a href="/" aria-current="page" className="h-full max-w-full">
-                                <div className="navbar_logo flex">
-                                    <img src="/svg/logo.svg" className="slef-center" />
-                                </div>
+                            <a href="/" aria-current="page" className="main-logo h-full max-w-full pt-[5px]">
+                                <img src="/svg/logo.svg" className="slef-center"/>
                             </a>
                             <Box
                                 sx={{ display: { xs: "none", md: "flex" } }}
