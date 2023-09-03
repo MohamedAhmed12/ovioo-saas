@@ -1,6 +1,6 @@
 "use client";
 
-import { Route as RouteInterface } from "@/inerfaces/route";
+import { Route as RouteInterface } from "@/interfaces";
 import { MouseEvent, useEffect, useState } from "react";
 import Desktop from "./Desktop";
 import Mobile from "./Mobile";

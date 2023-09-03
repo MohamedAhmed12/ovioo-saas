@@ -1,6 +1,6 @@
 import "@/styles/components/navbar/hamburger-btn.scss";
 
-import { Route as RouteInterface } from "@/inerfaces/route";
+import { Route as RouteInterface } from "@/interfaces";
 import { Close } from "@mui/icons-material";
 import EastIcon from "@mui/icons-material/East";
 import MenuIcon from "@mui/icons-material/Menu";

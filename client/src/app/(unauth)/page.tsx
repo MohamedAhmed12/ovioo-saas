@@ -4,10 +4,22 @@ import { IntroContainer } from "@/components/Home/IntroContainer";
 import { PortfolioSection } from "@/components/Home/PortfolioSection";
 import { PyramidSection } from "@/components/Home/PyramidSection";
 import { StatsSection } from "@/components/Home/StatsSection";
+import { FAQ as FAQInterface } from "@/interfaces";
 import "@/styles/app/unauth/home.scss";
-import BottomWrapper from '../../components/BottomWrapper';
+import BottomWrapper from "../../components/BottomWrapper";
 
 export default function Home() {
+    const faq: FAQInterface[] = [
+        {
+            question: "Every day business updates - what’s that?",
+            answer: "Every business day, your designer will provide you with an update on your task, or switch to a new one when it's completed.",
+        },
+        {
+            question: "How many designs do I get in a month?",
+            answer: "This depends on the complexity and number of iterations for each task. Every task is different, but we guarantee you will receive daily design updates.",
+        },
+    ];
+
     return (
         <div className="home-main items-center flex flex-col">
             <IntroContainer />
@@ -15,8 +27,11 @@ export default function Home() {
             <FindDesignerSection />
             <PortfolioSection />
             <AdvantageSection />
-            <PyramidSection/>
-            <BottomWrapper />
+            <PyramidSection />
+            <BottomWrapper
+                faq={faq}
+                getStartedContent="Add a <strong class='font-medium'>Pro Designer</strong> to Your Team <strong class='font-medium'>in Minutes</strong>, <strong class='font-medium'> Not Weeks</strong>."
+            />
         </div>
     );
 }

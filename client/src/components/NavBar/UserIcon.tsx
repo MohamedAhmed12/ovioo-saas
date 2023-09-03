@@ -1,4 +1,4 @@
-import { Route as RouteInterface } from "@/inerfaces/route";
+import { Route as RouteInterface } from "@/interfaces";
 import { Avatar, MenuItem } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";

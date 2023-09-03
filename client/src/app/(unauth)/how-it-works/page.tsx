@@ -1,6 +1,8 @@
 "use client";
 
+import BottomWrapper from "@/components/BottomWrapper";
 import HowItWorksStepper from "@/components/HowItWorks/HowItWorksStepper";
+import { FAQ as FAQInterface } from "@/interfaces";
 import "@/styles/app/unauth/how-it-works.scss";
 import { Typography } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
@@ -8,59 +10,63 @@ import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
 
 export default function HowItWorks() {
-    const srcset = (image: string, size: number, rows: number = 1, cols: number = 1) => {
-        return {
-            src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-            srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x `,
-        };
-    };
+    const faq: FAQInterface[] = [
+        {
+            question: "Every day business updates - what’s that?",
+            answer: "Every business day, your designer will provide you with an update on your task, or switch to a new one when it's completed.",
+        },
+        {
+            question: "How many designs do I get in a month?",
+            answer: "This depends on the complexity and number of iterations for each task. Every task is different, but we guarantee you will receive daily design updates.",
+        },
+    ];
 
     const itemData = [
         {
             img: "/images/smile.jpg",
-            title: "Breakfast",
+            alt: "Breakfast",
             rows: 1,
             cols: 1,
         },
         {
             img: "/images/smile.jpg",
-            title: "Burger",
+            alt: "Burger",
             rows: 1,
             cols: 1,
         },
         {
             img: "/images/smile.jpg",
-            title: "Camera",
+            alt: "Camera",
             rows: 2,
             cols: 2,
         },
         {
             img: "/images/smile.jpg",
-            title: "Coffee",
+            alt: "Coffee",
             cols: 2,
         },
         {
             img: "/images/smile.jpg",
-            title: "Breakfast",
+            alt: "Breakfast",
             rows: 2,
             cols: 2,
         },
         {
             img: "/images/smile.jpg",
-            title: "Honey",
+            alt: "Honey",
             author: "@arwinneil",
             rows: 1,
             cols: 2,
         },
         {
             img: "/images/smile.jpg",
-            title: "Breakfast",
+            alt: "Breakfast",
             rows: 1,
             cols: 1,
         },
         {
             img: "/images/smile.jpg",
-            title: "Burger",
+            alt: "Burger",
             rows: 1,
             cols: 1,
         },
@@ -99,11 +105,15 @@ export default function HowItWorks() {
                     variant="quilted"
                     cols={4}
                 >
-                    {itemData.map((item, index) => (
-                        <ImageListItem key={index} cols={item.cols || 1} rows={item.rows || 1}>
+                    {itemData.map((
+                        { img, alt, cols = 1, rows = 1 }: { img: string, alt: string, cols?: number, rows?: number }
+                        , index
+                    ) => (
+                        <ImageListItem key={index} cols={cols} rows={rows}>
                             <Image
-                                {...srcset(item.img, 121, item.rows, item.cols)}
-                                alt={item.title}
+                                src={`${img}?w=${121 * cols}&h=${121 * rows
+                                    }&fit=crop&auto=format`}
+                                alt={alt}
                                 loading="lazy"
                                 className="img"
                                 width={100}
@@ -113,6 +123,10 @@ export default function HowItWorks() {
                     ))}
                 </ImageList>
             </div>
+            <BottomWrapper
+                faq={faq}
+                getStartedContent="Add a <strong class='font-medium'>Pro Designer</strong> to Your Team <strong class='font-medium'>in Minutes</strong>, <strong class='font-medium'> Not Weeks</strong>."
+            />
         </div>
     );
 }

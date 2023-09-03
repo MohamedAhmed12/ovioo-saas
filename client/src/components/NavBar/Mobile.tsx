@@ -1,6 +1,6 @@
 import "@/styles/components/navbar/navbar-mobile.scss";
 
-import { Route as RouteInterface } from "@/inerfaces/route";
+import { Route as RouteInterface } from "@/interfaces";
 import { AppBar, Toolbar } from "@mui/material";
 import { MouseEvent } from "react";
 import HamburgerMenu from "./HamburgerMenu";
