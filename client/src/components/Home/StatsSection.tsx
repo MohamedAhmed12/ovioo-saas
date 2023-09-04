@@ -2,7 +2,7 @@
 
 import "@/styles/components/home/intro-container.scss";
 
-export const StatsSection = ({ title }: { title: string }) => (
+export const StatsSection = ({ title }: { title?: string }) => (
     <div className="mt-40">
         <div className="text-center max-w-[850px] m-auto">
             <h2 className="text-[38px] leading-relaxed font-normal">{title}</h2>

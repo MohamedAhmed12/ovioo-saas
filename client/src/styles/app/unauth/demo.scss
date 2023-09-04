@@ -1,0 +1,18 @@
+.demo {
+    .title {
+        margin-bottom: 80px;
+    }
+    .calendly-inline-widget {
+        min-width: 450px!important;
+        min-height: 900px!important;
+        height: 900px!important;
+        flex-basis:50%;
+        iframe {
+            width: 70%;
+            height: 100rem;
+            @media screen and (max-width: 991px) {
+                width: 100%;
+            }
+        }
+    }
+}
