@@ -1,7 +1,7 @@
 "use client";
 
+import { ReduxProvider } from "@/store/Provider";
 import "@/styles/app/globals.scss";
-import {ReduxProvider} from "@/store/Provider";
 import { ReactNode } from "react";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
