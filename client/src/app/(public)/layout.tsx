@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "#1 Design Platform To Cover All Your Business Needs - Ovioo",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between main-layout">
             <NavBar/>
