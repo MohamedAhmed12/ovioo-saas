@@ -1,0 +1,44 @@
+.dashboard__header {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    .MuiToolbar-root {
+        min-height: 92px;
+        padding: 0px 40px;
+        .toolbar-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            padding: 2px;
+            margin-right: 8px !important;
+            background-color: transparent;
+            &.opened {
+                color: rgb(30 64 175);
+            }
+            color: var(
+                --joy-palette-neutral-plainColor,
+                var(--joy-palette-neutral-700, #32383e)
+            );           
+            &:hover {
+                color: var(
+                    --joy-palette-neutral-plainColor,
+                    var(--joy-palette-neutral-700, #32383e)
+                );
+                background-color: rgb(212 212 216);
+            }
+        }
+    }
+
+    &:is(.dark .dark\:dark-mode) {
+        .toolbar-icon {
+            color:  rgb(203 213 225);;
+            &:hover {
+                color: var(
+                    --joy-palette-neutral-plainColor,
+                    var(--joy-palette-neutral-700, #32383e)
+                );
+                background-color: rgb(212 212 216);
+            }
+        }
+    }
+}

@@ -9,8 +9,7 @@ export const mainSlice = createSlice({
     name: 'main',
     initialState,
     reducers: {
-        toggleMode: (state) => {
-            
+        toggleMode: (state) => {            
             state.mode = state.mode == ModeEnum.Dark ? ModeEnum.Light : ModeEnum.Dark;
         }
     }

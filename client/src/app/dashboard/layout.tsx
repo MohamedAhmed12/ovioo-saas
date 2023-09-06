@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
+import DashboardHeader from "../../components/Dashboard/Layout/Header/index";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const mode = useAppSelector((state) => state.mainReducer.mode);
@@ -19,7 +20,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between dashboard-main-layout">
+        <main className="flex min-h-screen flex-col items-center justify-between dashboard-main-layout mt-36 mb-36">
+            <DashboardHeader />
             {children}
         </main>
     );

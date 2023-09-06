@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <ReduxProvider>
             <html lang="en">
-                <body>{children}</body>
+                <body className="dark:bg-slate-800">{children}</body>
             </html>
         </ReduxProvider>
     );
