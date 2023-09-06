@@ -1,0 +1,47 @@
+.navbar .MuiDrawer-root,
+.MuiModal-root {
+    .MuiPaper-root {
+        background: transparent;
+        width: 280px;
+        border-right: 1px solid var(--dashboard-border);
+        .simplebar-mask {
+            .simplebar-content {
+                .MuiList-root {
+                    padding: 8px;
+                    .MuiButtonBase-root {
+                        height: 48px;
+                        position: relative;
+                        text-transform: capitalize;
+                        border-radius: 6px;
+                        .MuiListItemIcon-root {
+                            width: 22px;
+                            height: 22px;
+                            color: inherit;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        &.active {
+                            background-color: rgba(159, 166, 173, 0.4);
+                            font-weight: bold;
+                        }
+                        .dark & {
+                            &:hover {
+                                background-color: rgba(159, 166, 173, 0.2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+            background: var(--dashboard-icon-color);
+            .dark & {
+                background: var(--dark-dashboard-icon-color);
+            }
+        }
+        .dark & {
+            border-right: 1px solid var(--dark-dashboard-border);
+        }
+    }
+}

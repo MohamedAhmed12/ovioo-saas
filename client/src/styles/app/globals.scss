@@ -9,14 +9,13 @@
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
     --secondary: #fae8bc;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
+    --dashboard-icon-color:var(
+        --joy-palette-neutral-plainColor,
+        var(--joy-palette-neutral-700, #32383e)
+    );
+    --dark-dashboard-icon-color: rgb(203 213 225);
+    --dashboard-border: rgba(0, 0, 0, 0.08);
+    --dark-dashboard-border: rgba(100, 116, 139, 0.5);
 }
 
 body {
@@ -27,7 +26,6 @@ body {
     font-weight: 300;
     font-family: E ukraine, sans-serif;
     padding: 0 !important;
-    overflow: visible !important;
     .section {
         flex-direction: column;
         align-items: center;
