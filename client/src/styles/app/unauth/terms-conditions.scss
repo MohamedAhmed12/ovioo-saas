@@ -1,0 +1,37 @@
+.terms-conditions {
+  .MuiTabs-root {
+    flex:inline;
+    background-color: transparent;
+    .MuiTabList-root {
+      .MuiTab-root {
+        text-align: center;
+        background-color: transparent;
+        font-family: E ukraine, sans-serif;
+        font-weight: 400;
+        font-size: 1.4rem;
+        line-height: 1.334;
+        color: white;
+        cursor: pointer;
+        margin-top: 40px;
+        &.Mui-selected,
+        &:hover {
+          color: var(--secondary) !important;
+        }
+      }
+    }
+    .MuiTabPanel-root {
+      text-align: center;
+      border-color: white;
+      border-radius: 20px;
+      background-color: transparent;
+      font-family: E ukraine, sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 30px;
+      color: white;
+      body .text-secondary {
+        color: var(--secondary);
+      }
+    }
+  }
+}
