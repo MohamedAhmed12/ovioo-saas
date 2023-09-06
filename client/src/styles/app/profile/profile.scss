@@ -1,0 +1,37 @@
+.profilepage {
+  .profilecard {
+    color: black;
+    .MuiContainer-root {
+      max-width: 444px;
+      padding: 0%;
+      .MuiCardHeader-root {
+        .MuiCardHeader-content {
+          text-align: center;
+          color: black !important;
+        }
+      }
+      .box {
+        .MuiAvatar-root{
+          align-items: center;
+        }
+        .MuiBox-root {
+          .MuiButton-root {
+            background-color: #3f56ba;
+            border-color: #3f56ba;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  .securitycard {
+    .MuiCard-root {
+      .MuiCardHeader-root {
+      }
+      .MuiCardContent-root {
+      }
+      .MuiCardActions-root {
+      }
+    }
+  }
+}
