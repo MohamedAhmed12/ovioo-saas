@@ -1,6 +1,7 @@
 'use client';
 
-import '@/styles/app/profile/profile.scss';
+import '@/styles/app/profile/index.scss';
+
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
@@ -12,8 +13,6 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import Image from 'next/image';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
@@ -30,9 +29,10 @@ export default function Profile() {
     });
   };
   return (
-    <div className="profilepage  flex flex-col lg:flex-row">
+    <div className="profilepage  flex flex-col lg:flex-col w-">
+
       <div className="profilecard bg-white mt-8 flex flex-col items-center mb-6">
-        <Container  component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs">
           <CardHeader title="Profile Settings " />
           <CssBaseline />
           <Box className="box pr-10 pl-10 pt-10 pb-10 bg-secondary  ">
@@ -69,7 +69,7 @@ export default function Profile() {
                 <Option value="dog">Dog</Option>
                 <Option value="cat">Cat</Option>
               </Select>
-              <Button 
+              <Button
                 type="submit"
                 fullWidth
                 variant="solid"
@@ -81,7 +81,7 @@ export default function Profile() {
           </Box>
         </Container>
       </div>
-      <div className="securitycard object-cover justify-between pt-5 ">
+      <div className="securitycard object-cover flex justify-between pt-5 ">
         <Card
           className="object-scale-down"
           variant="solid"

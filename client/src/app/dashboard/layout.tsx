@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between dashboard-main-layout mt-36 mb-36">
+        <main className="flex min-h-screen flex-col items-center justify-between dashboard-main-layout mt-36 mb-36 pl-72">
             <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
             <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
             {children}
