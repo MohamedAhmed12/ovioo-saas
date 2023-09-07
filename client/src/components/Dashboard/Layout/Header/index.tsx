@@ -10,24 +10,31 @@ import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import AccountPopover from "./AccountPopover";
 import NotificationsPopover from "./Notification/NotificationsPopover";
 
-export default function DashboardHeader({ onOpenNav }: { onOpenNav: () => void }) {
+export default function DashboardHeader({
+    openNav,
+    onOpenNav,
+}: {
+    openNav: boolean;
+    onOpenNav: () => void;
+}) {
     const mode = useAppSelector((state) => state.mainReducer.mode);
     const dispatch = useAppDispatch();
 
     return (
         <AppBar className="dashboard__header dark:dark-mode">
             <Toolbar>
-                <IconButton
-                    onClick={onOpenNav}
-                    sx={{
-                        mr: 1,
-                        color: "text.primary",
-                        display: { lg: "none" },
-                    }}
-                    className="toolbar-icon"
-                >
-                    <MenuIcon />
-                </IconButton>
+                {!openNav && (
+                    <IconButton
+                        onClick={onOpenNav}
+                        sx={{
+                            mr: 1,
+                            color: "text.primary",
+                        }}
+                        className="hamburger-btn toolbar-icon"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                )}
                 <Box sx={{ flexGrow: 1 }} />
                 <Stack
                     direction="row"
