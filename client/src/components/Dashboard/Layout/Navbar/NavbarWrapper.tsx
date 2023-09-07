@@ -22,7 +22,7 @@ export default function NavbarWrapper({
                 open={openNav}
                 onClose={onCloseNav}
                 onOpen={onCloseNav}
-                className="flex lg:hidden"
+                className="flex lg:hidden swipeable-drawer"
             >
                 {content}
             </SwipeableDrawer>
