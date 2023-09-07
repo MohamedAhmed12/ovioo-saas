@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <ReduxProvider>
-            <html lang="en">
+            <html lang="en" className="dark">
                 <body className="dark:bg-slate-800">{children}</body>
             </html>
         </ReduxProvider>
