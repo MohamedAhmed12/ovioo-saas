@@ -78,6 +78,20 @@ export default function NotificationsPopover() {
         setOpen(event ? event.currentTarget : null);
     };
 
+    const handleMarkAsRead = (id: number) => {
+        setNotifications(
+            notifications.map((notification) => {
+                if (notification.id == id) {
+                    return {
+                        ...notification,
+                        isUnRead: false,
+                    };
+                }
+                return notification;
+            })
+        );
+    };
+
     const handleMarkAllAsRead = () => {
         setNotifications(
             notifications.map((notification) => ({
@@ -146,7 +160,11 @@ export default function NotificationsPopover() {
                         }
                     >
                         {notifications.slice(0, 2).map((notification) => (
-                            <NotificationItem key={notification.id} notification={notification} />
+                            <NotificationItem
+                                key={notification.id}
+                                notification={notification}
+                                onClick={()=> handleMarkAsRead(notification.id)}
+                            />
                         ))}
                     </List>
 
