@@ -163,7 +163,7 @@ export default function NotificationsPopover() {
                             <NotificationItem
                                 key={notification.id}
                                 notification={notification}
-                                onClick={()=> handleMarkAsRead(notification.id)}
+                                onClick={() => handleMarkAsRead(notification.id)}
                             />
                         ))}
                     </List>
@@ -180,7 +180,11 @@ export default function NotificationsPopover() {
                         }
                     >
                         {notifications.slice(2, 5).map((notification) => (
-                            <NotificationItem key={notification.id} notification={notification} />
+                            <NotificationItem
+                                key={notification.id}
+                                notification={notification}
+                                onClick={() => handleMarkAsRead(notification.id)}
+                            />
                         ))}
                     </List>
 

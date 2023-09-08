@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "fonts";
-
 :root {
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
@@ -24,7 +22,6 @@ body {
     font-size: 14px;
     line-height: 22px;
     font-weight: 300;
-    font-family: E ukraine, sans-serif;
     padding: 0 !important;
     padding-right: 0!important;
      overflow: visible!important;
@@ -40,7 +37,7 @@ body {
         color: var(--secondary);
     }
     .MuiTypography-root{
-        font-family: E ukraine, sans-serif;
+        font-family: inherit;
     }
     .text-gradient {
         -webkit-text-fill-color: transparent;

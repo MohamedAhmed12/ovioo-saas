@@ -1,11 +1,5 @@
 "use client";
 
-import "@/styles/components/home/carousel.scss";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/pagination";
-
-import "@/styles/app/unauth/pricing.scss";
 import Check from "@mui/icons-material/Check";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import Button from "@mui/joy/Button";
@@ -40,8 +34,7 @@ export default function PlansCard({
             size="lg"
             variant={bgColor ? "solid" : "outlined"}
             key={tag}
-            color={bgColor ? "neutral": ""}
-            invertedColors={bgColor? true: false}
+            invertedColors={bgColor ? true : false}
             sx={{ bgcolor: bgColor }}
         >
             <div className="title flex flex-row justify-start">
@@ -77,7 +70,11 @@ export default function PlansCard({
                         </JoyTypography>
                     }
                     endDecorator={
-                        <JoyTypography fontSize="md" textColor="text.secondary" sx={{marginTop: 2}}>
+                        <JoyTypography
+                            fontSize="md"
+                            textColor="text.secondary"
+                            sx={{ marginTop: 2 }}
+                        >
                             / day
                         </JoyTypography>
                     }
@@ -87,10 +84,7 @@ export default function PlansCard({
                 </JoyTypography>
             </div>
             <Divider inset="none" />
-            <List
-                size="sm"
-                sx={{ mx: "calc(-1 * var(--ListItem-paddingX))", fontSize: 19 }}
-            >
+            <List size="sm" sx={{ mx: "calc(-1 * var(--ListItem-paddingX))", fontSize: 19 }}>
                 {includes.map((include: string, index: number) => (
                     <ListItem key={index}>
                         <ListItemDecorator>
@@ -101,14 +95,18 @@ export default function PlansCard({
                 ))}
             </List>
             <Divider inset="none" />
-            <CardActions>
+            <CardActions style={{padding: 0}}>
                 <JoyTypography level="title-lg" sx={{ mr: "auto" }}>
                     {monthlyFees}
-                    <JoyTypography fontSize="sm" textColor="text.tertiary">
+                    <JoyTypography fontSize="sm" textColor="text.tertiary" style={{marginLeft: 4}}>
                         / month
                     </JoyTypography>
                 </JoyTypography>
-                <Button variant="soft" color={bgColor ? "":"neutral"} endDecorator={<KeyboardArrowRight />}>
+                <Button
+                    variant="soft"
+                    endDecorator={<KeyboardArrowRight />}
+                    className={bgColor ? "text-white" : "text-neutral-700"}
+                >
                     Start now
                 </Button>
             </CardActions>
