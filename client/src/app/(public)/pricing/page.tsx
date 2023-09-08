@@ -77,10 +77,10 @@ export default function Pricing() {
         <div className="pricing w-full">
             <div className="intro flex flex-col mt-36 mb-20">
                 <div className="container title text-center">
-                    <Typography variant="h3" className="uppercase font-bold">
+                    <Typography variant="h3" className="uppercase">
                         Memberships levels
                     </Typography>
-                    <Typography variant="h5" className="mt-4">
+                    <Typography variant="h5">
                         Choose a plan <span className="text-gradient">that's right for you.</span>
                     </Typography>
                 </div>

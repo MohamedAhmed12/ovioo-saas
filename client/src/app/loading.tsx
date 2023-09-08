@@ -1,4 +1,7 @@
-export default function Loading({ ...props }: { props: any }) {
-    // Or a custom loading skeleton component
+interface Props {
+    className: string;
+}
+
+export default function Loading<Props>({ ...props }) {
     return <p {...props}>Loading...</p>;
 }

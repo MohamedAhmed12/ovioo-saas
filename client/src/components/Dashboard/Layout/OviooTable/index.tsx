@@ -11,7 +11,6 @@ import { useState } from "react";
 export default function OviooTable({
     headers,
     rows,
-    ...props
 }: {
     headers: string[];
     rows: {
@@ -19,7 +18,6 @@ export default function OviooTable({
         unitCost: number;
         quantity: number;
     }[];
-    props: any;
 }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
