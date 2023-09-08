@@ -16,22 +16,18 @@ export default function DashBoardCard({
   return (
     <Card component="main" className="bg-white mt10 mb-10">
       {headerTitle && (
-        <CardHeader className="bg-slate-200 w-full capitalize font-semibold" title={headerTitle}/>
+        <CardHeader
+          className="bg-slate-200 w-full capitalize font-semibold"
+          title={headerTitle}
+        />
       )}
-      <Box className="box pr-7 pl-7 pt-7 pb-7 bg-secondary">
-        <Box
-          className="box pr-7 pl-7 pt-7 pb-7 bg-secondary flex flex-col"
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          {children}
-        </Box>
-        <div className="flex w-full justify-end mt-6">
-          <Button type="submit" className="bg-black hover:bg-white ">
-            Sign In
-          </Button>
-        </div>
+      <Box
+        className="box pr-7 pl-7 pt-7 pb-7 bg-secondary flex flex-col"
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+      >
+        {children}
       </Box>
     </Card>
   );
