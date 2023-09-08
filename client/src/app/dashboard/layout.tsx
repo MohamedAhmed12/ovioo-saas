@@ -1,9 +1,12 @@
 "use client";
+
+import DashboardHeader from "@/components/Dashboard/Layout/Header/index";
 import { useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
 import { useEffect, useState } from "react";
-import DashboardHeader from "@/components/Dashboard/Layout/Header/index";
-import Navbar from "../../components/Dashboard/Layout/Navbar";
+import Navbar from "@/components/Dashboard/Layout/Navbar/index";
+
+const drawerWidth = 240;
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -22,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between dashboard-main-layout mt-36 mb-36">
+        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-32 pl-80 pr-8 bg-slate-50 dark:bg-slate-800">
             <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
             <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
             {children}

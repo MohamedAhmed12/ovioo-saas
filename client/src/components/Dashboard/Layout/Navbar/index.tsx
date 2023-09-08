@@ -1,13 +1,10 @@
-import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import {
-    Box,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText
-} from "@mui/material";
 import "@/styles/components/dashboard/layout/navbar.scss";
-import Image from 'next/image';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import TaskIcon from "@mui/icons-material/Task";
+import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import NavbarWrapper from "./NavbarWrapper";
@@ -15,23 +12,23 @@ import NavbarWrapper from "./NavbarWrapper";
 const navConfig = [
     {
         title: "Tasks",
-        path: "/dashboard/task",
-        icon: <ProductionQuantityLimitsIcon />,
+        url: "/dashboard/task",
+        icon: <TaskIcon />,
     },
     {
         title: "My assets",
-        path: "/dashboard/assets",
+        url: "/dashboard/assets",
         icon: <ProductionQuantityLimitsIcon />,
     },
     {
         title: "projects",
-        path: "/dashboard/project",
+        url: "/dashboard/project",
         icon: <ProductionQuantityLimitsIcon />,
     },
     {
         title: "Credit",
-        path: "/dashboard/payment",
-        icon: <ProductionQuantityLimitsIcon />,
+        url: "/dashboard/payment",
+        icon: <AttachMoneyIcon />,
     },
 ];
 
@@ -45,21 +42,23 @@ export default function Navbar({
     const renderContent = (
         <SimpleBar className="h-full bg-inherit dark:text-white ">
             <Box className="flex max-h-[100px] px-5 py-6">
-                <Image src="/svg/logo.svg" className="hamburger-icon slef-center" width="280" height="66" alt="logo"/>
+                <Image
+                    src="/svg/logo.svg"
+                    className="hamburger-icon slef-center"
+                    width="280"
+                    height="66"
+                    alt="logo"
+                />
             </Box>
             <Box>
                 <List disablePadding className=" dark:text-white">
-                    {navConfig.map(({ title, path, icon }) => (
-                        <ListItemButton
-                            disableGutters
-                            key={title}
-                            component="a"
-                            className="navItem text-inherit"
-                        >
-                            <ListItemIcon>{icon && icon}</ListItemIcon>
-
-                            <ListItemText disableTypography primary={title} />
-                        </ListItemButton>
+                    {navConfig.map(({ title, url, icon }) => (
+                        <Link href={url} key={title}>
+                            <ListItemButton disableGutters className="navItem text-inherit">
+                                <ListItemIcon>{icon && icon}</ListItemIcon>
+                                <ListItemText disableTypography primary={title} />
+                            </ListItemButton>
+                        </Link>
                     ))}
                 </List>
             </Box>

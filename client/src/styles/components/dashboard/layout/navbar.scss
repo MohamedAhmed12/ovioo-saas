@@ -1,3 +1,11 @@
+.navbar .MuiDrawer-root {
+    display:flex;
+    width: 280px;
+    flex-shrink: 0!important;
+    .MuiDrawer-paper {
+        box-sizing: border-box;
+    }
+}
 .navbar .MuiDrawer-root,
 .swipeable-drawer {
     .MuiPaper-root {
@@ -13,6 +21,9 @@
                         position: relative;
                         text-transform: capitalize;
                         border-radius: 6px;
+                        .dark & {
+                            color: var(--dark-dashboard-icon-color);
+                        }
                         .MuiListItemIcon-root {
                             width: 22px;
                             height: 22px;
@@ -20,6 +31,9 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
+                        }
+                        .MuiListItemText-root {
+                            color: inherit;
                         }
                         &.active {
                             background-color: rgba(159, 166, 173, 0.4);

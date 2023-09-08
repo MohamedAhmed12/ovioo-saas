@@ -1,0 +1,38 @@
+.ovioo-table {
+    max-width: 950px;
+    width: 100%;
+    margin: 35px 0;
+    border-radius: 10px;
+    .MuiTableContainer-root {
+        border-radius: 10px;
+        box-shadow: none;
+        .MuiTable-root {
+            th,
+            td {
+                font-family: inherit;
+            }
+            .MuiTableBody-root {
+                font-family: inherit;
+            }
+            .MuiTableRow-root {
+                .MuiTableCell-root {
+                    width: 160px;
+                }
+                .download-btn {
+                    font-family: inherit;
+                    --tw-bg-opacity: 1;
+                    background-color: rgb(30 64 175 / var(--tw-bg-opacity));
+                    &:hover {
+                        background-color: rgb(30 64 175 / 0.75);
+                    }
+                }
+            }
+        }
+    }
+}
+.MuiTablePagination-root {
+    font-family: inherit;
+    p {
+        font-family: inherit;
+    }
+}

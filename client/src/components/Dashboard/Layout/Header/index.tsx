@@ -21,7 +21,7 @@ export default function DashboardHeader({
     const dispatch = useAppDispatch();
 
     return (
-        <AppBar className="dashboard__header dark:dark-mode">
+        <AppBar className="dashboard__header dark:dark-mode" position="absolute">
             <Toolbar>
                 {!openNav && (
                     <IconButton
