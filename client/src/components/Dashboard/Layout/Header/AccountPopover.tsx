@@ -9,9 +9,23 @@ import {
     Typography,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import Link from "next/link";
 import { MouseEvent, useState } from "react";
 
-const MENU_OPTIONS = ["Profile", "Company", "Team"];
+const MENU_OPTIONS = [
+    {
+        title: "Profile",
+        url: "/dashboard/profile",
+    },
+    {
+        title: "Company",
+        url: "/dashboard/company",
+    },
+    {
+        title: "Team",
+        url: "/dashboard/team",
+    },
+];
 
 export default function AccountPopover() {
     const [open, setOpen] = useState<HTMLElement | null>(null);
@@ -79,10 +93,10 @@ export default function AccountPopover() {
                 <Divider sx={{ borderStyle: "dashed" }} />
 
                 <Stack sx={{ p: 1 }}>
-                    {MENU_OPTIONS.map((option) => (
-                        <MenuItem key={option} onClick={() => handleToggle(null)}>
-                            {option}
-                        </MenuItem>
+                    {MENU_OPTIONS.map(({ url, title }) => (
+                        <Link href={url} key={title} onClick={() => handleToggle(null)}>
+                            <MenuItem>{title}</MenuItem>
+                        </Link>
                     ))}
                 </Stack>
 

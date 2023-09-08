@@ -14,7 +14,7 @@ export default function NavbarWrapper({
 }) {
     return (
         <div className="navbar bg-transparent">
-            <Drawer open variant="permanent" className="hidden lg:flex">
+            <Drawer open variant="permanent" anchor="left" className="hidden lg:flex">
                 {content}
             </Drawer>
 

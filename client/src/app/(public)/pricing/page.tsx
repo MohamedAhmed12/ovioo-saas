@@ -37,7 +37,7 @@ export default function Pricing() {
             tag: "basic",
             title: "pro",
             dailyFees: 35,
-            monthlyFees: 668,
+            monthlyFees: 1485,
             fullTime: false,
             includes: [
                 "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
@@ -51,7 +51,7 @@ export default function Pricing() {
             tag: "basic",
             title: "1 to 1",
             dailyFees: 35,
-            monthlyFees: 668,
+            monthlyFees: 3580,
             fullTime: false,
             includes: [
                 "Lorem ipsum dolor sit amet consectetur adipisicing elit.",

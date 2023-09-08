@@ -11,7 +11,7 @@ import {
     Typography
 } from "@mui/material";
 
-export default function NotificationItem({ notification }: { notification: NotificationInterface }) {
+export default function NotificationItem({ notification, ...props }: { notification: NotificationInterface,props: any }) {
     const title = (
         <Typography variant="subtitle2">
             {notification.title}
@@ -23,14 +23,15 @@ export default function NotificationItem({ notification }: { notification: Notif
 
     return (
         <ListItemButton
-            sx={{
-                py: 1.5,
-                px: 2.5,
-                mt: "1px",
-                ...(notification.isUnRead && {
-                    bgcolor: "action.selected",
-                }),
-            }}
+        sx={{
+            py: 1.5,
+            px: 2.5,
+            mt: "1px",
+            ...(notification.isUnRead && {
+                bgcolor: "action.selected",
+            }),
+        }}
+        {...props}
         >
             <ListItemAvatar>
                 <Avatar sx={{ bgcolor: "background.neutral" }}>
