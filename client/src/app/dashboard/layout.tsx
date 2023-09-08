@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-32 pl-80 pr-8 bg-slate-50 dark:bg-slate-800">
+        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-32 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
             <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
             <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
             {children}
