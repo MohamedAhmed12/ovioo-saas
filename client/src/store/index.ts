@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import mainReducer from "./features/main";
+import boardReducer from "./features/board";
 
 export const store = configureStore({
     reducer: {
-        mainReducer
+        mainReducer,
+        boardReducer
     }
 });
 

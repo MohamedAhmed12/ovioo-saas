@@ -16,6 +16,7 @@
     --dashboard-dark-border: rgba(100, 116, 139, 0.5);
     --dashboard-bg-primary: rgb(32 33 44 / var(--tw-bg-opacity));
     --dashboard-bg-secondary: rgb(43 44 55 / var(--tw-bg-opacity));
+    --dashboard-primary: #1976d2;
 }
 
 body {
@@ -57,7 +58,6 @@ body {
         --tw-text-opacity: 1;
         --tw-bg-opacity: 1;
         border-radius: 0.5rem;
-        color: rgb(99 95 199 / var(--tw-text-opacity));
         background-color: rgb(255 255 255 / var(--tw-bg-opacity));
         .dark & {
             color: rgb(255 255 255 / var(--tw-text-opacity));
