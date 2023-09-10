@@ -22,7 +22,7 @@
                         text-transform: capitalize;
                         border-radius: 6px;
                         .dark & {
-                            color: var(--dark-dashboard-icon-color);
+                            color: var(--dashboard-dark-icon-color);
                         }
                         .MuiListItemIcon-root {
                             width: 22px;
@@ -51,11 +51,11 @@
         .simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
             background: var(--dashboard-icon-color);
             .dark & {
-                background: var(--dark-dashboard-icon-color);
+                background: var(--dashboard-dark-icon-color);
             }
         }
         .dark & {
-            border-right: 1px solid var(--dark-dashboard-border);
+            border-right: 1px solid var(--dashboard-dark-border);
         }
     }
 }

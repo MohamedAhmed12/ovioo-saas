@@ -7,13 +7,15 @@
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
     --secondary: #fae8bc;
-    --dashboard-icon-color:var(
+    --dashboard-icon-color: var(
         --joy-palette-neutral-plainColor,
         var(--joy-palette-neutral-700, #32383e)
     );
-    --dark-dashboard-icon-color: rgb(203 213 225);
     --dashboard-border: rgba(0, 0, 0, 0.08);
-    --dark-dashboard-border: rgba(100, 116, 139, 0.5);
+    --dashboard-dark-icon-color: rgb(203 213 225);
+    --dashboard-dark-border: rgba(100, 116, 139, 0.5);
+    --dashboard-bg-primary: rgb(32 33 44 / var(--tw-bg-opacity));
+    --dashboard-bg-secondary: rgb(43 44 55 / var(--tw-bg-opacity));
 }
 
 body {
@@ -23,8 +25,8 @@ body {
     line-height: 22px;
     font-weight: 300;
     padding: 0 !important;
-    padding-right: 0!important;
-     overflow: visible!important;
+    padding-right: 0 !important;
+    overflow: visible !important;
     .section {
         flex-direction: column;
         align-items: center;
@@ -36,7 +38,7 @@ body {
     .text-secondary {
         color: var(--secondary);
     }
-    .MuiTypography-root{
+    .MuiTypography-root {
         font-family: inherit;
     }
     .text-gradient {
@@ -50,5 +52,33 @@ body {
         );
         -webkit-background-clip: text;
         background-clip: text;
+    }
+    .ovioo-card {
+        --tw-text-opacity: 1;
+        --tw-bg-opacity: 1;
+        border-radius: 0.5rem;
+        color: rgb(99 95 199 / var(--tw-text-opacity));
+        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+        .dark & {
+            color: rgb(255 255 255 / var(--tw-text-opacity));
+            background-color: rgb(43 44 55 / var(--tw-bg-opacity));
+        }
+        &.with-shadow {
+            --tw-shadow-color: #364e7e1a;
+            --tw-shadow: var(--tw-shadow-colored);
+            --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+                0 4px 6px -4px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+                var(--tw-shadow);
+            .dark & {
+                --tw-shadow-color: #364e7e1a;
+                --tw-shadow: var(--tw-shadow-colored);
+                --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+                    0 4px 6px -4px var(--tw-shadow-color);
+                box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+                    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+            }
+        }
     }
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import "@/styles/components/dashboard/layout/ovioo-table.scss";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import DownloadIcon from "@mui/icons-material/Download";
+import { IconButton } from "@mui/joy";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -39,9 +42,9 @@ export default function OviooTable({
     };
 
     return (
-        <Paper className="ovioo-table flex flex-col dark:shadow-md dark:shadow-slate-300">
+        <Paper className="ovioo-table flex flex-col">
             <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+                <Table aria-label="simple table" className="ovioo-card with-shadow bg-white">
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
@@ -56,8 +59,8 @@ export default function OviooTable({
                         {(rowsPerPage > 0
                             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rows
-                        ).map((row) => (
-                            <TableRow key={row.plan}>
+                        ).map((row, i) => (
+                            <TableRow key={i}>
                                 <TableCell>{row.plan}</TableCell>
                                 <TableCell>{row.unitCost}</TableCell>
                                 <TableCell>{row.quantity}</TableCell>
@@ -84,13 +87,37 @@ export default function OviooTable({
             </TableContainer>
 
             <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                className="ovioo-card with-shadow bg-white"
+                rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                SelectProps={{
+                    IconComponent: () => (
+                        <ArrowDropDownIcon onChange={() => handleChangeRowsPerPage} />
+                    ),
+                }}
                 page={page}
                 onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => (
+                    <div className="flex">
+                        <IconButton
+                            onClick={() => onPageChange(null, page - 1)}
+                            disabled={page === 0}
+                            aria-label="Previous Page"
+                        >
+                            <KeyboardArrowLeft className="dark:text-white" />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => onPageChange(null, page + 1)}
+                            disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                            aria-label="Next Page"
+                        >
+                            <KeyboardArrowRight className="dark:text-white" />
+                        </IconButton>
+                    </div>
+                )}
             />
         </Paper>
     );
