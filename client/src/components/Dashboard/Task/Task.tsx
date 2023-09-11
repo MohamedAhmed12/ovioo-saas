@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/hooks/redux";
 import { ColumnInterface, SubTaskInterface, TaskInterface } from "@/interfaces";
-import { useState } from "react";
+import { useState, DragEvent } from "react";
 import TaskModal from "./TaskModal";
 
 export default function Task({ colIndex, taskIndex }: { colIndex: number; taskIndex: number }) {
@@ -22,7 +22,7 @@ export default function Task({ colIndex, taskIndex }: { colIndex: number; taskIn
         });
     }
 
-    const handleOnDrag = (e) => {
+    const handleOnDrag = (e: DragEvent<HTMLDivElement>) => {
         e.dataTransfer.setData("text", JSON.stringify({ taskIndex, prevColIndex: colIndex }));
     };
 
