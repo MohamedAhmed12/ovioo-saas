@@ -81,4 +81,53 @@ body {
             }
         }
     }
+    .dashboard-input {
+        .MuiInputBase-root {
+            input {
+                & ~ fieldset {
+                    border-color: #7b91a7;
+                }
+                &:invalid ~ fieldset {
+                    border-color: "red";
+                    border-width: 1;
+                }
+                &:valid:focus ~ fieldset {
+                    border-color: var(--dashboard-primary);
+                    border-left-width: 4;
+                    padding: "4px !important";
+                }
+                .dark & {
+                    color: #fff;
+                }
+            }
+            .MuiInputAdornment-root {
+                button {
+                    .dark & {
+                        color: #fff;
+                    }
+                    &.Mui-focused {
+                        color: var(--dashboard-primary) !important;
+                    }
+                }
+            }
+            &:hover {
+                & > fieldset {
+                    border-color: #7b91a7;
+                }
+            }
+            &.Mui-focused:hover {
+                & > fieldset {
+                    border-color: var(--dashboard-primary);
+                }
+            }
+        }
+        label {
+            .dark & {
+                color: #7b91a7;
+            }
+            &.Mui-focused {
+                color: var(--dashboard-primary);
+            }
+        }
+    }
 }

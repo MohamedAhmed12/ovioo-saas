@@ -104,8 +104,7 @@ export default function TaskModal({
     const validate = () => {
         setIsValid(false);
 
-        console.log(2);
-        if (!title.trim()) {
+        if (!title?.trim()) {
             return false;
         }
 
