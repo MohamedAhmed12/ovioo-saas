@@ -23,50 +23,43 @@ const steps = [
         img: 'https://picsum.photos/id/12/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/67/1000/1000',
         alt: 'Camera',
-        rows: 1,
-        cols: 1,
+        rows: 2,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/96/1000/1000',
         alt: 'Coffee',
-        rows: 1,
-        cols: 1,
-      },
-      {
-        img: 'https://picsum.photos/id/66/1000/1000',
-        alt: 'Breakfast',
-        rows: 1,
-        cols: 1,
-      },
-      {
-        img: 'https://picsum.photos/id/76/1000/1000',
-        alt: 'Honey',
-        author: '@arwinneil',
-        rows: 1,
-        cols: 1,
-      },
-      {
-        img: 'https://picsum.photos/id/66/1000/1000',
-        alt: 'Breakfast',
         rows: 2,
-        cols: 1,
+        cols: 2,
+      },
+      {
+        img: 'https://picsum.photos/id/66/1000/1000',
+        alt: 'Breakfast',
+        rows: 1,
+        cols: 2,
+      },
+      {
+        img: 'https://picsum.photos/id/66/1000/1000',
+        alt: 'Breakfast',
+        rows: 1,
+        cols: 4,
       },
       {
         img: 'https://picsum.photos/id/33/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 4,
       },
       {
         img: 'https://picsum.photos/id/22/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
     ],
   },
@@ -77,56 +70,50 @@ const steps = [
         img: 'https://picsum.photos/id/736/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 2,
+        cols: 4,
       },
       {
         img: 'https://picsum.photos/id/67/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/34/1000/1000',
         alt: 'Camera',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/432/1000/1000',
         alt: 'Coffee',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/123/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/53/1000/1000',
         alt: 'Honey',
         author: '@arwinneil',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
         img: 'https://picsum.photos/id/34/1000/1000',
         alt: 'Breakfast',
         rows: 2,
-        cols: 1,
+        cols: 3,
       },
       {
         img: 'https://picsum.photos/id/158/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
-      },
-      {
-        img: 'https://picsum.photos/id/111/1000/1000',
-        alt: 'Breakfast',
-        rows: 1,
-        cols: 1,
+        cols: 3,
       },
     ],
   },
@@ -143,50 +130,50 @@ const steps = [
         img: 'https://picsum.photos/id/12/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/67/1000/1000',
         alt: 'Camera',
-        rows: 1,
-        cols: 1,
+        rows: 2,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/96/1000/1000',
         alt: 'Coffee',
-        rows: 1,
-        cols: 1,
+        rows: 2,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/66/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/76/1000/1000',
         alt: 'Honey',
         author: '@arwinneil',
         rows: 1,
-        cols: 1,
+        cols: 4,
       },
       {
         img: 'https://picsum.photos/id/66/1000/1000',
         alt: 'Breakfast',
-        rows: 2,
-        cols: 1,
+        rows: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/33/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/22/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
     ],
   },
@@ -203,50 +190,56 @@ const steps = [
         img: 'https://picsum.photos/id/43/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/1000/347/1000',
         alt: 'Camera',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/444/1000/1000',
         alt: 'Coffee',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
-        img: 'https://picsum.photos/id/5476/1000/1000',
+        img: 'https://picsum.photos/id/547/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
         img: 'https://picsum.photos/id/22/1000/1000',
         alt: 'Honey',
         author: '@arwinneil',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
-        img: 'https://picsum.photos/id/73/1000/1000',
+        img: 'https://picsum.photos/id/78/1000/1000',
         alt: 'Breakfast',
         rows: 2,
-        cols: 1,
+        cols: 3,
       },
       {
         img: 'https://picsum.photos/id/83/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
-        img: 'https://picsum.photos/id/93/1000/1000',
+        img: 'https://picsum.photos/id/95/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 4,
+      },
+      {
+        img: 'https://picsum.photos/id/123/1000/1000',
+        alt: 'Breakfast',
+        rows: 1,
+        cols: 2,
       },
     ],
   },
@@ -256,57 +249,57 @@ const steps = [
       {
         img: 'https://picsum.photos/id/10/1000/1000',
         alt: 'Breakfast',
-        rows: 1,
+        rows: 2,
         cols: 2,
       },
       {
         img: 'https://picsum.photos/id/11/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/30/1000/1000',
         alt: 'Camera',
-        rows: 1,
-        cols: 1,
+        rows: 2,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/50/1000/1000',
         alt: 'Coffee',
-        rows: 1,
-        cols: 1,
+        rows: 2,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/46/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/43/1000/1000',
         alt: 'Honey',
         author: '@arwinneil',
         rows: 1,
-        cols: 1,
+        cols: 2,
       },
       {
         img: 'https://picsum.photos/id/3/1000/1000',
         alt: 'Breakfast',
         rows: 2,
-        cols: 1,
+        cols: 3,
       },
       {
         img: 'https://picsum.photos/id/39/1000/1000',
         alt: 'Burger',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
       {
-        img: 'https://picsum.photos/id/97/1000/1000',
+        img: 'https://picsum.photos/id/185/1000/1000',
         alt: 'Breakfast',
         rows: 1,
-        cols: 1,
+        cols: 3,
       },
     ],
   },
@@ -322,7 +315,7 @@ export default function Portfolio() {
   return (
     <>
       <div className="portfolio container flex flex-col pr-5 pl-5 mt-40 mb-40">
-        <h2 className="mb-10 text-3xl text-center">What You Get With Ovioo</h2>
+        <h2 className="mb-10 text-3xl text-center">Ovioo <strong>projects</strong></h2>
         <Tabs aria-label="Basic tabs" defaultValue={0}>
           <TabList className=" w-full justify-center flex flex-col lg:flex-row">
             {steps.map(({ title }, i) => (
@@ -334,9 +327,8 @@ export default function Portfolio() {
             <TabPanel key={i + '-tab-panel'} value={i}>
               <ImageList
                 className="w-full px-5 "
-                sx={{ gridAutoColumns: 1 }}
                 variant="quilted"
-                cols={4}
+                cols={6}
                 gap={60}
               >
                 {images.map(
@@ -358,7 +350,7 @@ export default function Portfolio() {
                       <Image
                         className="img w-full h-full"
                         src={`${img}?w=${90 * cols}&h=${
-                          90 * rows
+                          270 * rows
                         }&fit=crop&auto=format`}
                         alt={alt}
                         loading="lazy"

@@ -22,6 +22,14 @@
     }
     .MuiTabPanel-root {
       .MuiImageList-root {
+        grid-column-gap:60px;
+        grid-row-gap:60px;
+        max-width:1200px;
+        grid-template-rows:360px 360px 360px 360px 360px 360px 360px 360px;
+        grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-auto-rows:minmax(200px,360fr);
+        grid-auto-columns:1fr;
+        grid-auto-flow:dense;
         .MuiImageListItem-root {
           img {
             width: 100%;
