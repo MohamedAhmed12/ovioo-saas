@@ -9,26 +9,27 @@ const cardNumbers = 1234;
 
 export default function SubscriptionCard() {
     return (
-        <Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '10px'}} className="ovioo-card with-shadow" >
+        <Card
+            sx={{ minWidth: 275, maxWidth: 500, borderRadius: "10px" }}
+            className="ovioo-card with-shadow"
+        >
             <CardContent>
                 <span className="flex justify-between">
-                    <Typography variant="h5" component="div" style={{marginBottom: 32}}>
+                    <Typography variant="h5" component="div" style={{ marginBottom: 32 }}>
                         Current Plan <span className="capitalize text-slate-400">(pro)</span>
                     </Typography>
                     <Link
                         href="/dashboard/plan"
-                        className="text-lg font-semibold hover:bg-transparent text-slate-400 capitalize p-0"
+                        className="text-lg font-semibold text-slate-400 capitalize p-0"
                     >
                         change plan
                     </Link>
                 </span>
-                <Typography  style={{marginBottom: 4}}>
-                    card number
-                </Typography>
+                <Typography style={{ marginBottom: 4 }}>card number</Typography>
                 <Typography variant="body2">**** **** **** {cardNumbers}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" className="hover:bg-transparent" style={{ fontWeight: 700, color: 'white'}}>
+                <Button size="small" className="hover:bg-transparent dashboard__link" style={{ fontWeight: 700 }}>
                     Replace credit card
                 </Button>
             </CardActions>

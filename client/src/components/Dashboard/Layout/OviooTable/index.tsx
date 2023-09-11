@@ -69,7 +69,7 @@ export default function OviooTable({
                                     <Button
                                         variant="contained"
                                         type="submit"
-                                        className="download-btn"
+                                        className="dashboard__link bg-transparent shadow-none hover:bg-transparent hover:shadow-none font-semibold"
                                     >
                                         <DownloadIcon />
                                         Download
