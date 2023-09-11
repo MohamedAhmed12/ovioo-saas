@@ -295,13 +295,12 @@ export const boardSlice = createSlice({
             state.columns = action.payload.newColumns;
         },
         addTask: (state, action) => {
-
             const { title = "", status = "", description = "", subtasks = "", colIndex = 0 } =
                 action.payload;
             const task: TaskInterface = { title, description, subtasks, status };
             const column = state.columns.find((col: ColumnInterface, index: number) => index === colIndex);
-            console.log(column);
-            if (column && task) (column.tasks as WritableDraft<TaskInterface>[]).push(task);
+
+            if (column && task) column.tasks = { ...column.tasks, ...task }
         },
         editTask: (state, action) => {
             const {
@@ -330,7 +329,7 @@ export const boardSlice = createSlice({
 
             column.tasks = column.tasks.filter((task: TaskInterface, index) => index !== taskIndex);
             const newCol = state.columns.find((col: ColumnInterface, index: number) => index === newColIndex);
-            newCol && newCol.tasks.push(task);
+            newCol && (newCol.tasks = { ...newCol.tasks, ...task });
         },
         dragTask: (state, action) => {
             const { colIndex, prevColIndex, taskIndex } = action.payload;
@@ -341,14 +340,14 @@ export const boardSlice = createSlice({
             const [task]: TaskInterface[] | never = prevCol.tasks.splice(taskIndex, 1);
             const newCol: ColumnInterface | undefined = state.columns.find((col: ColumnInterface, i) => i === colIndex);
             if (newCol && task !== undefined) {
-                newCol.tasks.push(task);
+                newCol.tasks = { ...newCol.tasks, ...task };
             }
         },
         setSubtaskCompleted: (state, action) => {
             const payload = action.payload;
             const col = state.columns.find((col: ColumnInterface, i) => i === payload.colIndex);
             const task = col && col.tasks.find((task: TaskInterface, i) => i === payload.taskIndex);
-            const subtask = task && task.subtasks.find((subtask, i) => i === payload.index);
+            const subtask = (task && task.subtasks) && task.subtasks.find((subtask, i) => i === payload.index);
 
             if (subtask) subtask.isCompleted = !subtask.isCompleted;
         },
@@ -367,7 +366,7 @@ export const boardSlice = createSlice({
             task.status = payload.status;
             col.tasks = col.tasks.filter((task: TaskInterface, i) => i !== payload.taskIndex);
             const newCol = columns.find((col: ColumnInterface, i) => i === payload.newColIndex);
-            newCol && newCol.tasks.push(task);
+            newCol && (newCol.tasks = { ...newCol.tasks, ...task });
         },
         deleteTask: (state, action) => {
             const payload = action.payload;
