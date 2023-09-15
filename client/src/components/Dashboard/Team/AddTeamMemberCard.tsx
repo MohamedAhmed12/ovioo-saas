@@ -1,75 +1,125 @@
-'use client';
+"use client";
 
-import DashBoardCard from '@/components/DashBoardCard';
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import { FormEvent } from 'react';
+import DashBoardCard from "@/components/DashBoardCard";
+import { RoleEnum, User as UserInterface } from "@/interfaces";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import { MouseEvent, useEffect, useState } from "react";
 
 export default function AddTeamMemberCard({
-  handleSubmit,
-  headerTitle,
+    handleSubmit,
+    headerTitle,
 }: {
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  headerTitle: string;
+    handleSubmit: (event: UserInterface) => void;
+    headerTitle: string;
 }) {
-  return (
-    <DashBoardCard handleSubmit={handleSubmit} headerTitle={headerTitle}>
-      <>
-        <div className="flex flex-row">
-          <div className="w-full flex flex-col">
-            <Stack sx={{ width: '100%' }} spacing={2}>
-              <Alert severity="warning">
-                The new teammate was added! The invitation has been sent to
-                mazenA7med2000@gmail.com
-              </Alert>
-              <Alert severity="info">
-                Users will be able to manage tasks and receive notifications.
-                Only you can add and delete your team users.
-              </Alert>
-            </Stack>
-            <TextField
-              className="dashboard-input"
-              margin="normal"
-              required
-              fullWidth
-              name="email"
-              label="Email Address"
-              type="email"
-              id="email"
-            />
-            <TextField
-              className="dashboard-input"
-              margin="normal"
-              required
-              fullWidth
-              id="first-name"
-              label="first name"
-              name="firstname"
-              autoFocus
-            />
-            <TextField
-              className="dashboard-input"
-              margin="normal"
-              required
-              fullWidth
-              id="last-name"
-              label="last name"
-              name="lastname"
-              autoFocus
-            />
-          </div>
-        </div>
-        <div className="flex w-full justify-end mt-6">
-          <Button
-            type="submit"
-            className="bg-[--dashboard-primary] text-white "
-          >
-            add user
-          </Button>
-        </div>
-      </>
-    </DashBoardCard>
-  );
+    const [showInfo, setShowInfo] = useState<boolean>(false);
+    const [newMember, setNewMember] = useState<UserInterface>({
+        email: "",
+        firstname: "",
+        lastname: "",
+        role: RoleEnum.MEMBER,
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setNewMember({ ...newMember, [name]: value });
+    };
+
+    const onSubmit = (e: MouseEvent<HTMLElement>) => {
+        handleSubmit(newMember);
+
+        setShowInfo(true);
+        setNewMember({
+            email: "",
+            firstname: "",
+            lastname: "",
+            role: RoleEnum.MEMBER,
+        });
+    };
+
+    useEffect(() => console.log("red"), []);
+
+    return (
+        <DashBoardCard headerTitle={headerTitle}>
+            <>
+                <div className="flex flex-row">
+                    <div className="w-full flex flex-col">
+                        <Stack sx={{ width: "100%" }} spacing={2} className="mb-7">
+                            {showInfo && (
+                                <Alert
+                                    severity="success"
+                                    style={{
+                                        fontWeight: 600,
+                                        padding: "11px 20px",
+                                        lineHeight: "1.5rem",
+                                        marginBottom: 3,
+                                    }}
+                                    className="items-center rounded-md"
+                                >
+                                    The new teammate was added! The invitation has been sent to
+                                    {newMember.email}
+                                </Alert>
+                            )}
+                            <Alert
+                                severity="info"
+                                style={{
+                                    fontWeight: 600,
+                                    padding: "11px 20px",
+                                    lineHeight: "1.5rem",
+                                }}
+                                className="items-center rounded-md"
+                            >
+                                Users will be able to manage tasks and receive notifications. Only
+                                you can add and delete your team users.
+                            </Alert>
+                        </Stack>
+                        <TextField
+                            className="dashboard-input"
+                            margin="normal"
+                            required
+                            value={newMember.email}
+                            onChange={handleInputChange}
+                            fullWidth
+                            name="email"
+                            label="Email Address"
+                            type="email"
+                            id="email"
+                        />
+                        <TextField
+                            className="dashboard-input"
+                            margin="normal"
+                            required
+                            value={newMember.firstname}
+                            onChange={handleInputChange}
+                            fullWidth
+                            id="first-name"
+                            label="first name"
+                            name="firstname"
+                            autoFocus
+                        />
+                        <TextField
+                            className="dashboard-input"
+                            margin="normal"
+                            required
+                            value={newMember.lastname}
+                            onChange={handleInputChange}
+                            fullWidth
+                            id="last-name"
+                            label="last name"
+                            name="lastname"
+                            autoFocus
+                        />
+                    </div>
+                </div>
+                <div className="flex w-full justify-end mt-6">
+                    <Button className="bg-[--dashboard-primary] text-white" onClick={onSubmit}>
+                        add member
+                    </Button>
+                </div>
+            </>
+        </DashBoardCard>
+    );
 }

@@ -7,8 +7,6 @@ import { ModeEnum } from "@/interfaces/store/main";
 import "@/styles/app/unauth/dashboard/layout.scss";
 import { useEffect, useState } from "react";
 
-const drawerWidth = 240;
-
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     const mode = useAppSelector((state) => state.mainReducer.mode);
@@ -26,7 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
+        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-64 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
             <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
             <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
             {children}
