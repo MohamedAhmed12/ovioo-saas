@@ -2,6 +2,7 @@ import "@/styles/components/navbar/navbar-mobile.scss";
 
 import { Route as RouteInterface } from "@/interfaces";
 import { AppBar, Toolbar } from "@mui/material";
+import Image from "next/image";
 import { MouseEvent } from "react";
 import HamburgerMenu from "./HamburgerMenu";
 import UserIcon from "./UserIcon";
@@ -42,7 +43,13 @@ export default function MobileNavBar({
                         className="navbar-mobile w-full h-full justify-between items-center pl-12 pr-12 flex"
                         style={{ position: "relative" }}
                     >
-                        <img src="/svg/logo.svg" className="slef-center mobile-logo" />
+                        <Image
+                            src="/svg/logo.svg"
+                            className="slef-center mobile-logo"
+                            width={800}
+                            height={800}
+                            alt="logo"
+                        />
                         {authUser && (
                             <UserIcon
                                 settings={settings}

@@ -7,6 +7,7 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import ListItem from "@mui/joy/ListItem";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Image from "next/image";
 
 export default function PlansHelpCard() {
     return (
@@ -23,7 +24,7 @@ export default function PlansHelpCard() {
                     <ListItem className="flex flex-row text-2xl p-0 pt-4">
                         <span className="basis-4/5">
                             <ListItemDecorator>
-                                <img
+                                <Image
                                     src="/icons/web-flow.png"
                                     alt="webflow icon"
                                     width={25}

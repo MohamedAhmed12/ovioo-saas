@@ -1,5 +1,6 @@
 "use client";
 
+import { ModeEnum } from "@/interfaces";
 import { ReduxProvider } from "@/store/Provider";
 import "@/styles/app/globals.scss";
 import localFont from "next/font/local";
@@ -38,10 +39,13 @@ const myFont = localFont({
     ],
 });
 
+const storedMode =
+    (typeof window !== "undefined" && localStorage?.getItem("mode")) || ModeEnum.Dark;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <ReduxProvider>
-            <html lang="en" className={localStorage.getItem("mode") || "dark"}>
+            <html lang="en" className={storedMode}>
                 <body className={myFont.className}>{children}</body>
             </html>
         </ReduxProvider>

@@ -1,7 +1,7 @@
 import { MainState, ModeEnum } from "@/interfaces/store/main";
 import { createSlice } from '@reduxjs/toolkit';
 
-const storedMode = localStorage.getItem('mode') || ModeEnum.Dark;
+const storedMode = (typeof window !== 'undefined' && localStorage?.getItem('mode')) || ModeEnum.Dark;
 
 const initialState: MainState = {
     mode: storedMode === ModeEnum.Light ? ModeEnum.Light : ModeEnum.Dark
@@ -13,7 +13,7 @@ export const mainSlice = createSlice({
     reducers: {
         toggleMode: (state) => {
             state.mode = state.mode === ModeEnum.Dark ? ModeEnum.Light : ModeEnum.Dark;
-            localStorage.setItem('mode', state.mode);
+            typeof window !== 'undefined' && localStorage.setItem('mode', state.mode);
         }
     }
 });
