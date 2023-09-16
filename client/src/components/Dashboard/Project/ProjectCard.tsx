@@ -28,9 +28,7 @@ export default function ProjectCard({
     };
 
     return (
-        <Card
-            className="project-card ovioo-card px-6"
-        >
+        <Card className="project-card ovioo-card px-6">
             <CardHeader
                 avatar={<p className="text-base dashboard-primary">{project.tasks.length} tasks</p>}
                 action={
@@ -73,17 +71,11 @@ export default function ProjectCard({
                 </MenuItem>
             </Menu>
             <CardContent className="flex flex-col items-center">
-                <Avatar
-                    src="/https://picsum.photos/id/1/1000/1000"
-                    className="mb-5"
-                />
+                <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
                 <h3 className="text-lg">{project.name}</h3>
 
-                <CardActions >
-                    <Button
-                        color="primary"
-                        variant="outlined"
-                    >
+                <CardActions>
+                    <Button color="primary" variant="outlined">
                         <AddIcon className="mr-1 font-bold" fontSize="small" /> new task
                     </Button>
                 </CardActions>
