@@ -121,7 +121,7 @@ export default function Profile() {
                                 </div>
                             </div>
                             <div className="md:mt-0 mt-[20px] flex flex-raw">
-                                <img src="https://res.cloudinary.com/pizdata/image/upload/v1626192951/app/platform/images/i-alert.svg" />
+                                <Image src="https://res.cloudinary.com/pizdata/image/upload/v1626192951/app/platform/images/i-alert.svg" width={800} height={800} alt="img"/>
                                 <span className="ml-1 text-aw-gray-400 text-sm font-light">
                                     Unfortunately, this function is not currently available in
                                     Safari

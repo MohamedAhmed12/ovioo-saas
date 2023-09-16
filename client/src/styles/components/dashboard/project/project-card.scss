@@ -1,0 +1,27 @@
+.project-card {
+    max-height: "max-content";
+    max-width: 100%;
+    margin-right: 20px;
+    margin-left: 20px;
+    overflow: auto;
+    > .MuiCardHeader-root {
+        padding: 16px 0;
+    }
+    .MuiCardContent-root {
+        .MuiAvatar-root {
+            width: 100px;
+            height: 100px;
+        }
+        .MuiCardActions-root {
+            margin-top: 20px;
+            .MuiButtonBase-root,
+            .MuiButtonBase-root:hover {
+                font-size: 17px;
+                font-weight: bold;
+                text-transform: capitalize;
+                letter-spacing: 0.15rem;
+                border-width: 2.5px;
+            }
+        }
+    }
+}
