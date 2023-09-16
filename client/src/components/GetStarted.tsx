@@ -2,13 +2,14 @@
 
 import "@/styles/components/get-started.scss";
 import GetStartedBtns from "./GetStartedBtns";
+import Image from "next/image";
 
 export default function GetStarted() {
     return (
         <div className="section get-started">
             <div className="cta_banner-wrap">
                 <div className="cat_wrapper">
-                    <img
+                    <Image
                         src="svg/cat.svg"
                         loading="lazy"
                         width="295"
