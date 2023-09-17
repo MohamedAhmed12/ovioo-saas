@@ -11,9 +11,12 @@ const drawerWidth = 240;
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const mode = useAppSelector((state) => state.mainReducer.mode);
 
     useEffect(() => {
+        console.log("client side rendered");
+
         const htmlElement: HTMLElement = document.documentElement;
 
         if (htmlElement.classList.contains(ModeEnum.Dark))
@@ -23,13 +26,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             htmlElement.classList.remove(ModeEnum.Light);
 
         htmlElement.classList.add(mode);
+        setLoading(false);
     }, [mode]);
 
     return (
-        <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
-            <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
-            <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
-            {children}
-        </main>
+        !loading && (
+            <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
+                <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
+                <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
+                {children}
+            </main>
+        )
     );
 }

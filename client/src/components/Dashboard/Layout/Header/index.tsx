@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
-import { toggleMode } from "@/store/features/main";
+import { setMode } from "@/store/features/main";
 import "@/styles/components/dashboard/layout/header/index.scss";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -46,7 +46,11 @@ export default function DashboardHeader({
                 >
                     <IconButton
                         className="mode-toggle-btn toolbar-icon"
-                        onClick={() => dispatch(toggleMode())}
+                        onClick={() =>
+                            dispatch(
+                                setMode(mode === ModeEnum.Dark ? ModeEnum.Light : ModeEnum.Dark)
+                            )
+                        }
                     >
                         {mode === ModeEnum.Dark ? <Brightness7Icon /> : <Brightness4Icon />}
                     </IconButton>

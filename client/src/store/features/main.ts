@@ -11,13 +11,15 @@ export const mainSlice = createSlice({
     name: 'main',
     initialState,
     reducers: {
-        toggleMode: (state) => {
-            state.mode = state.mode === ModeEnum.Dark ? ModeEnum.Light : ModeEnum.Dark;
-            typeof window !== 'undefined' && localStorage.setItem('mode', state.mode);
+        setMode: (state, action) => {
+            console.log(action.payload);
+            
+            state.mode = action.payload;
+            typeof window !== 'undefined' && localStorage.setItem('mode', action.payload);
         }
     }
 });
 
-export const { toggleMode } = mainSlice.actions;
+export const { setMode } = mainSlice.actions;
 
 export default mainSlice.reducer;
