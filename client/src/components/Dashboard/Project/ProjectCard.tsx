@@ -28,7 +28,7 @@ export default function ProjectCard({
     };
 
     return (
-        <Card className="project-card ovioo-card px-6">
+        <Card className="project-card ovioo-card px-6 my-5">
             <CardHeader
                 avatar={<p className="text-base dashboard-primary">{project.tasks.length} tasks</p>}
                 action={

@@ -45,7 +45,7 @@ export default function Projects() {
     };
 
     return (
-        <div className="flex justify-start">
+        <div className="flex justify-start flex-wrap">
             {projects.map((project, i) => (
                 <ProjectCard project={project} key={i} />
             ))}

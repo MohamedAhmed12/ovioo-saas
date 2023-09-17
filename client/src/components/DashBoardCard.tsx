@@ -1,16 +1,18 @@
 import Box from "@mui/joy/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import { FormEvent, ReactElement } from "react";
+import { CSSProperties, FormEvent, ReactElement } from "react";
 
 export default function DashBoardCard({
     children,
     handleSubmit,
     headerTitle,
+    style,
 }: {
     children: ReactElement;
     handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
     headerTitle?: string;
+    style?: CSSProperties;
 }) {
     return (
         <Card component="main" className="ovioo-card with-shadow mt10 mb-10">
@@ -25,6 +27,7 @@ export default function DashBoardCard({
                 component="form"
                 onSubmit={handleSubmit}
                 noValidate
+                style={style}
             >
                 {children}
             </Box>

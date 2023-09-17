@@ -10,10 +10,10 @@ export default function AddNewProjectCard({
     handleToggleModal: (e: MouseEvent<HTMLElement> | null) => void;
 }) {
     return (
-        <Card className="ovioo-card min-w-[250px]" onClick={handleToggleModal}>
+        <Card className="ovioo-card min-w-[250px] mx-5 my-5" onClick={handleToggleModal}>
             <Button
                 variant="outlined"
-                className="w-full h-full opacity-50 hover:opacity-90 outline-dashed"
+                className="w-full min-h-[332px] opacity-50 hover:opacity-90 outline-dashed"
                 sx={{ borderRadius: "10px" }}
             >
                 <CardContent className="flex flex-col items-center" style={{ padding: "0px" }}>

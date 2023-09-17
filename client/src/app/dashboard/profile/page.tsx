@@ -101,7 +101,7 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className="flex w-full justify-end mt-6">
-                            <Button type="submit" className="bg-[--dashboard-primary] text-white ">
+                            <Button type="submit" className="dashboard__btn">
                                 Sign In
                             </Button>
                         </div>
