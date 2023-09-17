@@ -40,8 +40,6 @@ const myFont = localFont({
     ],
 });
 
-let storedMode: string;
-
 export default function RootLayout({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
 
@@ -53,14 +51,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <ReduxProvider>
-            {loading ? (
-                <Loading />
-            ) : (
-                <html lang="en" className={storedMode}>
+        window != undefined && (
+            <ReduxProvider>
+                <html lang="en" className={localStorage?.getItem("mode") || ModeEnum.Dark}>
                     <body className={myFont.className}>{children}</body>
                 </html>
-            )}
-        </ReduxProvider>
+            </ReduxProvider>
+        )
     );
 }
