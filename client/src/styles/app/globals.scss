@@ -83,7 +83,8 @@ body {
     }
     .dashboard-input {
         .MuiInputBase-root {
-            input {
+            input,
+            textarea {
                 & ~ fieldset {
                     border-color: #7b91a7;
                 }
