@@ -4,9 +4,9 @@ import Image from "next/image";
 export default function Footer() {
     return (
         <footer className="footer w-full relative">
-                <div className="rocket-wrapper absolute">
-                    <img src="/svg/rocket.svg" alt="rocket" loading="lazy" width="360" height="463" />
-                </div>
+            <div className="rocket-wrapper absolute">
+                <Image src="/svg/rocket.svg" alt="rocket" loading="lazy" width="360" height="463" />
+            </div>
             <div className="wrapper-footer ">
                 <div className="footer-menu flex-col lg:flex-row">
                     <div className="adress">
@@ -152,11 +152,13 @@ export default function Footer() {
                             target="_blank"
                             className="social-logo w-full inline-block"
                         >
-                            <img
+                            <Image
                                 src="/icons/website-icon.svg"
                                 loading="lazy"
-                                alt=""
+                                alt="website"
                                 className="ico-img"
+                                height={80}
+                                width={80}
                             />
                         </a>
                         <a
@@ -165,11 +167,13 @@ export default function Footer() {
                             target="_blank"
                             className="social-logo w-full inline-block"
                         >
-                            <img
+                            <Image
                                 src="/icons/behance-icon.svg"
                                 loading="lazy"
-                                alt=""
+                                alt="behance"
                                 className="ico-img"
+                                height={80}
+                                width={80}
                             />
                         </a>
                         <a
@@ -178,11 +182,13 @@ export default function Footer() {
                             target="_blank"
                             className="social-logo w-full inline-block"
                         >
-                            <img
+                            <Image
                                 src="/icons/fb-icon.svg"
                                 loading="lazy"
-                                alt=""
-                                className="ico-img "
+                                alt="fb"
+                                className="ico-img"
+                                height={80}
+                                width={80}
                             />
                         </a>
                         <a
@@ -191,11 +197,13 @@ export default function Footer() {
                             target="_blank"
                             className="social-logo w-full inline-block"
                         >
-                            <img
+                            <Image
                                 src="/icons/instagram-icon.svg"
                                 loading="lazy"
-                                alt=""
+                                alt="instagram"
                                 className="ico-img"
+                                height={80}
+                                width={80}
                             />
                         </a>
                         <a
@@ -204,11 +212,13 @@ export default function Footer() {
                             target="_blank"
                             className="social-logo w-full inline-block"
                         >
-                            <img
+                            <Image
                                 src="/icons/twitter-icon.svg"
                                 loading="lazy"
-                                alt=""
+                                alt="twitter"
                                 className="ico-img"
+                                height={80}
+                                width={80}
                             />
                         </a>
                     </div>

@@ -30,7 +30,9 @@ export default function Demo() {
 
     return (
         <>
-            <Loading className={loading ? "" : "hidden"} />
+            <div className={loading ? "" : "hidden"}>
+                <Loading bgTransparent />
+            </div>
 
             <div
                 className={`demo container flex items-center flex-col mt-28 mb-28 ${

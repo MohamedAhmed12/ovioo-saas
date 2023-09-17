@@ -2,7 +2,7 @@ import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { ColumnInterface, SubTaskInterface } from "@/interfaces";
 import { deleteTask, editTask, setTaskStatus } from "@/store/features/board";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
@@ -181,7 +181,7 @@ export default function TaskModal({
                         </select>
                     </div>
                     <div className="basis-1/2 flex justify-end">
-                        <DeleteIcon color="error" fontSize="large" onClick={setOpenDeleteModal} />
+                        <DeleteOutlineIcon color="error" fontSize="large" onClick={setOpenDeleteModal} />
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row task__body">
