@@ -1,11 +1,23 @@
-.dashboard-main-layout{
-      scrollbar-width: thin;
-        scrollbar-color: var(--secondary) var(--primary);
-      
+.dashboard-main-layout {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--primary);
     .dashboard__link {
         color: #0ea5e9;
-        &:hover{
+        &:hover {
             filter: brightness(1.2);
         }
+    }
+}
+
+.dashboard-primary {
+    color: var(--dashboard-primary);
+}
+
+.dashboard__btn {
+    background:  var(--dashboard-primary);
+    color: white;
+    &:hover {
+        background:  var(--dashboard-primary)!important;
+        filter: brightness(1.15);
     }
 }

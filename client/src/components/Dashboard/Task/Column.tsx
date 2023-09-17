@@ -5,19 +5,19 @@ import { shuffle } from "lodash";
 import { DragEvent, useEffect, useState } from "react";
 import Task from "./Task";
 
-export default function Column({ colIndex }: { colIndex: number }) {
-    const colors = [
-        "bg-red-500",
-        "bg-orange-500",
-        "bg-blue-500",
-        "bg-purple-500",
-        "bg-green-500",
-        "bg-indigo-500",
-        "bg-yellow-500",
-        "bg-pink-500",
-        "bg-sky-500",
-    ];
+const colors = [
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-blue-500",
+    "bg-purple-500",
+    "bg-green-500",
+    "bg-indigo-500",
+    "bg-yellow-500",
+    "bg-pink-500",
+    "bg-sky-500",
+];
 
+export default function Column({ colIndex }: { colIndex: number }) {
     const dispatch = useAppDispatch();
     const [color, setColor] = useState<string | undefined | null>(null);
     const [showNewTask, setShowNewTask] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export default function Column({ colIndex }: { colIndex: number }) {
 
     useEffect(() => {
         setColor(shuffle(colors).pop());
-    }, [dispatch]);
+    }, []);
 
     if (col == undefined) return;
 

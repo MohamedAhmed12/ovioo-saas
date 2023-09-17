@@ -3,6 +3,7 @@
 import "@/styles/components/home/intro-container.scss";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import GetStartedBtns from "../GetStartedBtns";
+import Image from "next/image";
 
 export const IntroContainer = () => (
     <div className="xl:container intro-container text-center">
@@ -18,7 +19,12 @@ export const IntroContainer = () => (
         <div className="btns-wrapper mt-20 ">
             <GetStartedBtns />
         </div>
-        <img src="/svg/astronauts.svg" alt="astronauts" className="mt-11" />
-
+        <Image
+            src="/svg/astronauts.svg"
+            alt="astronauts"
+            className="mt-11"
+            width={800}
+            height={800}
+        />
     </div>
 );

@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Link from "next/link";
 import HideOnScroll from "../HideOnScroll";
 import BookDemoBtn from "./BookDemoBtn";
+import Image from "next/image";
 
 export default function Desktop({
     pages,
@@ -28,7 +29,7 @@ export default function Desktop({
                     <div className="navbar-desktop-bg w-full h-full justify-center items-center flex">
                         <div className="navbar-desktop hidden lg:flex">
                             <a href="/" aria-current="page" className="main-logo h-full max-w-full pt-[5px]">
-                                <img src="/svg/logo.svg" className="slef-center"/>
+                                <Image src="/svg/logo.svg" className="slef-center" width={800} height={800} alt="logo"/>
                             </a>
                             <Box
                                 sx={{ display: { xs: "none", md: "flex" } }}
