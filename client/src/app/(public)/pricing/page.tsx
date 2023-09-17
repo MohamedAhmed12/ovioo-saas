@@ -37,7 +37,7 @@ export default function Pricing() {
             tag: "basic",
             title: "pro",
             dailyFees: 35,
-            monthlyFees: 668,
+            monthlyFees: 1485,
             fullTime: false,
             includes: [
                 "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
@@ -51,7 +51,7 @@ export default function Pricing() {
             tag: "basic",
             title: "1 to 1",
             dailyFees: 35,
-            monthlyFees: 668,
+            monthlyFees: 3580,
             fullTime: false,
             includes: [
                 "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
@@ -77,10 +77,10 @@ export default function Pricing() {
         <div className="pricing w-full">
             <div className="intro flex flex-col mt-36 mb-20">
                 <div className="container title text-center">
-                    <Typography variant="h3" className="uppercase font-bold">
+                    <Typography variant="h3" className="uppercase">
                         Memberships levels
                     </Typography>
-                    <Typography variant="h5" className="mt-4">
+                    <Typography variant="h5">
                         Choose a plan <span className="text-gradient">that's right for you.</span>
                     </Typography>
                 </div>

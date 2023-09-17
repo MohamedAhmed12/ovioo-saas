@@ -1,0 +1,61 @@
+.navbar .MuiDrawer-root {
+    display:flex;
+    width: 240px;
+    flex-shrink: 0!important;
+    .MuiDrawer-paper {
+        box-sizing: border-box;
+    }
+}
+.navbar .MuiDrawer-root,
+.swipeable-drawer {
+    .MuiPaper-root {
+        background: transparent;
+        width: 240px;
+        border-right: 1px solid var(--dashboard-border);
+        .simplebar-mask {
+            .simplebar-content {
+                .MuiList-root {
+                    padding: 8px;
+                    .MuiButtonBase-root {
+                        height: 48px;
+                        position: relative;
+                        text-transform: capitalize;
+                        border-radius: 6px;
+                        .dark & {
+                            color: var(--dashboard-dark-icon-color);
+                        }
+                        .MuiListItemIcon-root {
+                            width: 22px;
+                            height: 22px;
+                            color: inherit;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .MuiListItemText-root {
+                            color: inherit;
+                        }
+                        &.active {
+                            background-color: rgba(159, 166, 173, 0.4);
+                            font-weight: bold;
+                        }
+                        .dark & {
+                            &:hover {
+                                background-color: rgba(159, 166, 173, 0.2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+            background: var(--dashboard-icon-color);
+            .dark & {
+                background: var(--dashboard-dark-icon-color);
+            }
+        }
+        .dark & {
+            border-right: 1px solid var(--dashboard-dark-border);
+        }
+    }
+}

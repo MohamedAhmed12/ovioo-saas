@@ -1,17 +1,19 @@
-import { Notification as NotificationInterface } from '@/interfaces/notification';
+import { Notification as NotificationInterface } from "@/interfaces/notification";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
 import { fToNow } from "@/utils/formatTime";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import {
-    Avatar,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemText,
-    Typography
-} from "@mui/material";
+import { Avatar, ListItemAvatar, ListItemButton, ListItemText, Typography } from "@mui/material";
 
-export default function NotificationItem({ notification }: { notification: NotificationInterface }) {
+export default function NotificationItem({
+    key,
+    notification,
+    onClick,
+}: {
+    key: number;
+    notification: NotificationInterface;
+    onClick: () => void;
+}) {
     const title = (
         <Typography variant="subtitle2">
             {notification.title}
@@ -29,8 +31,10 @@ export default function NotificationItem({ notification }: { notification: Notif
                 mt: "1px",
                 ...(notification.isUnRead && {
                     bgcolor: "action.selected",
-                }),
+                })
             }}
+            key={key}
+            onClick={() => onClick}
         >
             <ListItemAvatar>
                 <Avatar sx={{ bgcolor: "background.neutral" }}>
@@ -49,7 +53,7 @@ export default function NotificationItem({ notification }: { notification: Notif
                             color: "text.disabled",
                         }}
                     >
-                        <AccessTimeIcon  className="mr-2"/>
+                        <AccessTimeIcon className="mr-2" />
                         {fToNow(notification.createdAt)}
                     </Typography>
                 }

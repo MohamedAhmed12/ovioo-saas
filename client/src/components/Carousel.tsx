@@ -4,11 +4,12 @@ import "@/styles/components/home/carousel.scss";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-
 import Box from "@mui/material/Box";
+import Image from "next/image";
 import { ReactElement } from "react";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
 const steps = [
     "https://picsum.photos/id/1/400/400",
     "https://picsum.photos/id/12/400/400",
@@ -34,7 +35,7 @@ export default function Carousel({ title }: { title: ReactElement | string }) {
             >
                 {steps.map((step, index) => (
                     <SwiperSlide key={index}>
-                        <img src={step} />
+                        <Image src={step} width={800} height={800} alt="swiper image" />
                     </SwiperSlide>
                 ))}
             </Swiper>

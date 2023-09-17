@@ -2,6 +2,7 @@
     background-color: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
+    z-index: 1;
     .MuiToolbar-root {
         min-height: 92px;
         padding: 0px 40px;
@@ -12,32 +13,23 @@
             padding: 2px;
             margin-right: 8px !important;
             background-color: transparent;
+            color: var(--dashboard-icon-color);
             &.opened {
                 color: rgb(30 64 175);
             }
-            color: var(
-                --joy-palette-neutral-plainColor,
-                var(--joy-palette-neutral-700, #32383e)
-            );           
             &:hover {
-                color: var(
-                    --joy-palette-neutral-plainColor,
-                    var(--joy-palette-neutral-700, #32383e)
-                );
                 background-color: rgb(212 212 216);
+                .dark & {
+                    color: var(--dashboard-icon-color);
+                }
             }
-        }
-    }
-
-    &:is(.dark .dark\:dark-mode) {
-        .toolbar-icon {
-            color:  rgb(203 213 225);;
-            &:hover {
-                color: var(
-                    --joy-palette-neutral-plainColor,
-                    var(--joy-palette-neutral-700, #32383e)
-                );
-                background-color: rgb(212 212 216);
+            .dark & {
+                color: var(--dashboard-dark-icon-color);
+            }
+            @media screen and (min-width: 991px) {
+               &.hamburger-btn {
+                   display: none;
+               } 
             }
         }
     }

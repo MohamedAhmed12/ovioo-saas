@@ -11,11 +11,11 @@ export default function Demo() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const isCalendlyEvent = (e) => {
+        const isCalendlyEvent = (e: any) => {
             return e.data.event && e.data.event.indexOf("calendly") === 0;
         };
 
-        const handleCalendlyEvent = (e) => {
+        const handleCalendlyEvent = (e: any) => {
             if ((isCalendlyEvent(e), e.data.event == "calendly.event_type_viewed")) {
                 setLoading(false);
             }
@@ -30,10 +30,14 @@ export default function Demo() {
 
     return (
         <>
-            <Loading className={loading ? "" : "hidden"} />
+            <div className={loading ? "" : "hidden"}>
+                <Loading bgTransparent />
+            </div>
 
             <div
-                className={`demo container flex items-center flex-col mt-28 mb-28 ${loading ? "hidden" : ""}`}
+                className={`demo container flex items-center flex-col mt-28 mb-28 ${
+                    loading ? "hidden" : ""
+                }`}
             >
                 <Typography
                     variant="h3"

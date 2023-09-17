@@ -1,4 +1,3 @@
 export default function Default() {
-    // Or a custom loading skeleton component
-    return <p>'Default...'</p>;
+    return <p className="text-6xl text-red-950">Default...</p>;
 }
