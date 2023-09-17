@@ -10,7 +10,7 @@ export default function DashBoardCard({
     style,
 }: {
     children: ReactElement;
-    handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    handleSubmit?: (event: FormEvent<HTMLFormElement>) => void;
     headerTitle?: string;
     style?: CSSProperties;
 }) {
@@ -23,7 +23,7 @@ export default function DashBoardCard({
                 />
             )}
             <Box
-                className="box pr-7 pl-7 pt-7 pb-7 bg-secondary flex flex-col"
+                className="box bg-secondary flex flex-col p-5 lg:p-7"
                 component="form"
                 onSubmit={handleSubmit}
                 noValidate

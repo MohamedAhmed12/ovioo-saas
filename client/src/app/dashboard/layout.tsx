@@ -7,8 +7,6 @@ import { ModeEnum } from "@/interfaces/store/main";
 import "@/styles/app/unauth/dashboard/layout.scss";
 import { useEffect, useState } from "react";
 
-const drawerWidth = 240;
-
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
