@@ -2,10 +2,15 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { MouseEvent } from "react";
 
-export default function AddNewProjectCard() {
+export default function AddNewProjectCard({
+    handleToggleModal,
+}: {
+    handleToggleModal: (e: MouseEvent<HTMLElement> | null) => void;
+}) {
     return (
-        <Card className="ovioo-card min-w-[250px]">
+        <Card className="ovioo-card min-w-[250px]" onClick={handleToggleModal}>
             <Button
                 variant="outlined"
                 className="w-full h-full opacity-50 hover:opacity-90 outline-dashed"

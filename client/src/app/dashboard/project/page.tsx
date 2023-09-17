@@ -1,10 +1,12 @@
 "use client";
 
 import AddNewProjectCard from "@/components/Dashboard/Project/AddNewProjectCard";
+import AddNewProjectCardModal from "@/components/Dashboard/Project/AddNewProjectCardModal";
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 
 export default function Projects() {
+    const [open, setOpen] = useState(false);
     const [projects, setProjects] = useState([
         {
             name: "first project",
@@ -38,16 +40,18 @@ export default function Projects() {
         },
     ]);
 
-    const handleOnAddProject = (e) => {
-        console.log(e);
+    const handleToggleModal = () => {
+        setOpen((prevState) => (prevState = !prevState));
     };
+
     return (
         <div className="flex justify-start">
             {projects.map((project, i) => (
                 <ProjectCard project={project} key={i} />
             ))}
 
-            <AddNewProjectCard />
+            <AddNewProjectCard handleToggleModal={handleToggleModal} />
+            <AddNewProjectCardModal open={open} handleToggleModal={handleToggleModal} />
         </div>
     );
 }
