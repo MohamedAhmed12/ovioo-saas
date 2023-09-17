@@ -4,8 +4,7 @@ import { ModeEnum } from "@/interfaces";
 import { ReduxProvider } from "@/store/Provider";
 import "@/styles/app/globals.scss";
 import localFont from "next/font/local";
-import { ReactNode, useEffect, useState } from "react";
-import Loading from "./loading";
+import { ReactNode } from "react";
 
 const myFont = localFont({
     display: "swap",
@@ -41,17 +40,8 @@ const myFont = localFont({
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        storedMode =
-            (typeof window !== "undefined" && localStorage?.getItem("mode")) || ModeEnum.Dark;
-
-        setLoading(false);
-    }, []);
-
     return (
-        window != undefined && (
+        window && (
             <ReduxProvider>
                 <html lang="en" className={localStorage?.getItem("mode") || ModeEnum.Dark}>
                     <body className={myFont.className}>{children}</body>
