@@ -3,24 +3,20 @@
 import "@/styles/components/dashboard/layout/ovioo-table.scss";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import DownloadIcon from "@mui/icons-material/Download";
 import { IconButton } from "@mui/joy";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 export default function OviooTable({
     headers,
     rows,
+    actions,
 }: {
     headers: string[];
-    rows: {
-        plan: string;
-        unitCost: number;
-        quantity: number;
-    }[];
+    rows: any[];
+    actions?: ReactNode;
 }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -52,7 +48,8 @@ export default function OviooTable({
                                     {header}
                                 </TableCell>
                             ))}
-                            <TableCell />
+
+                            {actions && <TableCell />}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -61,20 +58,11 @@ export default function OviooTable({
                             : rows
                         ).map((row, i) => (
                             <TableRow key={i}>
-                                <TableCell>{row.plan}</TableCell>
-                                <TableCell>{row.unitCost}</TableCell>
-                                <TableCell>{row.quantity}</TableCell>
-                                <TableCell>{row.unitCost * row.quantity}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        type="submit"
-                                        className="dashboard__link bg-transparent shadow-none hover:bg-transparent hover:shadow-none font-semibold"
-                                    >
-                                        <DownloadIcon />
-                                        Download
-                                    </Button>
-                                </TableCell>
+                                {Object.values(row).map((cell) => (
+                                    <TableCell key={String(cell)}>{String(cell)}</TableCell>
+                                ))}
+
+                                {actions && actions}
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (

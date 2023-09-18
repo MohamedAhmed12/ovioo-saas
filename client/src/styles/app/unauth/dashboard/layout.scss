@@ -14,10 +14,10 @@
 }
 
 .dashboard__btn {
-    background:  var(--dashboard-primary);
-    color: white;
+    background:  var(--dashboard-primary)!important;
+    color: white!important;
     &:hover {
-        background:  var(--dashboard-primary)!important;
+        background:  var(--dashboard-primary);
         filter: brightness(1.15);
     }
 }

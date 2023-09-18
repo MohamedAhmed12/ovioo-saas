@@ -1,0 +1,46 @@
+.tasks-wrapper {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    .MuiTabs-root {
+        flex: inline;
+        background-color: transparent;
+        .MuiTabs-scroller {
+            .MuiTab-root {
+                min-width: auto;
+                padding: 0 0 12px;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 28px;
+                text-align: center;
+                background-color: transparent;
+                font-family: inherit;
+                text-transform: unset;
+                cursor: pointer;
+                &.Mui-selected,
+                &:hover {
+                    color: var(--dashboard-primary);
+                }
+                &:not(:first-of-type) {
+                    margin-left: 10px;
+                }
+                &:not(:last-of-type) {
+                    margin-right: 10px;
+                }
+            }
+            .MuiTabs-indicator {
+                background-color: var(--dashboard-primary) !important;
+                height: 3px;
+            }
+        }
+    }
+    .ovioo-table {
+        .MuiTable-root {
+            text-align: center;
+            .MuiTableRow-root {
+                .MuiTableCell-root {
+                    text-align: inherit;
+                }
+            }
+        }
+    }
+}
