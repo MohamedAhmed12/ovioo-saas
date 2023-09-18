@@ -1,3 +1,63 @@
 .auth-main-layout {
-  
+  font-family: E ukraine, sans-serif;
+  a {
+    color: var(--dashboard-primary)!important;
+  }
+  .auth-card {
+    --tw-text-opacity: 1;
+    --tw-bg-opacity: 1;
+    border-radius: 0.5rem;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    &.with-shadow {
+      --tw-shadow-color: #364e7e1a;
+      --tw-shadow: var(--tw-shadow-colored);
+      --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+        0 4px 6px -4px var(--tw-shadow-color);
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+        var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    }
+  }
+  .auth-input {
+    .MuiInputBase-root {
+      input,
+      textarea {
+        & ~ fieldset {
+          border-color: #7b91a7;
+        }
+        &:invalid ~ fieldset {
+          border-color: 'red';
+          border-width: 1;
+        }
+        &:valid:focus ~ fieldset {
+          border-color: var(--dashboard-primary);
+          border-left-width: 4;
+          padding: '4px !important';
+        }
+      }
+      .MuiInputAdornment-root {
+        button {
+          .Mui-focused {
+            color: var(--dashboard-primary) !important;
+          }
+        }
+      }
+      &:hover {
+        & > fieldset {
+          border-color: #7b91a7;
+        }
+      }
+      &.Mui-focused:hover {
+        & > fieldset {
+          border-color: var(--dashboard-primary);
+        }
+      }
+    }
+    label {
+      .Mui-focused {
+        color: var(--dashboard-primary);
+      }
+    }
+  }
 }
