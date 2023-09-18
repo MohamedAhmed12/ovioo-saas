@@ -8,7 +8,7 @@ export const GetStartedBtns = () => (
                 <div className="buttons-l">Get started</div>
             </div>
         </a>
-        <AnimatedBtn />
+        <AnimatedBtn title="Book a Demo" />
     </div>
 );
 

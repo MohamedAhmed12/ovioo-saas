@@ -49,7 +49,7 @@ export default function PlansHelpCard() {
                     <p>We will help you build a plan acording to you needs</p>
                 </div>
                 <div className="mt-12 flex justify-end">
-                    <AnimatedBtn />
+                    <AnimatedBtn title="Book a Demo" />
                 </div>
             </CardContent>
         </Card>
