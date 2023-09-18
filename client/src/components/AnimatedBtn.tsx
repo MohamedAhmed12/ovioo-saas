@@ -1,13 +1,13 @@
 import "@/styles/components/animated-btn.scss";
 
-export const AnimatedBtn = () => (
+export const AnimatedBtn = ({ title }: { title: string }) => (
     <a href="/demo" className="button-wrapper w-inline-block">
-    <div className="button-outline">
-        <div className="cta book-demo">
-            <p className="buttons-l dark">Book a Demo</p>
+        <div className="button-outline">
+            <div className="cta book-demo">
+                <p className="buttons-l dark">{title}</p>
+            </div>
         </div>
-    </div>
-</a>
+    </a>
 );
 
 export default AnimatedBtn;

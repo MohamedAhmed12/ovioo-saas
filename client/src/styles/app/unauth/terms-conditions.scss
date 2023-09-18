@@ -1,37 +1,104 @@
 .terms-conditions {
-  .MuiTabs-root {
-    flex:inline;
-    background-color: transparent;
-    .MuiTabList-root {
-      .MuiTab-root {
-        text-align: center;
+    .MuiTabs-root {
+        flex: inline;
         background-color: transparent;
-        font-family: E ukraine, sans-serif;
-        font-weight: 400;
-        font-size: 1.4rem;
-        line-height: 1.334;
-        color: white;
-        cursor: pointer;
-        margin-top: 40px;
-        &.Mui-selected,
-        &:hover {
-          color: var(--secondary) !important;
+        .MuiTabList-root {
+            justify-content: space-between;
+            .MuiTab-root {
+                padding: 0 0 20px;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 28px;
+                text-align: center;
+                background-color: transparent;
+                font-family: inherit;
+                color: white;
+                cursor: pointer;
+                &.Mui-selected,
+                &:hover {
+                    color: var(--secondary) !important;
+                }
+                &:not(:first-of-type) {
+                    margin-left: 20px;
+                }
+                &:not(:last-of-type) {
+                    margin-right: 20px;
+                }
+            }
         }
-      }
+        .terms-card {
+            margin: 70px 50px 100px;
+            max-width: 1050px;
+            background-color: #2c2b46;
+            border-radius: 6px;
+            padding: 16px;
+            .terms-card__gradient-border {
+                background-image: linear-gradient(
+                        rgba(255, 255, 255, 0.8),
+                        rgba(255, 255, 255, 0.3)
+                    ),
+                    radial-gradient(
+                        circle,
+                        #31b4d0,
+                        #60bfc6 23%,
+                        #a06ad1 48%,
+                        #fea5a5 68%,
+                        #fee5a5 86%,
+                        #41a9ea
+                    );
+                border-radius: 3px;
+                padding: 6px;
+                .terms-card__container {
+                    background-color: #2c2b46;
+                    .terms-card__heading-wrapper {
+                        padding: 75px 75px 85px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        .terms-card_heading {
+                            text-align: center;
+                            max-width: 70%;
+                            font-size: 40px;
+                            font-weight: 300;
+                            line-height: 60px;
+                            margin-bottom: 30px;
+                            @media screen and (max-width: 479px) {
+                                padding-left: 0;
+                                padding-right: 0;
+                                font-size: 28px;
+                                line-height: 1.6em;
+                                margin-bottom: 16px;
+                                font-weight: 500;
+                                max-width: 720px;
+                            }
+                        }
+                        .MuiTabPanel-root {
+                            text-align: center;
+                            border-color: white;
+                            border-radius: 20px;
+                            background-color: transparent;
+                            font-family: inherit;
+                            font-size: 20px;
+                            font-weight: 400;
+                            line-height: 30px;
+                            color: white;
+    
+                            body .text-secondary {
+                                color: var(--secondary);
+                            }
+                        }
+                        @media screen and (max-width: 479px) {
+                            max-width: 290px;
+                        }
+                    }
+                }
+            }
+            @media screen and (max-width: 767px) {
+                max-width: 360px;
+            }
+        }
     }
-    .MuiTabPanel-root {
-      text-align: center;
-      border-color: white;
-      border-radius: 20px;
-      background-color: transparent;
-      font-family: E ukraine, sans-serif;
-      font-size: 20px;
-      font-weight: 400;
-      line-height: 30px;
-      color: white;
-      body .text-secondary {
-        color: var(--secondary);
-      }
+    .have-question{
+        align-items: start;
     }
-  }
 }

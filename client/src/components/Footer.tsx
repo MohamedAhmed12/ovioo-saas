@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="rocket-wrapper absolute">
                 <Image src="/svg/rocket.svg" alt="rocket" loading="lazy" width="360" height="463" />
             </div>
-            <div className="wrapper-footer ">
+            <div className="wrapper-footer z-50">
                 <div className="footer-menu flex-col lg:flex-row">
                     <div className="adress">
                         <a
@@ -91,7 +91,7 @@ export default function Footer() {
                                 </div>
                             </div>
                             <div className="link_footer last">
-                                <a href="/terms-of-service" className="footer_nav-text">
+                                <a href="/terms" className="footer_nav-text">
                                     Terms &amp; Policies
                                 </a>
                             </div>
