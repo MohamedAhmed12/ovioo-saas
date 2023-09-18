@@ -47,7 +47,7 @@ export default function TermsConditions() {
     return (
         <div className="terms-conditions container flex flex-col items-center pr-16 pl-16 mt-32 mb-36">
             <h2 className="text-6xl uppercase tracking-wide mb-24">Terms of Service</h2>
-            <Tabs aria-label="Basic Tabs " defaultValue={0}>
+            <Tabs aria-label="Basic Tabs" defaultValue={0}>
                 <TabList className="flex flex-col lg:flex-row">
                     {titles.map((title, index) => (
                         <Tab key={title}>{title}</Tab>

@@ -3,12 +3,13 @@
 import AddNewProjectCard from "@/components/Dashboard/Project/AddNewProjectCard";
 import AddNewProjectCardModal from "@/components/Dashboard/Project/AddNewProjectCardModal";
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 
 export default function Projects() {
     const [open, setOpen] = useState(false);
     const [projects, setProjects] = useState([
         {
+            id: 1,
             name: "first project",
             tasks: [
                 {
@@ -24,6 +25,7 @@ export default function Projects() {
             ],
         },
         {
+            id: 2,
             name: "second project",
             tasks: [
                 {

@@ -14,12 +14,13 @@ import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Link from "next/link";
 import { MouseEvent, useState } from "react";
 
 export default function ProjectCard({
     project,
 }: {
-    project: { name: string; tasks: TaskInterface[] };
+    project: { id: number; name: string; tasks: TaskInterface[] };
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -71,8 +72,12 @@ export default function ProjectCard({
                 </MenuItem>
             </Menu>
             <CardContent className="flex flex-col items-center">
-                <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
-                <h3 className="text-lg">{project.name}</h3>
+                <Link href={`/dashboard/project/${project.id}`}>
+                    <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
+                </Link>
+                <Link href={`/dashboard/project/${project.id}`}>
+                    <h3 className="text-lg">{project.name}</h3>
+                </Link>
 
                 <CardActions>
                     <Button color="primary" variant="outlined">
