@@ -4,7 +4,7 @@ import DashboardHeader from "@/components/Dashboard/Layout/Header/index";
 import Navbar from "@/components/Dashboard/Layout/Navbar/index";
 import { useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
-import "@/styles/app/unauth/dashboard/layout.scss";
+import "@/styles/app/dashboard/layout.scss";
 import { useEffect, useState } from "react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

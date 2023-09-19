@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { FormEvent, useState } from 'react';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 
-export default function company() {
+export default function Company() {
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
   const ValidationTextField = styled(TextField)({
