@@ -1,3 +1,5 @@
+"use client";
+
 import { TaskStatus } from "@/interfaces";
 import "@/styles/components/dashboard/project/project-tasks-table.scss";
 import { Box, Tab, Tabs } from "@mui/material";
