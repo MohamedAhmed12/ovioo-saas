@@ -4,33 +4,31 @@ import DashBoardCard from "@/components/DashBoardCard";
 import SortBy from "@/components/Dashboard/SortBy";
 import { AssetList as AssetListInterface } from "@/interfaces";
 import DownloadIcon from "@mui/icons-material/Download";
+import { usePathname, useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import AssetList from "./AssetList";
-import { SelectChangeEvent } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
 
 const sortbyOptions = [
     { title: "categories", path: "/dashboard/asset" },
-    { title: "projects", path: "/dashboard/asset/project/[id]" },
+    { title: "projects", path: "/dashboard/asset/project" },
 ];
 
-export default function AssetListCard({ assetsList }: { assetsList: AssetListInterface[] }) {
+export default function AssetListCard({
+    assetsList,
+    sortBy,
+}: {
+    assetsList: AssetListInterface[];
+    sortBy: string;
+}) {
     const router = useRouter();
-    const pathname = usePathname();
-    const initialVal = sortbyOptions.findIndex((elm) => elm.path == pathname);
+    const initialVal = sortbyOptions.findIndex((elm) => elm.title == sortBy);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e);
     };
-    const handleSortBySelected = (selectedVal: string) => {
-        console.log(sortbyOptions[+selectedVal].path);
-        
+    const handleSortBySelected = (selectedVal: string) =>
         router.push(sortbyOptions[+selectedVal].path);
-        // if (sortby[parseInt(e?.target?.value || 0)] === "projects") {
-        //
-        // }
-    };
 
     return (
         <DashBoardCard

@@ -44,9 +44,12 @@ export default function AssetProjects() {
     return (
         <div className="asset-container flex justify-start flex-wrap">
             {projects.map((project, i) => (
-                <Link href={`/dashboard/asset/project/${project.id}`} key={i}>
-                    <ProjectCard project={project} readOnly />
-                </Link>
+                <ProjectCard
+                    key={i}
+                    project={project}
+                    readOnly
+                    actionURL={`/dashboard/asset/project/${project.id}`}
+                />
             ))}
         </div>
     );

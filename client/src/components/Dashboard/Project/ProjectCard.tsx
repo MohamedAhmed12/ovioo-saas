@@ -20,9 +20,11 @@ import { MouseEvent, useState } from "react";
 export default function ProjectCard({
     project,
     readOnly = false,
+    actionURL
 }: {
     project: { id: number; name: string; tasks: TaskInterface[] };
     readOnly?: boolean;
+    actionURL:string
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -83,10 +85,10 @@ export default function ProjectCard({
             )}
 
             <CardContent className="flex flex-col items-center">
-                <Link href={`/dashboard/project/${project.id}`}>
+                <Link href={actionURL}>
                     <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
                 </Link>
-                <Link href={`/dashboard/project/${project.id}`}>
+                <Link href={actionURL}>
                     <h3 className="text-lg">{project.name}</h3>
                 </Link>
 
