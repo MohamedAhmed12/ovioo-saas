@@ -1,11 +1,9 @@
 "use client";
 
-import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
-import { useState } from "react";
-import "@/styles/app/dashboard/asset.scss";
-import Link from "next/link";
 import AssetListCard from "@/components/Dashboard/Asset/AssetListCard";
 import ProjectDetailedCard from "@/components/Dashboard/Project/ProjectDetailedCard";
+import { AssetList as AssetListInterface } from "@/interfaces";
+import "@/styles/app/dashboard/asset.scss";
 
 export default function AssetViewProject() {
     const assetsList: AssetListInterface[] = [
