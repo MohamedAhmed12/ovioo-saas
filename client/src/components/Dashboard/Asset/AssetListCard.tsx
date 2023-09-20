@@ -7,20 +7,26 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { FormEvent } from "react";
 import AssetList from "./AssetList";
 import { SelectChangeEvent } from "@mui/material";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 
-const sortby = ["categories", "projects"];
+const sortbyOptions = [
+    { title: "categories", path: "/dashboard/asset" },
+    { title: "projects", path: "/dashboard/asset/project/[id]" },
+];
 
 export default function AssetListCard({ assetsList }: { assetsList: AssetListInterface[] }) {
-    // const router = useRouter();
+    const router = useRouter();
+    const pathname = usePathname();
+    const initialVal = sortbyOptions.findIndex((elm) => elm.path == pathname);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e);
     };
-    const onSelected = (e: SelectChangeEvent<HTMLFormElement>) => {
-        console.log(typeof e?.target?.value);
-
+    const handleSortBySelected = (selectedVal: string) => {
+        console.log(sortbyOptions[+selectedVal].path);
+        
+        router.push(sortbyOptions[+selectedVal].path);
         // if (sortby[parseInt(e?.target?.value || 0)] === "projects") {
         //
         // }
@@ -37,7 +43,11 @@ export default function AssetListCard({ assetsList }: { assetsList: AssetListInt
                 </button>
             }
         >
-            <SortBy onSelected={onSelected} options={sortby} />
+            <SortBy
+                onSelected={handleSortBySelected}
+                options={sortbyOptions}
+                initialVal={initialVal}
+            />
             <AssetList assetsList={assetsList} />
         </DashBoardCard>
     );

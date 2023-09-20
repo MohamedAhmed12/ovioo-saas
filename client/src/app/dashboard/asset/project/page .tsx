@@ -1,13 +1,12 @@
 "use client";
 
-import AddNewProjectCard from "@/components/Dashboard/Project/AddNewProjectCard";
-import AddNewProjectCardModal from "@/components/Dashboard/Project/AddNewProjectCardModal";
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
 import { useState } from "react";
+import "@/styles/app/dashboard/asset.scss";
+import Link from "next/link";
 
-export default function Projects() {
-    const [open, setOpen] = useState(false);
-    const projects= [
+export default function AssetProjects() {
+    const projects = [
         {
             id: 1,
             name: "first project",
@@ -42,18 +41,13 @@ export default function Projects() {
         },
     ];
 
-    const handleToggleModal = () => {
-        setOpen((prevState) => (prevState = !prevState));
-    };
-
     return (
-        <div className="flex justify-start flex-wrap">
+        <div className="asset-container flex justify-start flex-wrap">
             {projects.map((project, i) => (
-                <ProjectCard project={project} key={i} />
+                <Link href={`/dashboard/asset/project/${project.id}`} key={i}>
+                    <ProjectCard project={project} readOnly />
+                </Link>
             ))}
-
-            <AddNewProjectCard handleToggleModal={handleToggleModal} />
-            <AddNewProjectCardModal open={open} handleToggleModal={handleToggleModal} />
         </div>
     );
 }
