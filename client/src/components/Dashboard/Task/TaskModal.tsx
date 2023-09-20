@@ -61,8 +61,6 @@ export default function TaskModal({
     }
 
     const handleClose = () => {
-        console.log(3333333333333);
-
         dispatch(
             setTaskStatus({
                 taskIndex,
@@ -151,8 +149,6 @@ export default function TaskModal({
             open={open}
             onClose={() => {
                 const isValid = validate();
-                console.log(isValid, 3);
-
                 if (isValid) {
                     onSubmit();
                     setIsTaskModalOpen(false);

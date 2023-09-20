@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { shuffle } from "lodash";
 import { DragEvent, useEffect, useState } from "react";
 import Task from "./Task";
+import { TaskStatus } from "@/interfaces";
 
 const colors = [
     "bg-red-500",
@@ -51,7 +52,7 @@ export default function Column({ colIndex }: { colIndex: number }) {
                 {col.name} ({col.tasks.length})
             </p>
 
-            {col.tasks.map((task, index) => (
+            {col?.tasks?.map((task, index) => (
                 <Task key={index} taskIndex={index} colIndex={colIndex} />
             ))}
 
@@ -62,7 +63,7 @@ export default function Column({ colIndex }: { colIndex: number }) {
                             addTask({
                                 id: 113,
                                 title: e.target.value,
-                                status: "Todo",
+                                status: TaskStatus.IN_QUEUE,
                                 colIndex,
                             })
                         );
@@ -71,7 +72,7 @@ export default function Column({ colIndex }: { colIndex: number }) {
                     type="text"
                     onChange={(e) => setTaskTitle(e.target.value)}
                     value={taskTitle}
-                    className="mt-3 py-[10px] bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px]"
+                    className="mt-3 bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px]"
                     placeholder="New task"
                 />
             )}

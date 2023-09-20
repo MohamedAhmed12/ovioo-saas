@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BoardState, ColumnInterface, TaskInterface } from '@/interfaces';
+import { BoardState, ColumnInterface, TaskInterface, TaskStatus } from '@/interfaces';
 
 const initialState: BoardState = {
     columns: [
@@ -10,7 +10,7 @@ const initialState: BoardState = {
                 {
                     title: "Build UI for onboarding flow",
                     description: "",
-                    status: "Todo",
+                    status: TaskStatus.IN_QUEUE,
                     subtasks: [
                         {
                             title: "Sign up page",
@@ -29,7 +29,7 @@ const initialState: BoardState = {
                 {
                     title: "Build UI for search",
                     description: "",
-                    status: "Todo",
+                    status: TaskStatus.IN_QUEUE,
                     subtasks: [
                         {
                             title: "Search page",
@@ -40,7 +40,7 @@ const initialState: BoardState = {
                 {
                     title: "Build settings UI",
                     description: "",
-                    status: "Todo",
+                    status: TaskStatus.IN_QUEUE,
                     subtasks: [
                         {
                             title: "Account page",
@@ -55,7 +55,7 @@ const initialState: BoardState = {
                 {
                     title: "QA and test all major user journeys",
                     description: "Once we feel version one is ready, we need to rigorously test it both internally and externally to identify any major gaps.",
-                    status: "Todo",
+                    status: TaskStatus.IN_QUEUE,
                     subtasks: [
                         {
                             title: "Internal testing",
@@ -76,7 +76,7 @@ const initialState: BoardState = {
                 {
                     title: "Design settings and search pages",
                     description: "",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Settings - Account page",
@@ -95,7 +95,7 @@ const initialState: BoardState = {
                 {
                     title: "Add account management endpoints",
                     description: "",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Upgrade plan",
@@ -114,7 +114,7 @@ const initialState: BoardState = {
                 {
                     title: "Design onboarding flow",
                     description: "",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Sign up page",
@@ -133,7 +133,7 @@ const initialState: BoardState = {
                 {
                     title: "Add search enpoints",
                     description: "",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Add search endpoint",
@@ -148,7 +148,7 @@ const initialState: BoardState = {
                 {
                     title: "Add authentication endpoints",
                     description: "",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Define user model",
@@ -163,7 +163,7 @@ const initialState: BoardState = {
                 {
                     title: "Research pricing points of various competitors and trial different business models",
                     description: "We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.",
-                    status: "Doing",
+                    status: TaskStatus.IN_PROGRESS,
                     subtasks: [
                         {
                             title: "Research competitor pricing and business models",
@@ -188,7 +188,7 @@ const initialState: BoardState = {
                 {
                     title: "Conduct 5 wireframe tests",
                     description: "Ensure the layout continues to make sense and we have strong buy-in from potential users.",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Complete 5 wireframe prototype tests",
@@ -199,7 +199,7 @@ const initialState: BoardState = {
                 {
                     title: "Create wireframe prototype",
                     description: "Create a greyscale clickable wireframe prototype to test our asssumptions so far.",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Create clickable wireframe prototype in Balsamiq",
@@ -210,7 +210,7 @@ const initialState: BoardState = {
                 {
                     title: "Review results of usability tests and iterate",
                     description: "Keep iterating through the subtasks until we're clear on the core concepts for the app.",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Meet to review notes from previous tests and plan changes",
@@ -229,7 +229,7 @@ const initialState: BoardState = {
                 {
                     title: "Create paper prototypes and conduct 10 usability tests with potential customers",
                     description: "",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Create paper prototypes for version one",
@@ -244,7 +244,7 @@ const initialState: BoardState = {
                 {
                     title: "Market discovery",
                     description: "We need to define and refine our core product. Interviews will help us learn common pain points and help us define the strongest MVP.",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Interview 10 prospective customers",
@@ -255,7 +255,7 @@ const initialState: BoardState = {
                 {
                     title: "Competitor analysis",
                     description: "",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Find direct and indirect competitors",
@@ -270,7 +270,7 @@ const initialState: BoardState = {
                 {
                     title: "Research the market",
                     description: "We need to get a solid overview of the market to ensure we have up-to-date estimates of market size and demand.",
-                    status: "Done",
+                    status: TaskStatus.DONE,
                     subtasks: [
                         {
                             title: "Write up research analysis",
@@ -294,13 +294,12 @@ export const boardSlice = createSlice({
         editBoard: (state, action) => {
             state.columns = action.payload.newColumns;
         },
-        addTask: (state, action) => {
-            const { title = "", status = "", description = "", subtasks = "", colIndex = 0 } =
-                action.payload;
-            const task: TaskInterface = { title, description, subtasks, status };
-            const column = state.columns.find((col: ColumnInterface, index: number) => index === colIndex);
+        addTask: (state, { payload }: { payload: TaskInterface & { colIndex: number } }) => {
+            const { title, status, description, subtasks } = payload;
+            const task: TaskInterface = { id: 55, title, description, subtasks, status };
+            const column: ColumnInterface | undefined = state.columns.find((col: ColumnInterface | undefined, index: number) => index === payload.colIndex || 0);
 
-            if (column && task) column.tasks = { ...column.tasks, ...task }
+            if (column && column.tasks && task) (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         editTask: (state, action) => {
             const {
