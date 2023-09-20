@@ -1,25 +1,28 @@
 import Box from "@mui/joy/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import { CSSProperties, FormEvent, ReactElement } from "react";
+import { CSSProperties, FormEvent, ReactNode } from "react";
 
 export default function DashBoardCard({
     children,
     handleSubmit,
     headerTitle,
+    action,
     style,
 }: {
-    children: ReactElement;
+    children: ReactNode;
     handleSubmit?: (event: FormEvent<HTMLFormElement>) => void;
     headerTitle?: string;
+    action?: ReactNode;
     style?: CSSProperties;
 }) {
     return (
-        <Card component="main" className="ovioo-card with-shadow mt10 mb-10">
+        <Card component="main" className="ovioo-card with-shadow mt10 mb-10 w-full">
             {headerTitle && (
                 <CardHeader
-                    className="bg-slate-300 dark:bg-slate-500 w-full capitalize font-semibold text-start"
+                    className="bg-slate-300 dark:bg-slate-500 w-full capitalize font-semibold text-start items-center"
                     title={headerTitle}
+                    action={action}
                 />
             )}
             <Box

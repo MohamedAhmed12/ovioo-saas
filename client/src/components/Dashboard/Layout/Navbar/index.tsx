@@ -17,7 +17,7 @@ const navConfig = [
     },
     {
         title: "My assets",
-        url: "/dashboard/assets",
+        url: "/dashboard/asset",
         icon: <ProductionQuantityLimitsIcon />,
     },
     {
