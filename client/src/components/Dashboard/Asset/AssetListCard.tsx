@@ -1,10 +1,10 @@
 "use client";
 
 import DashBoardCard from "@/components/DashBoardCard";
-import SortBy from "@/components/Dashboard/SortBy";
+import OviooDropDown from "@/components/Dashboard/OviooDropDown";
 import { AssetList as AssetListInterface } from "@/interfaces";
 import DownloadIcon from "@mui/icons-material/Download";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import AssetList from "./AssetList";
 
@@ -41,7 +41,7 @@ export default function AssetListCard({
                 </button>
             }
         >
-            <SortBy
+            <OviooDropDown
                 onSelected={handleSortBySelected}
                 options={sortbyOptions}
                 initialVal={initialVal}

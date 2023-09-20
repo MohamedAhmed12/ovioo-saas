@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 
-export default function BasicSelect({
+export default function OviooDropDown({
     onSelected,
     options,
     initialVal,
