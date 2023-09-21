@@ -36,13 +36,14 @@ export default function PlansCard({
             key={tag}
             invertedColors={bgColor ? true : false}
             sx={{ bgcolor: bgColor }}
-            className="overflow-hidden px-6 py-[36px]"
+            className="overflow-hidden px-6 !py-[36px]"
         >
-              {tag && (
-                    <div className="w-52 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 transform rotate-[35deg] absolute top-[34px] right-[-66px] z-90 text-center font-semibold">
-{tag}
-                    </div>
-                )}
+            {tag && (
+                <div className="w-52 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 transform rotate-[30deg] absolute top-[26px] right-[-38px] z-90 text-center font-semibold">
+                    {tag}
+                </div>
+
+            )}
 
             <div className="title flex flex-row justify-start">
                 <Chip
