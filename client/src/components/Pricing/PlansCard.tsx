@@ -22,7 +22,7 @@ export default function PlansCard({
     includes,
 }: {
     bgColor?: string;
-    tag: string;
+    tag?: string;
     title: string;
     monthlyFees: number;
     dailyFees: number;
@@ -36,16 +36,15 @@ export default function PlansCard({
             key={tag}
             invertedColors={bgColor ? true : false}
             sx={{ bgcolor: bgColor }}
+            className="overflow-hidden px-6 py-[36px]"
         >
+              {tag && (
+                    <div className="w-52 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 transform rotate-[35deg] absolute top-[34px] right-[-66px] z-90 text-center font-semibold">
+{tag}
+                    </div>
+                )}
+
             <div className="title flex flex-row justify-start">
-                <Chip
-                    size="sm"
-                    variant={bgColor ? "solid" : "outlined"}
-                    color="neutral"
-                    className="mr-3"
-                >
-                    {tag}
-                </Chip>
                 <Chip
                     size="sm"
                     variant={bgColor ? "solid" : "outlined"}
@@ -55,8 +54,8 @@ export default function PlansCard({
                     {fullTime ? "full-time" : "part-time"}
                 </Chip>
             </div>
-            <div className="title flex flex-row justify-between">
-                <JoyTypography level="h2" className="inline-flex">
+            <div className="title flex flex-row justify-between mt-3">
+                <JoyTypography level="h2" className="inline-flex capitalize">
                     {title}
                 </JoyTypography>
 
@@ -95,10 +94,14 @@ export default function PlansCard({
                 ))}
             </List>
             <Divider inset="none" />
-            <CardActions style={{padding: 0}}>
+            <CardActions style={{ padding: 0 }}>
                 <JoyTypography level="title-lg" sx={{ mr: "auto" }}>
                     {monthlyFees}
-                    <JoyTypography fontSize="sm" textColor="text.tertiary" style={{marginLeft: 4}}>
+                    <JoyTypography
+                        fontSize="sm"
+                        textColor="text.tertiary"
+                        style={{ marginLeft: 4 }}
+                    >
                         / month
                     </JoyTypography>
                 </JoyTypography>
