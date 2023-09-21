@@ -1,9 +1,9 @@
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { SubTaskInterface, TaskStatus } from "@/interfaces";
+import { SubTaskInterface, TaskInterface, TaskStatus } from "@/interfaces";
 import { deleteTask, editTask, setTaskStatus } from "@/store/features/board";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useMediaQuery } from "@mui/material";
+import { SelectChangeEvent, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
 import { ChangeEvent, MouseEvent, useState } from "react";
@@ -22,33 +22,27 @@ const images = [
 
 export default function TaskModal({
     open,
-    taskIndex,
-    colIndex,
+    task,
+    colId,
     setIsTaskModalOpen,
 }: {
     open: boolean;
-    taskIndex: number;
-    colIndex: number;
+    task: TaskInterface;
+    colId: number;
     setIsTaskModalOpen: (val: boolean) => void;
 }) {
+    const dispatch = useAppDispatch();
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const dispatch = useAppDispatch();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [description, setDescription] = useState("");
-    const columns = useAppSelector((state) => state.boardReducer.columns);
-
-    const col = columns.find((col, i) => i === colIndex);
-    let task = col && col.tasks.find((task, i) => i === taskIndex);
 
     const [title, setTitle] = useState(task?.title);
     const [status, setStatus] = useState(task?.status);
-    const [newColIndex, setNewColIndex] = useState(col ? columns.indexOf(col) : null);
-
-    if (!task) return;
 
     let subtasks = task.subtasks;
 
@@ -61,20 +55,8 @@ export default function TaskModal({
         });
     }
 
-    const handleClose = () => {
-        dispatch(
-            setTaskStatus({
-                taskIndex,
-                colIndex,
-                newColIndex,
-                status,
-            })
-        );
-        setIsTaskModalOpen(false);
-    };
-
     const onDeleteBtnClick = (e: MouseEvent<HTMLElement>) => {
-        dispatch(deleteTask({ taskIndex, colIndex }));
+        dispatch(deleteTask({ taskId: task.id, colId }));
         setIsTaskModalOpen(false);
         setIsDeleteModalOpen(false);
     };
@@ -93,11 +75,6 @@ export default function TaskModal({
 
             return subtask;
         });
-    };
-
-    const onChangeStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-        setStatus(e.target.value);
-        setNewColIndex(e.target.selectedIndex);
     };
 
     const validate = () => {
@@ -131,18 +108,20 @@ export default function TaskModal({
     }
 
     const onSubmit = () => {
-        dispatch(
-            editTask({
-                ...task,
-                title,
-                taskIndex,
-                colIndex,
-                newColIndex,
-            })
-        );
+        // dispatch(
+        //     editTask({
+        //         ...task,
+        //         title,
+        //         taskIndex,
+        //         colIndex,
+        //         newColIndex,
+        //     })
+        // );
     };
 
-    const handleStatusChanged = () => {};
+    const handleStatusChanged = (status: string) => {
+        dispatch(setTaskStatus({ taskId: task.id, status }));
+    };
 
     return (
         <Dialog
@@ -171,7 +150,7 @@ export default function TaskModal({
                         <OviooDropDown
                             options={Object.values(TaskStatus)}
                             onSelected={handleStatusChanged}
-                            initialVal={task.status || TaskStatus.IN_QUEUE}
+                            initialVal={task.status || TaskStatus.InQueue}
                         />
                     </div>
                     <div className="basis-1/2 flex justify-end">
@@ -201,7 +180,7 @@ export default function TaskModal({
                             placeholder="Description e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
                         />
                         <div className="mt-8 flex flex-col space-y-3">
-                            {subtasks && (
+                            {/* {subtasks && (
                                 <Subtask
                                     subtasks={subtasks}
                                     setSubtasks={(
@@ -210,7 +189,7 @@ export default function TaskModal({
                                     taskIndex={taskIndex}
                                     colIndex={colIndex}
                                 />
-                            )}
+                            )} */}
                         </div>
                         <div className="mt-8 flex flex-col space-y-3">
                             <Attachement images={images} />

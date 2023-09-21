@@ -1,20 +1,19 @@
 export enum TaskStatus {
-    ALL = "All",
-    IN_QUEUE = "In queue",
-    IN_PROGRESS = "In progress",
+    InQueue = "In queue",
+    InProgress = "In progress",
     REVIEW = "review",
-    ON_HOLD = "On hold",
+    OnHold = "On hold",
     DONE = "Done"
 }
 
 export interface SubTaskInterface {
-    id?: number,
+    id: number,
     title: string,
     isCompleted: boolean
 }
 
 export interface TaskInterface {
-    id?: number,
+    id: number,
     title?: string,
     description?: string,
     status?: TaskStatus,
@@ -23,7 +22,7 @@ export interface TaskInterface {
 
 export interface ColumnInterface {
     id: number,
-    name: string,
+    title: string,
     tasks: TaskInterface[] | [],
 };
 
