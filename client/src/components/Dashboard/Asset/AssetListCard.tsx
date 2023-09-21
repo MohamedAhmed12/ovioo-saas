@@ -43,7 +43,7 @@ export default function AssetListCard({
         >
             <OviooDropDown
                 onSelected={handleSortBySelected}
-                options={sortbyOptions}
+                options={sortbyOptions.map((option) => option.title)}
                 initialVal={initialVal}
             />
             <AssetList assetsList={assetsList} />

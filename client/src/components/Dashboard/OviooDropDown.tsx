@@ -12,7 +12,7 @@ export default function OviooDropDown({
     initialVal,
 }: {
     onSelected: (selectedVal: string) => void;
-    options: { title: string; path: string }[];
+    options: string[];
     initialVal: string | number;
 }) {
     const [val, setVal] = useState(String(initialVal));
@@ -31,9 +31,9 @@ export default function OviooDropDown({
                     className: "dark:bg-slate-400",
                 }}
             >
-                {options.map(({ title }, i) => (
-                    <MenuItem value={i} key={title}>
-                        {title}
+                {options.map((option, i) => (
+                    <MenuItem value={option} key={option}>
+                        {option}
                     </MenuItem>
                 ))}
             </Select>

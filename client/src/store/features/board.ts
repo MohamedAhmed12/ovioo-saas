@@ -315,20 +315,22 @@ export const boardSlice = createSlice({
 
             if (column == undefined) return;
 
-            const task = column && column.tasks.find((task: TaskInterface, index) => index === taskIndex);
+            let task = column && column.tasks.find((task: TaskInterface, index) => index === taskIndex);
 
             if (task == undefined) return;
 
-            task.title = title;
-            task.status = status;
-            task.description = description;
-            task.subtasks = subtasks;
+            task = {
+                ...task,
+                title,
+                status,
+                description,
+                subtasks,
+            };
 
             if (prevColIndex === newColIndex) return;
 
-            column.tasks = column.tasks.filter((task: TaskInterface, index) => index !== taskIndex);
             const newCol = state.columns.find((col: ColumnInterface, index: number) => index === newColIndex);
-            newCol && (newCol.tasks = { ...newCol.tasks, ...task });
+            if (newCol && newCol.tasks && task) (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         dragTask: (state, action) => {
             const { colIndex, prevColIndex, taskIndex } = action.payload;

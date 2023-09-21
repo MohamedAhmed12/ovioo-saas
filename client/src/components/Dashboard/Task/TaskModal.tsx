@@ -1,12 +1,13 @@
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { ColumnInterface, SubTaskInterface } from "@/interfaces";
+import { SubTaskInterface, TaskStatus } from "@/interfaces";
 import { deleteTask, editTask, setTaskStatus } from "@/store/features/board";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
 import { ChangeEvent, MouseEvent, useState } from "react";
+import OviooDropDown from "../OviooDropDown";
 import Attachement from "./Attachement";
 import Subtask from "./Subtask";
 
@@ -41,7 +42,7 @@ export default function TaskModal({
     const columns = useAppSelector((state) => state.boardReducer.columns);
 
     const col = columns.find((col, i) => i === colIndex);
-    const task = col && col.tasks.find((task, i) => i === taskIndex);
+    let task = col && col.tasks.find((task, i) => i === taskIndex);
 
     const [title, setTitle] = useState(task?.title);
     const [status, setStatus] = useState(task?.status);
@@ -132,16 +133,16 @@ export default function TaskModal({
     const onSubmit = () => {
         dispatch(
             editTask({
+                ...task,
                 title,
-                description,
-                subtasks,
-                status,
                 taskIndex,
                 colIndex,
                 newColIndex,
             })
         );
     };
+
+    const handleStatusChanged = () => {};
 
     return (
         <Dialog
@@ -166,18 +167,19 @@ export default function TaskModal({
             <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
                 <div className="flex task__header justify-between mb-10 px-8">
                     <div className="basis-1/2">
-                        <select
-                            value={status}
-                            onChange={onChangeStatus}
-                            className=" select-status flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#635fc7] outline-none"
-                        >
-                            {columns.map((column: ColumnInterface, index: number) => (
-                                <option key={index}>{column.name}</option>
-                            ))}
-                        </select>
+                        {task.status}
+                        <OviooDropDown
+                            options={Object.values(TaskStatus)}
+                            onSelected={handleStatusChanged}
+                            initialVal={task.status || TaskStatus.IN_QUEUE}
+                        />
                     </div>
                     <div className="basis-1/2 flex justify-end">
-                        <DeleteOutlineIcon color="error" fontSize="large" onClick={setOpenDeleteModal} />
+                        <DeleteOutlineIcon
+                            color="error"
+                            fontSize="large"
+                            onClick={setOpenDeleteModal}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row task__body">
