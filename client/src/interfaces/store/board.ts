@@ -1,7 +1,7 @@
 export enum TaskStatus {
     InQueue = "In queue",
     InProgress = "In progress",
-    REVIEW = "review",
+    REVIEW = "Review",
     OnHold = "On hold",
     DONE = "Done"
 }

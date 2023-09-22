@@ -1,15 +1,17 @@
 import DeleteModal from "@/components/Modals/DeleteModal";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppDispatch } from "@/hooks/redux";
 import { SubTaskInterface, TaskInterface, TaskStatus } from "@/interfaces";
-import { deleteTask, editTask, setTaskStatus } from "@/store/features/board";
+import { deleteTask, setTaskStatus } from "@/store/features/board";
+import "@/styles/components/dashboard/task/task-modal.scss";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { SelectChangeEvent, useMediaQuery } from "@mui/material";
+import { Avatar, MenuItem, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
-import { ChangeEvent, MouseEvent, useState } from "react";
+import { MouseEvent, useState } from "react";
 import OviooDropDown from "../OviooDropDown";
 import Attachement from "./Attachement";
 import Subtask from "./Subtask";
+import TaskTypeDropDown from "../TaskTypeDropDown";
 
 const images = [
     "https://picsum.photos/id/1/400/400",
@@ -112,7 +114,7 @@ export default function TaskModal({
         //     editTask({
         //         ...task,
         //         title,
-        //         taskIndex,
+        //         taskId,
         //         colIndex,
         //         newColIndex,
         //     })
@@ -144,16 +146,22 @@ export default function TaskModal({
             }}
         >
             <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
-                <div className="flex task__header justify-between mb-10 px-8">
-                    <div className="basis-1/2">
-                        {task.status}
+                <div className="flex task__header justify-between mb-5">
+                    <div className="flex basis-1/2 items-center px-8">
                         <OviooDropDown
                             options={Object.values(TaskStatus)}
                             onSelected={handleStatusChanged}
                             initialVal={task.status || TaskStatus.InQueue}
                         />
+                        <TaskTypeDropDown />
+                        <Avatar
+                            alt="Remy Sharp"
+                            sx={{ width: 56, height: 56 }}
+                            src="/static/images/avatar/1.jpg"
+                            className="ml-3"
+                        />
                     </div>
-                    <div className="basis-1/2 flex justify-end">
+                    <div className="basis-1/2 flex justify-end px-8">
                         <DeleteOutlineIcon
                             color="error"
                             fontSize="large"
@@ -180,16 +188,16 @@ export default function TaskModal({
                             placeholder="Description e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
                         />
                         <div className="mt-8 flex flex-col space-y-3">
-                            {/* {subtasks && (
+                            {subtasks && (
                                 <Subtask
                                     subtasks={subtasks}
                                     setSubtasks={(
                                         newSubtask: SubTaskInterface[] | [] | undefined
                                     ) => (subtasks = newSubtask)}
-                                    taskIndex={taskIndex}
-                                    colIndex={colIndex}
+                                    taskId={task.id}
+                                    colId={colId}
                                 />
-                            )} */}
+                            )}
                         </div>
                         <div className="mt-8 flex flex-col space-y-3">
                             <Attachement images={images} />
