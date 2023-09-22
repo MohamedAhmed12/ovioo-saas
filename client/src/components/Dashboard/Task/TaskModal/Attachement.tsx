@@ -1,5 +1,4 @@
-import { useTheme } from "@emotion/react";
-import { ImageList, ImageListItem, useMediaQuery } from "@mui/material";
+import { ImageListItem } from "@mui/material";
 import Image from "next/image";
 
 export default function Attachement({ images }: { images: string[] }) {

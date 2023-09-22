@@ -1,13 +1,12 @@
-import { useAppSelector } from "@/hooks/redux";
-import { ColumnInterface, SubTaskInterface, TaskInterface } from "@/interfaces";
-import { useState, DragEvent } from "react";
+import { SubTaskInterface, TaskInterface } from "@/interfaces";
+import { DragEvent, useState } from "react";
 import TaskModal from "./TaskModal";
 
 export default function Task({ task, colId }: { task: TaskInterface; colId: number }) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
     let completed = 0;
-    let subtasks = task.subtasks;
+    let subtasks: SubTaskInterface[] | undefined = task.subtasks;
 
     if (subtasks) {
         subtasks.forEach((subtask: SubTaskInterface) => {
@@ -18,8 +17,6 @@ export default function Task({ task, colId }: { task: TaskInterface; colId: numb
     }
 
     const handleOnDrag = (e: DragEvent<HTMLDivElement>) => {
-        console.log('task component', task.id);
-        
         e.dataTransfer.setData("text", JSON.stringify({ taskId: task.id, prevColId: colId }));
     };
 

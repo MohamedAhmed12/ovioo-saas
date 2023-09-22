@@ -11,22 +11,16 @@ export default function Subtask({
     colId,
 }: {
     subtasks: SubTaskInterface[];
-    setSubtasks: (
-        newSubtask: SubTaskInterface[] | [] | undefined
-    ) => SubTaskInterface[] | [] | undefined;
+    setSubtasks: (newSubtask: SubTaskInterface[] | undefined) => SubTaskInterface[] | undefined;
     taskId: number;
     colId: number;
 }) {
     const [subtaskTitle, setSubtaskTitle] = useState("");
 
-    let completed = 0;
-    if (subtasks) {
-        subtasks.forEach((subtask) => {
-            if (subtask.isCompleted) {
-                completed++;
-            }
-        });
-    }
+    const completed = subtasks?.reduce(
+        (count, subtask) => (subtask.isCompleted ? count++ : count--),
+        0
+    );
 
     const dispatch = useAppDispatch();
     const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -75,7 +69,7 @@ export default function Subtask({
                         type="text"
                         onChange={(e) => setSubtaskTitle(e.target.value)}
                         value={subtaskTitle}
-                        className="mr-9 py-[10px] bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px]"
+                        className="mr-9 bg-transparent outline-none focus:border-0 flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px]"
                         placeholder="New task"
                     />
                 </div>
