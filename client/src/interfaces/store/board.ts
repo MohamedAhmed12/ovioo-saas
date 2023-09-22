@@ -17,7 +17,7 @@ export interface TaskInterface {
     title?: string,
     description?: string,
     status?: TaskStatus,
-    subtasks?: SubTaskInterface[] | []
+    subtasks?: SubTaskInterface[] | undefined
 };
 
 export interface ColumnInterface {

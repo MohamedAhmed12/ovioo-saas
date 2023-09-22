@@ -127,9 +127,6 @@ const initialState: BoardState = {
                     title: "Add search enpoints",
                     description: "",
                     status: TaskStatus.InProgress,
-                    subtasks: [
-
-                    ]
                 },
             ]
         },
@@ -155,17 +152,12 @@ const initialState: BoardState = {
                     title: "Create wireframe prototype",
                     description: "Create a greyscale clickable wireframe prototype to test our asssumptions so far.",
                     status: TaskStatus.DONE,
-                    subtasks: [
-
-                    ]
                 },
                 {
                     id: 3,
                     title: "Market discovery",
                     description: "We need to define and refine our core product. Interviews will help us learn common pain points and help us define the strongest MVP.",
                     status: TaskStatus.DONE,
-                    subtasks: [
-                    ]
                 },
             ]
         },
@@ -253,10 +245,10 @@ export const boardSlice = createSlice({
             console.log(action.payload);
         },
         deleteTask: (state, action) => {
-            const {taskId, colId} = action.payload;
+            const { taskId, colId } = action.payload;
             const col = state.columns.find((col: ColumnInterface, i) => col.id === colId);
 
-            if (col != undefined) {   
+            if (col != undefined) {
                 col.tasks = col.tasks.filter((task: TaskInterface, i) => task.id !== taskId);
             }
         },
