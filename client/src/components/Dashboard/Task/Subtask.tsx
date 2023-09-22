@@ -7,15 +7,15 @@ import { ChangeEvent, useState } from "react";
 export default function Subtask({
     subtasks,
     setSubtasks,
-    taskIndex,
-    colIndex,
+    taskId,
+    colId,
 }: {
     subtasks: SubTaskInterface[];
     setSubtasks: (
         newSubtask: SubTaskInterface[] | [] | undefined
     ) => SubTaskInterface[] | [] | undefined;
-    taskIndex: number;
-    colIndex: number;
+    taskId: number;
+    colId: number;
 }) {
     const [subtaskTitle, setSubtaskTitle] = useState("");
 
@@ -30,7 +30,7 @@ export default function Subtask({
 
     const dispatch = useAppDispatch();
     const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch(setSubtaskCompleted({ index: 1, taskIndex, colIndex }));
+        dispatch(setSubtaskCompleted({ index: 1, taskId, colId }));
     };
     const onDelete = (id: number) => {
         setSubtasks(subtasks.filter((el) => el.id !== id));

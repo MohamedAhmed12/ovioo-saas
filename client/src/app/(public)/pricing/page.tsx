@@ -13,14 +13,13 @@ export default function Pricing() {
     const plans: {
         bgColor?: string;
         title: string;
-        tag: string;
+        tag?: string;
         dailyFees: number;
         monthlyFees: number;
         fullTime: boolean;
         includes: string[];
     }[] = [
         {
-            tag: "basic",
             title: "standard",
             dailyFees: 35,
             monthlyFees: 668,
@@ -34,7 +33,7 @@ export default function Pricing() {
         },
         {
             bgColor: "neutral.700",
-            tag: "basic",
+            tag: "most popular",
             title: "pro",
             dailyFees: 35,
             monthlyFees: 1485,
@@ -48,7 +47,6 @@ export default function Pricing() {
         },
         {
             bgColor: "neutral.900",
-            tag: "basic",
             title: "1 to 1",
             dailyFees: 35,
             monthlyFees: 3580,

@@ -1,7 +1,10 @@
-.sortby-component {
+.ovioo-dropdown-wrapper {
     .MuiInputBase-root {
+        font-family: inherit!important;
+        width: auto;
         .MuiSelect-select {
-            padding: 10px 15px;
+            padding: 10px 32px 10px 15px;
+            display: flex;
         }
     }
     .dark & {
@@ -13,7 +16,11 @@
         }
     }
 }
+.MuiButtonBase-root{
+    font-family: inherit!important;
+}
 .dark .MuiMenu-paper {
     background: rgb(148 163 184) !important;
     color: #fff !important;
 }
+

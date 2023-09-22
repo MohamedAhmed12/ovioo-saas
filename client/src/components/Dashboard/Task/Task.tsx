@@ -3,13 +3,8 @@ import { ColumnInterface, SubTaskInterface, TaskInterface } from "@/interfaces";
 import { useState, DragEvent } from "react";
 import TaskModal from "./TaskModal";
 
-export default function Task({ colIndex, taskIndex }: { colIndex: number; taskIndex: number }) {
-    const columns = useAppSelector((state) => state.boardReducer.columns);
-    const col = columns.find((col: ColumnInterface, i) => i === colIndex);
-    const task = col && col.tasks.find((task: TaskInterface, i) => i === taskIndex);
+export default function Task({ task, colId }: { task: TaskInterface; colId: number }) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-
-    if (!task) return;
 
     let completed = 0;
     let subtasks = task.subtasks;
@@ -23,7 +18,9 @@ export default function Task({ colIndex, taskIndex }: { colIndex: number; taskIn
     }
 
     const handleOnDrag = (e: DragEvent<HTMLDivElement>) => {
-        e.dataTransfer.setData("text", JSON.stringify({ taskIndex, prevColIndex: colIndex }));
+        console.log('task component', task.id);
+        
+        e.dataTransfer.setData("text", JSON.stringify({ taskId: task.id, prevColId: colId }));
     };
 
     return (
@@ -48,8 +45,8 @@ export default function Task({ colIndex, taskIndex }: { colIndex: number; taskIn
 
             <TaskModal
                 open={isTaskModalOpen}
-                colIndex={colIndex}
-                taskIndex={taskIndex}
+                task={task}
+                colId={colId}
                 setIsTaskModalOpen={setIsTaskModalOpen}
             />
         </div>

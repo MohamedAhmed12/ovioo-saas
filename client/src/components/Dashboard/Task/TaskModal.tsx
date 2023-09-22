@@ -1,14 +1,17 @@
 import DeleteModal from "@/components/Modals/DeleteModal";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { ColumnInterface, SubTaskInterface } from "@/interfaces";
-import { deleteTask, editTask, setTaskStatus } from "@/store/features/board";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { useMediaQuery } from "@mui/material";
+import { useAppDispatch } from "@/hooks/redux";
+import { SubTaskInterface, TaskInterface, TaskStatus } from "@/interfaces";
+import { deleteTask, setTaskStatus } from "@/store/features/board";
+import "@/styles/components/dashboard/task/task-modal.scss";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Avatar, MenuItem, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
-import { ChangeEvent, MouseEvent, useState } from "react";
+import { MouseEvent, useState } from "react";
+import OviooDropDown from "../OviooDropDown";
 import Attachement from "./Attachement";
 import Subtask from "./Subtask";
+import TaskTypeDropDown from "../TaskTypeDropDown";
 
 const images = [
     "https://picsum.photos/id/1/400/400",
@@ -21,33 +24,27 @@ const images = [
 
 export default function TaskModal({
     open,
-    taskIndex,
-    colIndex,
+    task,
+    colId,
     setIsTaskModalOpen,
 }: {
     open: boolean;
-    taskIndex: number;
-    colIndex: number;
+    task: TaskInterface;
+    colId: number;
     setIsTaskModalOpen: (val: boolean) => void;
 }) {
+    const dispatch = useAppDispatch();
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const dispatch = useAppDispatch();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [description, setDescription] = useState("");
-    const columns = useAppSelector((state) => state.boardReducer.columns);
-
-    const col = columns.find((col, i) => i === colIndex);
-    const task = col && col.tasks.find((task, i) => i === taskIndex);
 
     const [title, setTitle] = useState(task?.title);
     const [status, setStatus] = useState(task?.status);
-    const [newColIndex, setNewColIndex] = useState(col ? columns.indexOf(col) : null);
-
-    if (!task) return;
 
     let subtasks = task.subtasks;
 
@@ -60,20 +57,8 @@ export default function TaskModal({
         });
     }
 
-    const handleClose = () => {
-        dispatch(
-            setTaskStatus({
-                taskIndex,
-                colIndex,
-                newColIndex,
-                status,
-            })
-        );
-        setIsTaskModalOpen(false);
-    };
-
     const onDeleteBtnClick = (e: MouseEvent<HTMLElement>) => {
-        dispatch(deleteTask({ taskIndex, colIndex }));
+        dispatch(deleteTask({ taskId: task.id, colId }));
         setIsTaskModalOpen(false);
         setIsDeleteModalOpen(false);
     };
@@ -92,11 +77,6 @@ export default function TaskModal({
 
             return subtask;
         });
-    };
-
-    const onChangeStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-        setStatus(e.target.value);
-        setNewColIndex(e.target.selectedIndex);
     };
 
     const validate = () => {
@@ -130,17 +110,19 @@ export default function TaskModal({
     }
 
     const onSubmit = () => {
-        dispatch(
-            editTask({
-                title,
-                description,
-                subtasks,
-                status,
-                taskIndex,
-                colIndex,
-                newColIndex,
-            })
-        );
+        // dispatch(
+        //     editTask({
+        //         ...task,
+        //         title,
+        //         taskId,
+        //         colIndex,
+        //         newColIndex,
+        //     })
+        // );
+    };
+
+    const handleStatusChanged = (status: string) => {
+        dispatch(setTaskStatus({ taskId: task.id, status }));
     };
 
     return (
@@ -164,20 +146,27 @@ export default function TaskModal({
             }}
         >
             <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
-                <div className="flex task__header justify-between mb-10 px-8">
-                    <div className="basis-1/2">
-                        <select
-                            value={status}
-                            onChange={onChangeStatus}
-                            className=" select-status flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#635fc7] outline-none"
-                        >
-                            {columns.map((column: ColumnInterface, index: number) => (
-                                <option key={index}>{column.name}</option>
-                            ))}
-                        </select>
+                <div className="flex task__header justify-between mb-5">
+                    <div className="flex basis-1/2 items-center px-8">
+                        <OviooDropDown
+                            options={Object.values(TaskStatus)}
+                            onSelected={handleStatusChanged}
+                            initialVal={task.status || TaskStatus.InQueue}
+                        />
+                        <TaskTypeDropDown />
+                        <Avatar
+                            alt="Remy Sharp"
+                            sx={{ width: 56, height: 56 }}
+                            src="/static/images/avatar/1.jpg"
+                            className="ml-3"
+                        />
                     </div>
-                    <div className="basis-1/2 flex justify-end">
-                        <DeleteOutlineIcon color="error" fontSize="large" onClick={setOpenDeleteModal} />
+                    <div className="basis-1/2 flex justify-end px-8">
+                        <DeleteOutlineIcon
+                            color="error"
+                            fontSize="large"
+                            onClick={setOpenDeleteModal}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row task__body">
@@ -205,8 +194,8 @@ export default function TaskModal({
                                     setSubtasks={(
                                         newSubtask: SubTaskInterface[] | [] | undefined
                                     ) => (subtasks = newSubtask)}
-                                    taskIndex={taskIndex}
-                                    colIndex={colIndex}
+                                    taskId={task.id}
+                                    colId={colId}
                                 />
                             )}
                         </div>

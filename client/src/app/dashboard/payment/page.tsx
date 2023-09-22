@@ -6,7 +6,7 @@ import { Button, TableCell } from "@mui/material";
 const headers = ["plan", "unit cost", "quantity", "amount"];
 const rows = [
     {
-        plan: "basic tier",
+        plan: "standard tier",
         unitCost: 668,
         quantity: 1,
         totalCost: 668 * 1,

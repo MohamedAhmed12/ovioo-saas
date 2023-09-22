@@ -12,7 +12,7 @@ const rows = [
     {
         designer: "John Doe",
         task: "First Task",
-        status: TaskStatus.IN_QUEUED,
+        status: TaskStatus.InQueue,
         updated: new Date().toDateString(),
     },
 ];
