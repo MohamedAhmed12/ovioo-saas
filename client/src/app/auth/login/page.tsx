@@ -1,4 +1,4 @@
-import LoginForm from "@/components/Auth/Login/LoginForm";
+import LoginForm from "@/components/Auth/LoginForm";
 import "@/styles/app/auth/login.scss";
 import type { Metadata } from "next";
 

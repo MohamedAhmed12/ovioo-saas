@@ -1,9 +1,8 @@
 "use client";
 
 import "@/styles/app/auth/login.scss";
-import { Button as JoyButton } from "@mui/joy";
+import { Button } from "@mui/joy";
 import {
-    Button,
     Checkbox,
     Divider,
     FormControlLabel,
@@ -13,19 +12,27 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import { sign } from "crypto";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import SSOWrapper from "./SSOWrapper";
 
 export default function LoginForm() {
     const router = useRouter();
+    const searchParam = useSearchParams();
+    const callbackUrl = searchParam.get("callback") || undefined;
 
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
-        router.push("/dashboard");
+        console.log("this is callback", callbackUrl);
+
+        signIn("google", { callbackUrl });
+        // router.push("/dashboard");
     };
 
     return (
@@ -41,38 +48,7 @@ export default function LoginForm() {
                 </Link>
             </Typography>
 
-            <div className="flex flex-row spacing-2 social-btn-group">
-                <Button fullWidth size="large" color="inherit" variant="outlined">
-                    <Image
-                        src="/svg/social/google.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-                <Button fullWidth size="large" color="inherit" variant="outlined" className="mx-5">
-                    <Image
-                        src="/svg/social/facebook.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-                <Button fullWidth size="large" color="inherit" variant="outlined">
-                    <Image
-                        src="/svg/social/linkedin.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-            </div>
-
-            <Divider sx={{ my: 3 }}>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    OR
-                </Typography>
-            </Divider>
+            <SSOWrapper />
 
             <Stack spacing={3}>
                 <TextField name="email" label="Email address" />
@@ -108,7 +84,7 @@ export default function LoginForm() {
                 </Link>
             </Stack>
 
-            <JoyButton
+            <Button
                 loading={loading}
                 onClick={handleClick}
                 variant="solid"
@@ -116,7 +92,7 @@ export default function LoginForm() {
                 className="auth-btn !mt-4"
             >
                 Login
-            </JoyButton>
+            </Button>
         </>
     );
 }

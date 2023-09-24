@@ -39,7 +39,7 @@ export default function RegisterForm() {
                         alt="linkedin icon"
                     ></Image>
                 </Button>
-                <Button fullWidth size="large" color="inherit" variant="outlined" className="mx-5">
+                <Button fullWidth size="large" color="inherit" variant="outlined" className="!mx-5">
                     <Image
                         src="/svg/social/facebook.svg"
                         width={22}

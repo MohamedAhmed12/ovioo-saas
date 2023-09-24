@@ -9,6 +9,7 @@ import {
     Typography,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
 
@@ -102,9 +103,7 @@ export default function AccountPopover() {
 
                 <Divider sx={{ borderStyle: "dashed" }} />
 
-                <MenuItem onClick={() => handleToggle(null)} sx={{ m: 1 }}>
-                    Logout
-                </MenuItem>
+                <MenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</MenuItem>
             </Popover>
         </>
     );
