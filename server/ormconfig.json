@@ -6,7 +6,7 @@
     "port": 5432,
     "username": "postgres",
     "password": "postgres",
-    "database": "cloud_file_sharing",
+    "database": "ovioo",
     "synchronize": true,
     "entities": ["dist/**/*.entity.js"]
   },
