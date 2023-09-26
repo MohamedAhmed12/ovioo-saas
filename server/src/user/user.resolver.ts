@@ -9,6 +9,11 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Mutation(() => User)
+  async login(@Args('user') loginDto: LoginDto) {
+    return this.userService.login(loginDto);
+  }
+
+  @Mutation(() => User)
   async register(@Args('user') registerDto: RegisterDto) {
     return this.userService.register(registerDto);
   }

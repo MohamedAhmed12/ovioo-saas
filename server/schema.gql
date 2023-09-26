@@ -8,7 +8,9 @@ type User {
   firstname: String!
   lastname: String!
   email: String!
-  avatar: String!
+  avatar: String
+  company: String
+  phone: Int
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -23,13 +25,21 @@ type Query {
 }
 
 type Mutation {
-  createUser(user: CreateUserDto!): User!
+  login(user: LoginDto!): User!
+  register(user: RegisterDto!): User!
 }
 
-input CreateUserDto {
-  id: ID!
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+input RegisterDto {
+  email: String!
+  password: String!
   firstname: String!
   lastname: String!
-  email: String!
-  avatar: String!
+  password_confirmation: String!
+  company: String
+  phone: Int
 }
