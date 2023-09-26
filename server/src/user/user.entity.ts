@@ -1,7 +1,8 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { hash } from 'bcrypt';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -28,8 +29,19 @@ export class User extends BaseEntity {
   email: string;
 
   @Column('text')
-  @Field()
+  password: string;
+
+  @Column('text', { nullable: true })
+  @Field(() => String, { nullable: true })
   avatar: string;
+
+  @Column('text', { nullable: true })
+  @Field(() => String, { nullable: true })
+  company: string;
+
+  @Column('text', { nullable: true })
+  @Field(() => Int, { nullable: true })
+  phone: number;
 
   @CreateDateColumn()
   @Field()
@@ -38,4 +50,9 @@ export class User extends BaseEntity {
   @CreateDateColumn()
   @Field()
   updated_at: Date;
+
+  @BeforeInsert()
+  async hashPass() {
+    this.password = await hash(this.password, 12);
+  }
 }

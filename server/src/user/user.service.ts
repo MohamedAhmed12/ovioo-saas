@@ -1,15 +1,14 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { isEmail } from 'class-validator';
-import { throwError } from 'rxjs';
+import { Repository } from 'typeorm';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -18,7 +17,7 @@ export class UserService {
     private readonly UserRepository: Repository<User>,
   ) {}
 
-  async createUser(data: CreateUserDto): Promise<User> {
+  async register(data: RegisterDto): Promise<User> {
     if (!isEmail(data.email)) {
       throw new BadRequestException('Email has to be valid!');
     }
