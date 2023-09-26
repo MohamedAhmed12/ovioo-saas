@@ -6,7 +6,10 @@ import { gql, useMutation } from "@apollo/client";
 import { Button as JoyButton } from "@mui/joy";
 import { Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import SSOWrapper from "./SSOWrapper";
+import { toast } from "react-hot-toast";
+import { useState } from "react";
 
 const Register = gql`
     mutation ($user: RegisterDto!) {
@@ -23,6 +26,7 @@ const Register = gql`
 `;
 
 export default function RegisterForm() {
+    const [loading, setLoading] = useState(false);
     const { value: firstname, bind: bindFirstname } = useInput("");
     const { value: lastname, bind: bindLastname } = useInput("");
     const { value: email, bind: bindEmail } = useInput("");
@@ -31,10 +35,12 @@ export default function RegisterForm() {
     const { value: password_confirmation, bind: bindPasswordConfirmation } = useInput("");
     const { value: phone, bind: bindPhone } = useInput("");
 
+    const router = useRouter();
     const client = getClient();
-    const [register, { data, loading, error }] = useMutation(Register, { client });
+    const [register] = useMutation(Register, { client });
 
     const handleSubmit = async () => {
+        setLoading(true);
         await register({
             variables: {
                 user: {
@@ -48,6 +54,11 @@ export default function RegisterForm() {
                 },
             },
         });
+
+        toast.success("Account created successfully.", {
+            position: "top-right",
+        });
+        router.push("/auth/login");
     };
 
     return (
@@ -114,7 +125,7 @@ export default function RegisterForm() {
                 type="submit"
                 className="auth-btn !mt-8 !mb-2"
             >
-                Create Account
+                {!loading && "Create Account"}
             </JoyButton>
 
             <Stack direction="row" alignItems="center" sx={{ my: 2 }}>
