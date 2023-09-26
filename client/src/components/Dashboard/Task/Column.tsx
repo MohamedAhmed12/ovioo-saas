@@ -1,10 +1,11 @@
+"use client";
+
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { TaskStatus } from "@/interfaces";
 import { addTask, dragTask } from "@/store/features/board";
 import { Typography } from "@mui/material";
-import { shuffle } from "lodash";
-import { DragEvent, FocusEvent, useEffect, useState } from "react";
+import { DragEvent, FocusEvent, useState } from "react";
 import Task from "./Task";
-import { TaskStatus } from "@/interfaces";
 
 export default function Column({ title, color }: { title: TaskStatus; color: string }) {
     const dispatch = useAppDispatch();

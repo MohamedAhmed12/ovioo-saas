@@ -138,7 +138,7 @@ const assetsList: AssetListInterface[] = [
 export default function Asset() {
     return (
         <div className="asset-container flex justify-start flex-wrap">
-            <AssetListCard assetsList={assetsList} sortBy="categories"/>
+            <AssetListCard assetsList={assetsList} sortBy="categories" />
         </div>
     );
 }

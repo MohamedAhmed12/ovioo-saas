@@ -1,5 +1,3 @@
-"use client";
-
 import Column from "@/components/Dashboard/Task/Column";
 import { TaskKanbanColors } from "@/constants/TaskKanbanColors";
 import { TaskStatus } from "@/interfaces";
