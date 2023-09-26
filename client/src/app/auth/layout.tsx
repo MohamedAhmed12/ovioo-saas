@@ -1,7 +1,6 @@
 import LeftSideCover from "@/components/Auth/LeftSideCover";
 import "@/styles/app/auth/layout.scss";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -10,7 +9,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <LeftSideCover />
                 <div className="form__wrapper basis-[55%] bg-white text-black">
                     {children}
-                    <ToastContainer position="top-right" />
+                    <Toaster position="top-right" />
                 </div>
             </div>
         </main>

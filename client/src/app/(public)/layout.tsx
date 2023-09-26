@@ -3,8 +3,7 @@ import "@/styles/app/unauth/layout.scss";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import type { Metadata } from "next";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
     title: "#1 Design Platform To Cover All Your Business Needs - Ovioo",
@@ -16,7 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <NavBar />
             {children}
             <Footer />
-            <ToastContainer position="top-right" />
+            <Toaster position="top-right" />
         </main>
     );
 }

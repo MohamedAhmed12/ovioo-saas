@@ -6,8 +6,7 @@ import { useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
 import "@/styles/app/dashboard/layout.scss";
 import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -33,7 +32,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
                 <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
                 {children}
-                <ToastContainer position="top-right" theme={mode} />
+                <Toaster
+                    position="top-right"
+                    toastOptions={{
+                        style: {
+                            backgroundColor: "#20212c",
+                            color: "#fff",
+                        },
+                    }}
+                />
             </main>
         )
     );
