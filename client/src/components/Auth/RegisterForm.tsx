@@ -1,20 +1,53 @@
 "use client";
 
+import { getClient } from "@/app/api/auth/[...nextauth]/apollo-client";
+import { useInput } from "@/hooks/useInput";
+import { gql, useMutation } from "@apollo/client";
 import { Button as JoyButton } from "@mui/joy";
-import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
-import Image from "next/image";
+import { Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import SSOWrapper from "./SSOWrapper";
+
+const Register = gql`
+    mutation ($user: RegisterDto!) {
+        register(user: $user) {
+            id
+            firstname
+            lastname
+            email
+            avatar
+            created_at
+            updated_at
+        }
+    }
+`;
 
 export default function RegisterForm() {
-    const router = useRouter();
+    const { value: firstname, bind: bindFirstname } = useInput("");
+    const { value: lastname, bind: bindLastname } = useInput("");
+    const { value: email, bind: bindEmail } = useInput("");
+    const { value: company, bind: bindCompany } = useInput("");
+    const { value: password, bind: bindPassword } = useInput("");
+    const { value: password_confirmation, bind: bindPasswordConfirmation } = useInput("");
+    const { value: phone, bind: bindPhone } = useInput("");
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const client = getClient();
+    const [register, { data, loading, error }] = useMutation(Register, { client });
 
-    const handleClick = () => {
-        router.push("/dashboard");
+    const handleSubmit = async () => {
+        await register({
+            variables: {
+                user: {
+                    firstname,
+                    lastname,
+                    company,
+                    email,
+                    password,
+                    password_confirmation,
+                    phone: +phone,
+                },
+            },
+        });
     };
 
     return (
@@ -30,54 +63,56 @@ export default function RegisterForm() {
                 </Link>
             </Typography>
 
-            <div className="flex flex-row spacing-2 social-btn-group">
-                <Button fullWidth size="large" color="inherit" variant="outlined">
-                    <Image
-                        src="/svg/social/google.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-                <Button fullWidth size="large" color="inherit" variant="outlined" className="!mx-5">
-                    <Image
-                        src="/svg/social/facebook.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-                <Button fullWidth size="large" color="inherit" variant="outlined">
-                    <Image
-                        src="/svg/social/linkedin.svg"
-                        width={22}
-                        height={22}
-                        alt="linkedin icon"
-                    ></Image>
-                </Button>
-            </div>
-
-            <Divider sx={{ my: 3 }}>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    OR
-                </Typography>
-            </Divider>
+            <SSOWrapper />
 
             <Stack spacing={3}>
-                <TextField required name="firstname" label="First name" type="text" />
-                <TextField required name="lastname" label="Last name" type="text" />
-                <TextField name="company" label="Company" type="text" />
-                <TextField required name="email" label="Work email" type="email" />
-                <TextField required name="password" label="Password" type="Password" />
-                <TextField name="phone" label="Phone number" type="text" placeholder="+971" />
+                <TextField
+                    required
+                    name="firstname"
+                    label="First name"
+                    type="text"
+                    {...bindFirstname}
+                />
+                <TextField
+                    required
+                    name="lastname"
+                    label="Last name"
+                    type="text"
+                    {...bindLastname}
+                />
+                <TextField name="company" label="Company" type="text" {...bindCompany} />
+                <TextField required name="email" label="Work email" type="email" {...bindEmail} />
+                <TextField
+                    required
+                    name="password"
+                    label="Password"
+                    type="Password"
+                    {...bindPassword}
+                />
+                <TextField
+                    required
+                    name="password_confirmation"
+                    label="Password Confirmation"
+                    type="password"
+                    {...bindPasswordConfirmation}
+                />
+                <TextField
+                    name="phone"
+                    label="Phone number"
+                    type="text"
+                    placeholder="+971"
+                    {...bindPhone}
+                />
             </Stack>
 
             <JoyButton
                 loading={loading}
-                onClick={handleClick}
+                onClick={() => {
+                    handleSubmit();
+                }}
                 variant="solid"
                 type="submit"
-                className="auth-btn mt-8 mb-2"
+                className="auth-btn !mt-8 !mb-2"
             >
                 Create Account
             </JoyButton>

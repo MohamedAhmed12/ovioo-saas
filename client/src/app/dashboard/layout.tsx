@@ -13,8 +13,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const mode = useAppSelector((state) => state.mainReducer.mode);
 
     useEffect(() => {
-        console.log("client side rendered");
-
         const htmlElement: HTMLElement = document.documentElement;
 
         if (htmlElement.classList.contains(ModeEnum.Dark))

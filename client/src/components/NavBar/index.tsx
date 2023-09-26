@@ -11,7 +11,7 @@ function NavBar() {
         { url: "/pricing", title: "Plans" },
         { url: "/how-it-works", title: "How it Works" },
         { url: "/about", title: "About Us" },
-        { url: "/login", title: "Log In" },
+        { url: "/auth/login", title: "Log In" },
     ];
     const settings: RouteInterface[] = [
         { url: "/profile", title: "Profile" },
@@ -44,10 +44,7 @@ function NavBar() {
 
     return (
         <>
-            <Desktop
-                pages={pages}
-                scrolling={scrolling}
-            />
+            <Desktop pages={pages} scrolling={scrolling} />
             <Mobile
                 pages={pages}
                 settings={settings}
