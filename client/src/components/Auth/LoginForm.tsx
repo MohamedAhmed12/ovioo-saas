@@ -1,10 +1,14 @@
 "use client";
 
+import { getClient } from "@/app/api/auth/[...nextauth]/apollo-client";
+import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
+import { gql, useMutation } from "@apollo/client";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/joy";
 import {
     Checkbox,
-    Divider,
     FormControlLabel,
     IconButton,
     InputAdornment,
@@ -12,27 +16,51 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { sign } from "crypto";
 import { signIn } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import SSOWrapper from "./SSOWrapper";
 
-export default function LoginForm() {
-    const router = useRouter();
-    const searchParam = useSearchParams();
-    const callbackUrl = searchParam.get("callback") || undefined;
+const Login = gql`
+    mutation ($user: LoginDto!) {
+        login(user: $user) {
+            id
+            firstname
+            lastname
+            email
+            avatar
+            created_at
+            updated_at
+        }
+    }
+`;
 
+export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { value: email, bind: bindEmail } = useInput("");
+    const { value: password, bind: bindPassword } = useInput("");
 
-    const handleClick = () => {
-        console.log("this is callback", callbackUrl);
+    const searchParam = useSearchParams();
+    const callbackUrl = searchParam.get("callback") || "/dashboard/task";
 
-        signIn("google", { callbackUrl });
-        // router.push("/dashboard");
+    const client = getClient();
+    const [login] = useMutation(Login, { client });
+
+    const handleSubmit = async () => {
+        setLoading(true);
+
+        const { data } = await login({
+            variables: {
+                user: {
+                    email,
+                    password,
+                },
+            },
+        });
+
+        if (data && data?.login) await signIn("credentials", { callbackUrl, data: data?.login });
     };
 
     return (
@@ -51,7 +79,7 @@ export default function LoginForm() {
             <SSOWrapper />
 
             <Stack spacing={3}>
-                <TextField name="email" label="Email address" />
+                <TextField name="email" label="Email address" {...bindEmail} />
 
                 <TextField
                     name="password"
@@ -64,11 +92,12 @@ export default function LoginForm() {
                                     onClick={() => setShowPassword(!showPassword)}
                                     edge="end"
                                 >
-                                    {/* <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} /> */}
+                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                 </IconButton>
                             </InputAdornment>
                         ),
                     }}
+                    {...bindPassword}
                 />
             </Stack>
 
@@ -86,12 +115,12 @@ export default function LoginForm() {
 
             <Button
                 loading={loading}
-                onClick={handleClick}
+                onClick={handleSubmit}
                 variant="solid"
                 type="submit"
                 className="auth-btn !mt-4"
             >
-                Login
+                {!loading && "Login"}
             </Button>
         </>
     );

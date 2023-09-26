@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import LinkedInProvider from "next-auth/providers/linkedin";
+import { User as UserInterface } from "@/interfaces/user";
 
 export const authOptions = {
     providers: [
@@ -16,6 +18,18 @@ export const authOptions = {
         LinkedInProvider({
             clientId: process.env.LINKEDIN_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+        }),
+        CredentialsProvider({
+            type: "credentials",
+            credentials: {},
+            authorize(credentials, req) {
+                const { callbackUrl, data } = credentials as {
+                    callbackUrl: string;
+                    data: any;
+                };
+
+                return data;
+            },
         }),
     ],
     pages: {
