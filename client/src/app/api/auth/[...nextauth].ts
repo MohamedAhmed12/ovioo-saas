@@ -1,3 +1,5 @@
+import { getClient } from "@/app/api/apollo-client";
+import { splitName } from "@/utils/helpers";
 import { gql } from "@apollo/client";
 import NextAuth, { Account, Profile, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
@@ -5,8 +7,6 @@ import CredentialsProvider, { CredentialInput } from "next-auth/providers/creden
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import LinkedInProvider from "next-auth/providers/linkedin";
-import { getClient } from "./apollo-client";
-import { splitName } from "@/utils/helpers";
 
 const FindOrCreateSSOUser = gql`
     mutation ($user: CreateSsoUserDto!) {
@@ -159,6 +159,4 @@ export const authOptions = {
     },
 };
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);

@@ -1,4 +1,4 @@
-import { getClient } from "@/app/api/auth/[...nextauth]/apollo-client";
+import { getClient } from "@/app/api/apollo-client";
 import { UserRegister as UserRegisterInterface } from "@/interfaces/user";
 import { gql } from "@apollo/client";
 
