@@ -1,6 +1,6 @@
 "use client";
 
-import { getClient } from "@/app/api/auth/[...nextauth]/apollo-client";
+import { getClient } from "@/app/api/apollo-client";
 import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
 import { gql, useMutation } from "@apollo/client";

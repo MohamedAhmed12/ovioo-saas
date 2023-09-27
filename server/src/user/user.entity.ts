@@ -8,6 +8,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { AuthProviderEnum } from './enums/auth-provider.enum';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -17,18 +18,18 @@ export class User extends BaseEntity {
   id: number;
 
   @Column('text')
-  @Field()
+  @Field(() => String)
   firstname: string;
 
   @Column('text')
-  @Field()
+  @Field(() => String)
   lastname: string;
 
   @Column('text', { unique: true })
-  @Field()
+  @Field(() => String)
   email: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   password: string;
 
   @Column('text', { nullable: true })
@@ -43,6 +44,10 @@ export class User extends BaseEntity {
   @Field(() => Int, { nullable: true })
   phone: number;
 
+  @Column('text')
+  @Field(() => String)
+  provider: string;
+
   @CreateDateColumn()
   @Field()
   created_at: Date;
@@ -53,6 +58,8 @@ export class User extends BaseEntity {
 
   @BeforeInsert()
   async hashPass() {
-    this.password = await hash(this.password, 12);
+    if (this.provider === AuthProviderEnum.Credentials) {
+      this.password = await hash(this.password, 12);
+    }
   }
 }

@@ -11,6 +11,7 @@ type User {
   avatar: String
   company: String
   phone: Int
+  provider: String!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -25,8 +26,17 @@ type Query {
 }
 
 type Mutation {
+  findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   login(user: LoginDto!): User!
   register(user: RegisterDto!): User!
+}
+
+input CreateSsoUserDto {
+  firstname: String
+  lastname: String
+  email: String!
+  avatar: String
+  provider: String!
 }
 
 input LoginDto {
@@ -42,4 +52,5 @@ input RegisterDto {
   password_confirmation: String!
   company: String
   phone: Int
+  provider: String!
 }

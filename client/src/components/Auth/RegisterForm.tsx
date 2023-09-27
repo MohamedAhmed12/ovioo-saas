@@ -1,29 +1,15 @@
 "use client";
 
-import { getClient } from "@/app/api/auth/[...nextauth]/apollo-client";
 import { useInput } from "@/hooks/useInput";
-import { gql, useMutation } from "@apollo/client";
+import { useRegister } from "@/hooks/useRegister";
+import { AuthProviderEnum } from "@/interfaces";
 import { Button as JoyButton } from "@mui/joy";
 import { Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import SSOWrapper from "./SSOWrapper";
-import { toast } from "react-hot-toast";
 import { useState } from "react";
-
-const Register = gql`
-    mutation ($user: RegisterDto!) {
-        register(user: $user) {
-            id
-            firstname
-            lastname
-            email
-            avatar
-            created_at
-            updated_at
-        }
-    }
-`;
+import { toast } from "react-hot-toast";
+import SSOWrapper from "./SSOWrapper";
 
 export default function RegisterForm() {
     const [loading, setLoading] = useState(false);
@@ -36,29 +22,26 @@ export default function RegisterForm() {
     const { value: phone, bind: bindPhone } = useInput("");
 
     const router = useRouter();
-    const client = getClient();
-    const [register] = useMutation(Register, { client });
+    const register = useRegister;
 
     const handleSubmit = async () => {
         setLoading(true);
+
         await register({
-            variables: {
-                user: {
-                    firstname,
-                    lastname,
-                    company,
-                    email,
-                    password,
-                    password_confirmation,
-                    phone: +phone,
-                },
-            },
+            firstname,
+            lastname,
+            company,
+            email,
+            password,
+            password_confirmation,
+            phone: +phone,
+            provider: AuthProviderEnum.Credentials,
         });
 
         toast.success("Account created successfully.", {
             position: "top-right",
         });
-        router.push("/auth/login");
+        router.push("/dashboard/task");
     };
 
     return (
