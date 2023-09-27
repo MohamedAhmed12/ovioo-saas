@@ -11,14 +11,14 @@ import { LoginDto } from './login.dto';
 
 @InputType()
 export class RegisterDto extends LoginDto {
-  @Field()
   @IsString()
   @IsNotEmpty()
+  @Field(() => String)
   firstname: string;
 
-  @Field()
   @IsString()
   @IsNotEmpty()
+  @Field()
   lastname: string;
 
   @IsStrongPassword()

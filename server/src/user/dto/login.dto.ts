@@ -9,15 +9,15 @@ import {
 
 @InputType()
 export class LoginDto {
-  @Field()
   @IsNotEmpty()
   @IsEmail()
+  @Field()
   email: string;
 
+  @Field()
   @IsStrongPassword()
   @IsNotEmpty()
   @MaxLength(32)
   @MinLength(8)
-  @Field()
   password: string;
 }
