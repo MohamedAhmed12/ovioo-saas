@@ -49,11 +49,15 @@ export class UserService {
   }
 
   async register(data: RegisterDto): Promise<User> {
-    if (!isEmail(data.email)) {
-      throw new BadRequestException('Email has to be valid!');
+    let user = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
+
+    if (user) {
+      throw new BadRequestException('Email already registered');
     }
 
-    const user = this.UserRepository.create(data);
+    user = this.UserRepository.create(data);
     return await this.UserRepository.save(user);
   }
 }

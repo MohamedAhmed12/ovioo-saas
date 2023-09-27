@@ -1,18 +1,38 @@
 "use client";
 
+import { getClient } from "@/app/api/apollo-client";
+import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
-import { useRegister } from "@/hooks/useRegister";
 import { AuthProviderEnum } from "@/interfaces";
+import { gql } from "@apollo/client";
 import { Button as JoyButton } from "@mui/joy";
 import { Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import SSOWrapper from "./SSOWrapper";
 
+const Register = gql`
+    mutation ($user: RegisterDto!) {
+        register(user: $user) {
+            id
+            firstname
+            lastname
+            email
+            avatar
+            created_at
+            updated_at
+        }
+    }
+`;
+
 export default function RegisterForm() {
+    const router = useRouter();
+    const client = getClient();
+
     const [loading, setLoading] = useState(false);
+    const { errors, errorHandler } = useGraphError({});
     const { value: firstname, bind: bindFirstname } = useInput("");
     const { value: lastname, bind: bindLastname } = useInput("");
     const { value: email, bind: bindEmail } = useInput("");
@@ -21,27 +41,34 @@ export default function RegisterForm() {
     const { value: password_confirmation, bind: bindPasswordConfirmation } = useInput("");
     const { value: phone, bind: bindPhone } = useInput("");
 
-    const router = useRouter();
-    const register = useRegister;
-
     const handleSubmit = async () => {
         setLoading(true);
 
-        await register({
-            firstname,
-            lastname,
-            company,
-            email,
-            password,
-            password_confirmation,
-            phone: +phone,
-            provider: AuthProviderEnum.Credentials,
-        });
+        try {
+            await client.mutate({
+                mutation: Register,
+                variables: {
+                    user: {
+                        firstname,
+                        lastname,
+                        company,
+                        email,
+                        password,
+                        password_confirmation,
+                        phone: +phone,
+                        provider: AuthProviderEnum.Credentials,
+                    },
+                },
+            });
+            toast.success("Account created successfully.", {
+                position: "top-right",
+            });
+            router.push("/dashboard/task");
+        } catch (e: any) {
+            errorHandler(e);
+        }
 
-        toast.success("Account created successfully.", {
-            position: "top-right",
-        });
-        router.push("/dashboard/task");
+        setLoading(false);
     };
 
     return (
@@ -63,6 +90,8 @@ export default function RegisterForm() {
                 <TextField
                     required
                     name="firstname"
+                    error={errors.hasOwnProperty("firstname")}
+                    helperText={errors["firstname"]}
                     label="First name"
                     type="text"
                     {...bindFirstname}
@@ -70,15 +99,34 @@ export default function RegisterForm() {
                 <TextField
                     required
                     name="lastname"
+                    error={errors.hasOwnProperty("lastname")}
+                    helperText={errors["lastname"]}
                     label="Last name"
                     type="text"
                     {...bindLastname}
                 />
-                <TextField name="company" label="Company" type="text" {...bindCompany} />
-                <TextField required name="email" label="Work email" type="email" {...bindEmail} />
+                <TextField
+                    name="company"
+                    error={errors.hasOwnProperty("company")}
+                    helperText={errors["company"]}
+                    label="Company"
+                    type="text"
+                    {...bindCompany}
+                />
+                <TextField
+                    required
+                    name="email"
+                    error={errors.hasOwnProperty("email")}
+                    helperText={errors["email"]}
+                    label="Work email"
+                    type="email"
+                    {...bindEmail}
+                />
                 <TextField
                     required
                     name="password"
+                    error={errors.hasOwnProperty("password")}
+                    helperText={errors["password"]}
                     label="Password"
                     type="Password"
                     {...bindPassword}
@@ -86,12 +134,16 @@ export default function RegisterForm() {
                 <TextField
                     required
                     name="password_confirmation"
+                    error={errors.hasOwnProperty("password_confirmation")}
+                    helperText={errors["password_confirmation"]}
                     label="Password Confirmation"
                     type="password"
                     {...bindPasswordConfirmation}
                 />
                 <TextField
                     name="phone"
+                    error={errors.hasOwnProperty("phone")}
+                    helperText={errors["phone"]}
                     label="Phone number"
                     type="text"
                     placeholder="+971"
