@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compareSync } from 'bcrypt';
 import { isEmail } from 'class-validator';
 import { Repository } from 'typeorm';
+import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.entity';
@@ -17,6 +18,19 @@ export class UserService {
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
   ) {}
+
+  async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
+    let user = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
+
+    if (!user) {
+      user = this.UserRepository.create(data);
+      user = await this.UserRepository.save(user);
+    }
+
+    return user;
+  }
 
   async login(data: LoginDto): Promise<User> {
     const user = await this.UserRepository.findOne({

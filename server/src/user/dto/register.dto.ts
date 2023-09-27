@@ -35,4 +35,9 @@ export class RegisterDto extends LoginDto {
   @IsNumber()
   @Field(() => Int, { nullable: true })
   phone?: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @Field(() => String)
+  provider: string;
 }
