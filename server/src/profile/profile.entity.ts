@@ -36,11 +36,11 @@ export class Profile extends BaseEntity {
   @Field(() => String, { nullable: true })
   company_links: string;
 
-  @Column('text', { default: false })
+  @Column('boolean', { default: false })
   @Field(() => Boolean)
   push_notification_enabled: boolean;
 
-  @Column('text', { default: false })
+  @Column('boolean', { default: false })
   @Field(() => Boolean)
   mail_notification_enabled: boolean;
 
