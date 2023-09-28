@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import { ProfileModule } from './profile/profile.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ormConfig = require('../ormconfig.json');
@@ -12,6 +13,7 @@ const ormConfig = require('../ormconfig.json');
 @Module({
   imports: [
     UserModule,
+    ProfileModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',

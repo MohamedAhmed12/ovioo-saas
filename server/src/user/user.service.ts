@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compareSync } from 'bcrypt';
-import { isEmail } from 'class-validator';
-import { Repository } from 'typeorm';
+import { Profile } from 'src/profile/profile.entity';
+import { DeepPartial, Repository } from 'typeorm';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -17,6 +17,9 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
+
+    @InjectRepository(Profile)
+    private readonly profileRepository: Repository<Profile>,
   ) {}
 
   async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
@@ -25,8 +28,7 @@ export class UserService {
     });
 
     if (!user) {
-      user = this.UserRepository.create(data);
-      user = await this.UserRepository.save(user);
+      user = await this.createUseWithRelatedEntities(data);
     }
 
     return user;
@@ -49,7 +51,7 @@ export class UserService {
   }
 
   async register(data: RegisterDto): Promise<User> {
-    let user = await this.UserRepository.findOne({
+    const user = await this.UserRepository.findOne({
       where: { email: data.email },
     });
 
@@ -57,7 +59,18 @@ export class UserService {
       throw new BadRequestException('Email already registered');
     }
 
-    user = this.UserRepository.create(data);
-    return await this.UserRepository.save(user);
+    return await this.createUseWithRelatedEntities(data);
+  }
+
+  async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
+    let user = this.UserRepository.create(data);
+    user = await this.UserRepository.save(user);
+
+    const profile = this.profileRepository.create({
+      company_name: data.company,
+    });
+    this.profileRepository.save(profile);
+
+    return user;
   }
 }
