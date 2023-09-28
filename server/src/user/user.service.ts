@@ -63,14 +63,13 @@ export class UserService {
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
-    let user = this.UserRepository.create(data);
-    user = await this.UserRepository.save(user);
+    const user = this.UserRepository.create(data);
 
     const profile = this.profileRepository.create({
       company_name: data.company,
     });
-    this.profileRepository.save(profile);
+    user.profile = profile;
 
-    return user;
+    return await this.UserRepository.save(user);
   }
 }

@@ -6,9 +6,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
+import { Profile } from 'src/profile/profile.entity';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -55,6 +58,10 @@ export class User extends BaseEntity {
   @CreateDateColumn()
   @Field()
   updated_at: Date;
+
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  @JoinColumn()
+  profile: Profile;
 
   @BeforeInsert()
   async hashPass() {

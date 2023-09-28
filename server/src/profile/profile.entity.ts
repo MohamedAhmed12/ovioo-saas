@@ -1,9 +1,11 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -49,4 +51,7 @@ export class Profile extends BaseEntity {
   @CreateDateColumn()
   @Field()
   updated_at: Date;
+
+  @OneToOne(() => User, (user) => user.profile)
+  user: User;
 }
