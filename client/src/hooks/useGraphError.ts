@@ -2,17 +2,18 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const useGraphError = (initialVal: { [key: string]: string }) => {
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>(initialVal);
 
     const errorHandler = (e: any) => {
-        const graphQLerror = e?.graphQLErrors?.[0]?.extensions?.originalError;
+        const graphQLerror = e?.graphQLErrors?.[0]?.extensions;
+        const graphQLerrorMsgs = graphQLerror?.originalError?.message;
 
-        if (Array.isArray(graphQLerror?.message)) {
-            setErrors(e.graphQLErrors[0].extensions.originalError.message[0]);
+        if (Array.isArray(graphQLerrorMsgs)) {
+            setErrors(graphQLerrorMsgs[0]);
         } else {
-            if (graphQLerror?.statusCode == 400) {
+            if (["BAD_REQUEST", "UNAUTHENTICATED"].includes(graphQLerror?.code)) {
                 setErrors({});
-                toast.error(graphQLerror?.message);
+                toast.error(graphQLerrorMsgs);
             }
         }
     };

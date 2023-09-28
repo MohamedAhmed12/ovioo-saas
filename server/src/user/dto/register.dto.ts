@@ -22,7 +22,12 @@ export class RegisterDto extends LoginDto {
   lastname: string;
 
   @IsStrongPassword()
-  @IsNotEmpty()
+  @MaxLength(32)
+  @MinLength(8)
+  @Field()
+  password: string;
+
+  @IsStrongPassword()
   @MaxLength(23)
   @MinLength(8)
   @Field()

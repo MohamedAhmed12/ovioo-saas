@@ -1,6 +1,7 @@
 "use client";
 
 import { getClient } from "@/app/api/apollo-client";
+import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
 import { gql, useMutation } from "@apollo/client";
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import SSOWrapper from "./SSOWrapper";
 
@@ -39,6 +40,7 @@ const Login = gql`
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { errors, errorHandler } = useGraphError({});
     const { value: email, bind: bindEmail } = useInput("");
     const { value: password, bind: bindPassword } = useInput("");
 
@@ -51,16 +53,21 @@ export default function LoginForm() {
     const handleSubmit = async () => {
         setLoading(true);
 
-        const { data } = await login({
-            variables: {
-                user: {
-                    email,
-                    password,
+        try {
+            const { data } = await login({
+                variables: {
+                    user: {
+                        email,
+                        password,
+                    },
                 },
-            },
-        });
+            });
 
-        if (data && data?.login) await signIn("credentials", { callbackUrl, data: data?.login });
+            await signIn("credentials", { callbackUrl, data: data?.login });
+        } catch (e: any) {
+            errorHandler(e);
+        }
+        setLoading(false);
     };
 
     return (
@@ -79,9 +86,17 @@ export default function LoginForm() {
             <SSOWrapper />
 
             <Stack spacing={3}>
-                <TextField name="email" label="Email address" {...bindEmail} />
+                <TextField
+                    required
+                    name="email"
+                    label="Email address"
+                    error={errors.hasOwnProperty("email")}
+                    helperText={errors["email"]}
+                    {...bindEmail}
+                />
 
                 <TextField
+                    required
                     name="password"
                     label="Password"
                     type={showPassword ? "text" : "password"}
@@ -97,6 +112,8 @@ export default function LoginForm() {
                             </InputAdornment>
                         ),
                     }}
+                    error={errors.hasOwnProperty("password")}
+                    helperText={errors["password"]}
                     {...bindPassword}
                 />
             </Stack>

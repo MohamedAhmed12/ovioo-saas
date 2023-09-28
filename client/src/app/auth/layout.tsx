@@ -23,7 +23,14 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <LeftSideCover />
                 <div className="form__wrapper basis-[55%] bg-white text-black">
                     {children}
-                    <Toaster position="top-right" />
+                    <Toaster
+                        position="top-right"
+                        toastOptions={{
+                            style: {
+                                maxWidth: 600,
+                            },
+                        }}
+                    />
                 </div>
             </div>
         </main>
