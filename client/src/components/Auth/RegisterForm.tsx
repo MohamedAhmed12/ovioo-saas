@@ -1,6 +1,6 @@
 "use client";
 
-import { getClient } from "@/app/api/apollo-client";
+import { useClient } from "@/hooks/useClient";
 import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import { AuthProviderEnum } from "@/interfaces";
@@ -29,7 +29,7 @@ const Register = gql`
 
 export default function RegisterForm() {
     const router = useRouter();
-    const client = getClient();
+    const client = useClient();
 
     const [loading, setLoading] = useState(false);
     const { errors, errorHandler } = useGraphError({});
@@ -63,11 +63,10 @@ export default function RegisterForm() {
             toast.success("Account created successfully.", {
                 position: "top-right",
             });
-            router.push("/dashboard/task");
+            await router.push("/dashboard/task");
         } catch (e: any) {
             errorHandler(e);
         }
-
         setLoading(false);
     };
 

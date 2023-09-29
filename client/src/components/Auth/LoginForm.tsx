@@ -1,6 +1,6 @@
 "use client";
 
-import { getClient } from "@/app/api/apollo-client";
+import { useClient } from "@/hooks/useClient";
 import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
@@ -47,7 +47,7 @@ export default function LoginForm() {
     const searchParam = useSearchParams();
     const callbackUrl = searchParam.get("callback") || "/dashboard/task";
 
-    const client = getClient();
+    const client = useClient();
     const [login] = useMutation(Login, { client });
 
     const handleSubmit = async () => {
@@ -63,7 +63,7 @@ export default function LoginForm() {
                 },
             });
 
-            await signIn("credentials", { callbackUrl, data: data?.login });
+            await signIn("credentials", { callbackUrl, data: JSON.stringify(data.login) });
         } catch (e: any) {
             errorHandler(e);
         }
