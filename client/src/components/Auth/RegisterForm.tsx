@@ -5,8 +5,10 @@ import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import { AuthProviderEnum } from "@/interfaces";
 import { gql } from "@apollo/client";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Button as JoyButton } from "@mui/joy";
-import { Stack, TextField, Typography } from "@mui/material";
+import { IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -32,6 +34,9 @@ export default function RegisterForm() {
     const client = useClient();
 
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const { errors, errorHandler } = useGraphError({});
     const { value: firstname, bind: bindFirstname } = useInput("");
     const { value: lastname, bind: bindLastname } = useInput("");
@@ -127,7 +132,19 @@ export default function RegisterForm() {
                     error={errors.hasOwnProperty("password")}
                     helperText={errors["password"]}
                     label="Password"
-                    type="Password"
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     {...bindPassword}
                 />
                 <TextField
@@ -136,7 +153,23 @@ export default function RegisterForm() {
                     error={errors.hasOwnProperty("password_confirmation")}
                     helperText={errors["password_confirmation"]}
                     label="Password Confirmation"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    edge="end"
+                                >
+                                    {showConfirmPassword ? (
+                                        <VisibilityIcon />
+                                    ) : (
+                                        <VisibilityOffIcon />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     {...bindPasswordConfirmation}
                 />
                 <TextField
