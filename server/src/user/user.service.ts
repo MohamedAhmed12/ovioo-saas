@@ -11,6 +11,7 @@ import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.entity';
+import { AuthGuardUserDto } from './dto/auth-guard-user.dto';
 
 @Injectable()
 export class UserService {
@@ -60,6 +61,16 @@ export class UserService {
     }
 
     return await this.createUseWithRelatedEntities(data);
+  }
+
+  async me({ email, provider }: AuthGuardUserDto): Promise<User> {
+    return await this.UserRepository.findOneOrFail({
+      where: {
+        email,
+        provider,
+      },
+      relations: ['profile'],
+    });
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {

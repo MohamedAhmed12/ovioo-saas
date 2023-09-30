@@ -53,5 +53,6 @@ export class Profile extends BaseEntity {
   updated_at: Date;
 
   @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
+  @Field(() => User, { defaultValue: null })
   user: User;
 }

@@ -15,7 +15,10 @@ export class ProfileService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async find({ email, provider }: AuthGuardUserDto): Promise<Profile> {
+  async find({
+    email,
+    provider,
+  }: AuthGuardUserDto): Promise<Profile | undefined> {
     return await this.profileRepository.findOne({
       where: {
         user: {

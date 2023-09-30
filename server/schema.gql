@@ -14,6 +14,7 @@ type User {
   provider: String!
   created_at: DateTime!
   updated_at: DateTime!
+  profile: Profile!
 }
 
 """
@@ -33,10 +34,12 @@ type Profile {
   mail_notification_enabled: Boolean!
   created_at: DateTime!
   updated_at: DateTime!
+  user: User!
 }
 
 type Query {
   getHello: String!
+  me: User!
   findProfile: Profile!
 }
 

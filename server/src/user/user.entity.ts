@@ -61,6 +61,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @JoinColumn()
+  @Field(() => Profile, { defaultValue: null })
   profile: Profile;
 
   @BeforeInsert()
