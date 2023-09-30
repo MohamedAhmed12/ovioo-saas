@@ -1,8 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @InputType()
-export class ProfileDto {
+export class UpdateProfileDto {
+  @IsString()
+  @IsNotEmpty()
+  @Field(() => String)
+  id: number;
+
   @IsString()
   @Field(() => String, { nullable: true })
   company_name: string;
@@ -24,10 +29,12 @@ export class ProfileDto {
   company_links: string;
 
   @IsBoolean()
-  @Field(() => Boolean)
-  push_notification_enabled: boolean;
+  @IsOptional()
+  @Field(() => Boolean, { nullable: true })
+  push_notification_enabled?: boolean;
 
   @IsBoolean()
-  @Field(() => Boolean)
-  mail_notification_enabled: boolean;
+  @IsOptional()
+  @Field(() => Boolean, { nullable: true })
+  mail_notification_enabled?: boolean;
 }

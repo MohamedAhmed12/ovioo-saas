@@ -16,7 +16,7 @@ export class Profile extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column('text', { nullable: true, unique: true })
+  @Column('text', { nullable: true })
   @Field(() => String, { nullable: true })
   company_name: string;
 
@@ -52,6 +52,6 @@ export class Profile extends BaseEntity {
   @Field()
   updated_at: Date;
 
-  @OneToOne(() => User, (user) => user.profile)
+  @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
   user: User;
 }
