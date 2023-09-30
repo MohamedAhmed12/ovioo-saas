@@ -37,7 +37,6 @@ type Profile {
 
 type Query {
   getHello: String!
-  veryfiy: String!
   findProfile: Profile!
 }
 
@@ -81,4 +80,6 @@ input UpdateProfileDto {
   company_links: String
   push_notification_enabled: Boolean
   mail_notification_enabled: Boolean
+  created_at: DateTime
+  updated_at: DateTime
 }

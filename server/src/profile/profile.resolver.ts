@@ -16,6 +16,7 @@ export class ProfileResolver {
     return this.profileService.find(authGuardUser);
   }
 
+  @UseGuards(new AuthGuard())
   @Mutation(() => Profile)
   async updateProfile(@Args('profile') updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(updateProfileDto);

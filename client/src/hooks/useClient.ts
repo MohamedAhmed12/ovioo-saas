@@ -27,7 +27,9 @@ const getClient = (session: any): ApolloClient<any> | null => {
     if (!client) {
         client = new ApolloClient({
             link: session ? authLink(session).concat(httpLink) : httpLink,
-            cache: new InMemoryCache(),
+            cache: new InMemoryCache({
+                addTypename: false,
+            }),
         });
     }
 

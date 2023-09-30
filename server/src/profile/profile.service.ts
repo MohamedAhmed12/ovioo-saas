@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './profile.entity';
-import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
-import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class ProfileService {
@@ -27,10 +27,19 @@ export class ProfileService {
     });
   }
 
-  async update(data: UpdateProfileDto): Promise<Profile> {
-    const profile = await this.profileRepository.findOneBy({ id: +data.id });
-    this.profileRepository.merge(profile, data);
+  async update({
+    created_at,
+    updated_at,
+    ...data
+  }: UpdateProfileDto): Promise<Profile> {
+    const profile = await this.profileRepository.findOneBy({ id: data.id });
 
-    return await this.profileRepository.save(profile);
+    if (!profile)
+      throw new NotFoundException('Couldn’t find profile matches id.');
+
+    await this.profileRepository.merge(profile, data);
+    this.profileRepository.update(profile.id, profile);
+
+    return profile;
   }
 }

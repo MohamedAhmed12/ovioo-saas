@@ -1,15 +1,33 @@
 "use client";
-import { getClient } from "@/app/api/apollo-client";
 import DashBoardCard from "@/components/DashBoardCard";
-import { useInput } from "@/hooks/useInput";
-import { gql, useQuery } from "@apollo/client";
+import { useClient } from "@/hooks/useClient";
+import { useForm } from "@/hooks/useForm";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Button } from "@mui/joy";
 import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-const FetchProfile = gql`
-    query ($id: Float!) {
-        findProfile(id: $id) {
+const FETCH_PROFILE = gql`
+    query {
+        findProfile {
+            id
+            company_name
+            company_links
+            company_website
+            target_audience
+            business_info
+            push_notification_enabled
+            mail_notification_enabled
+            created_at
+            updated_at
+        }
+    }
+`;
+
+const UPDATE_PROFILE = gql`
+    mutation ($profile: UpdateProfileDto!) {
+        updateProfile(profile: $profile) {
             id
             company_name
             company_links
@@ -25,61 +43,56 @@ const FetchProfile = gql`
 `;
 
 export default function Company() {
-    const client = getClient();
-    const { loading, error, data } = useQuery(FetchProfile, { client, variables: { id: 1 } });
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        company_name: "",
+        company_website: "",
+        business_info: "",
+        target_audience: "",
+        company_links: "",
+    });
+    const { handleOnChange } = useForm(setFormData);
+
+    const apolloClient = useClient();
     const {
-        value: company_name,
-        setValue: setValueCompanyName,
-        bind: bindCompanyName,
-    } = useInput("");
-    const {
-        value: company_website,
-        setValue: setValueCompanyWebsite,
-        bind: bindCompanyWebsite,
-    } = useInput("");
-    const {
-        value: business_info,
-        setValue: setValueBusinessInfo,
-        bind: bindBusinessInfo,
-    } = useInput("");
-    const {
-        value: target_audience,
-        setValue: setValueTargetAudience,
-        bind: bindTargetAudience,
-    } = useInput("");
-    const {
-        value: company_links,
-        setValue: setValueCompanyLinks,
-        bind: bindCompanyLinks,
-    } = useInput("");
+        loading: graphQLloading,
+        error,
+        data: initialData,
+    } = useQuery(FETCH_PROFILE, { client: apolloClient });
+
+    const [updateProfile] = useMutation(UPDATE_PROFILE, {
+        client: apolloClient,
+        refetchQueries: [FETCH_PROFILE],
+    });
 
     useEffect(() => {
-        console.log("loain");
-
-        if (!loading) {
-            setValueCompanyName(data.findProfile.company_name || "");
-            setValueCompanyWebsite(data.findProfile.company_website || "");
-            setValueBusinessInfo(data.findProfile.business_info || "");
-            setValueTargetAudience(data.findProfile.target_audience || "");
-            setValueCompanyLinks(data.findProfile.company_links || "");
+        if (!loading && initialData) {
+            setFormData(initialData.findProfile);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, data]);
+    }, [loading, initialData]);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+        setLoading(true);
+
+        try {
+            const { data } = await updateProfile({
+                variables: {
+                    profile: formData,
+                },
+            });
+            data && toast.success("Profile settings updated successfully");
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+        setLoading(false);
     };
 
     if (error) throw new Error(JSON.stringify(error));
 
     return (
-        !loading &&
-        data && (
+        !graphQLloading &&
+        initialData.findProfile && (
             <div className="company-card px-40 flex flex-col lg:flex-col w-full">
                 <DashBoardCard handleSubmit={handleSubmit} headerTitle="profile settings">
                     <>
@@ -91,57 +104,66 @@ export default function Company() {
                                     fullWidth
                                     id="Company-name"
                                     label="Company name"
-                                    name="Company name"
-                                    {...bindCompanyName}
+                                    name="company_name"
+                                    value={formData.company_name}
+                                    onChange={handleOnChange}
                                     autoFocus
                                 />
                                 <TextField
                                     className="dashboard-input"
                                     margin="normal"
                                     fullWidth
-                                    name=" link"
+                                    name="company_website"
                                     label="Website link"
                                     type="link"
                                     id="link"
-                                    {...bindCompanyWebsite}
+                                    value={formData.company_website}
+                                    onChange={handleOnChange}
                                 />
                                 <TextField
                                     className="dashboard-input"
                                     margin="normal"
                                     fullWidth
-                                    name="what is your business About"
+                                    name="business_info"
                                     label="what is your business About?"
                                     type="what is your business About"
                                     id="what-is-your-business-About"
                                     multiline
-                                    {...bindBusinessInfo}
+                                    value={formData.business_info}
+                                    onChange={handleOnChange}
                                 />
                                 <TextField
                                     className="dashboard-input"
                                     margin="normal"
                                     fullWidth
-                                    name="client"
+                                    name="target_audience"
                                     label="describe your client/ target audience"
                                     type="client"
                                     id="client"
                                     multiline
-                                    {...bindTargetAudience}
+                                    value={formData.target_audience}
+                                    onChange={handleOnChange}
                                 />
                                 <TextField
                                     className="dashboard-input"
                                     margin="normal"
                                     fullWidth
-                                    name="Other links"
+                                    name="company_links"
                                     label="Other links"
                                     type="Other links"
                                     id="Other-links"
                                     multiline
-                                    {...bindCompanyLinks}
+                                    value={formData.company_links}
+                                    onChange={handleOnChange}
                                 />
                             </div>
                         </div>
                         <div className="flex w-full justify-end mt-6">
-                            <Button type="submit" className="bg-[--dashboard-primary] text-white ">
+                            <Button
+                                loading={loading}
+                                type="submit"
+                                className="bg-[--dashboard-primary] text-white "
+                            >
                                 update
                             </Button>
                         </div>

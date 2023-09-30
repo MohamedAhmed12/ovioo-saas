@@ -94,10 +94,6 @@ export default function Profile() {
                                     id="email"
                                     autoComplete="current-password"
                                 />
-                                <Select defaultValue="dog" className="my-3 h-14">
-                                    <Option value="dog">Dog</Option>
-                                    <Option value="cat">Cat</Option>
-                                </Select>
                             </div>
                         </div>
                         <div className="flex w-full justify-end mt-6">
@@ -114,18 +110,33 @@ export default function Profile() {
                         <div className="flex flex-col px-[35px] py-[24px]">
                             <div className="flex flex-row justify-between">
                                 <div className="text-base">
-                                    Browser push notifications (Updates & Comments from designers)
+                                    Browser push notifications (Updates & Messages from designers)
                                 </div>
                                 <div>
                                     <Switch {...label} />
                                 </div>
                             </div>
                             <div className="md:mt-0 mt-[20px] flex flex-raw">
-                                <Image src="https://res.cloudinary.com/pizdata/image/upload/v1626192951/app/platform/images/i-alert.svg" width={800} height={800} alt="img"/>
+                                <Image
+                                    src="https://res.cloudinary.com/pizdata/image/upload/v1626192951/app/platform/images/i-alert.svg"
+                                    width={20}
+                                    height={20}
+                                    alt="img"
+                                />
                                 <span className="ml-1 text-aw-gray-400 text-sm font-light">
                                     Unfortunately, this function is not currently available in
                                     Safari
                                 </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col px-[35px] py-[24px]">
+                            <div className="flex flex-row justify-between">
+                                <div className="text-base">
+                                    Mail notifications (Updates & Messages from designers)
+                                </div>
+                                <div>
+                                    <Switch {...label} />
+                                </div>
                             </div>
                         </div>
                     </>
