@@ -35,7 +35,7 @@ export default function RegisterForm() {
 
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const { errors, errorHandler } = useGraphError({});
     const { value: firstname, bind: bindFirstname } = useInput("");
@@ -153,15 +153,17 @@ export default function RegisterForm() {
                     error={errors.hasOwnProperty("password_confirmation")}
                     helperText={errors["password_confirmation"]}
                     label="Password Confirmation"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showPasswordConfirmation ? "text" : "password"}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    onClick={() =>
+                                        setShowPasswordConfirmation(!showPasswordConfirmation)
+                                    }
                                     edge="end"
                                 >
-                                    {showConfirmPassword ? (
+                                    {showPasswordConfirmation ? (
                                         <VisibilityIcon />
                                     ) : (
                                         <VisibilityOffIcon />

@@ -2,10 +2,11 @@
 
 import DashBoardCard from "@/components/DashBoardCard";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
+import { default as Visibility, default as VisibilityIcon } from "@mui/icons-material/Visibility";
+import {
+    default as VisibilityOff,
+    default as VisibilityOffIcon,
+} from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
@@ -46,8 +47,6 @@ export default function Profile() {
             password: data.get("password"),
         });
     };
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleClickShowPasswordConfirmation = () => setShowPasswordConfirmation((show) => !show);
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -65,6 +64,7 @@ export default function Profile() {
                                     width="1500"
                                     height="1500"
                                     alt="profile"
+                                    className="rounded-full"
                                 />
                                 <div className="mt-5 mb-3 flex items-center cursor-pointer">
                                     <AddAPhotoIcon />
@@ -96,9 +96,9 @@ export default function Profile() {
                                 />
                             </div>
                         </div>
-                        <div className="flex w-full justify-end mt-6">
+                        <div className="flex w-full justify-end mt-5">
                             <Button type="submit" className="dashboard__btn">
-                                Sign In
+                                Update
                             </Button>
                         </div>
                     </>
@@ -148,79 +148,75 @@ export default function Profile() {
                         <div className="flex flex-col px-[35px] py-[24px]">
                             <div className="flex flex-col">
                                 <TextField
-                                    className="m-0 dashboard-input"
+                                    className="!m-0 dashboard-input"
                                     margin="normal"
                                     required
                                     fullWidth
                                     name="password"
                                     label="Current Password"
-                                    type="password"
                                     id="password"
-                                    autoComplete="current-password"
+                                    type="password"
                                 />
-
-                                <FormControl
-                                    className="mt-6 w-full dashboard-input"
-                                    variant="outlined"
-                                >
-                                    <InputLabel htmlFor="outlined-adornment-password">
-                                        Password
-                                    </InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-password"
-                                        type={showPassword ? "text" : "password"}
-                                        endAdornment={
+                                <TextField
+                                    required
+                                    name="password"
+                                    className="!mt-6 dashboard-input"
+                                    // error={errors.hasOwnProperty("password")}
+                                    // helperText={errors["password"]}
+                                    label="Password"
+                                    type={showPassword ? "text" : "password"}
+                                    InputProps={{
+                                        endAdornment: (
                                             <InputAdornment position="end">
                                                 <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
+                                                    onClick={() => setShowPassword(!showPassword)}
                                                     edge="end"
                                                 >
                                                     {showPassword ? (
-                                                        <VisibilityOff />
+                                                        <VisibilityIcon />
                                                     ) : (
-                                                        <Visibility />
+                                                        <VisibilityOffIcon />
                                                     )}
                                                 </IconButton>
                                             </InputAdornment>
-                                        }
-                                        label="Password"
-                                    />
-                                </FormControl>
-                                <FormControl
-                                    className="mt-6 w-full dashboard-input"
-                                    variant="outlined"
-                                >
-                                    <InputLabel htmlFor="outlined-adornment-confirm-password">
-                                        Password
-                                    </InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-confirm-password"
-                                        type={showPasswordConfirmation ? "text" : "password"}
-                                        endAdornment={
+                                        ),
+                                    }}
+                                    // {...bindPassword}
+                                />
+                                <TextField
+                                    required
+                                    name="password_confirmation"
+                                    className="!mt-6 dashboard-input"
+                                    // error={errors.hasOwnProperty("password_confirmation")}
+                                    // helperText={errors["password_confirmation"]}
+                                    label="Password Confirmation"
+                                    type={showPasswordConfirmation ? "text" : "password"}
+                                    InputProps={{
+                                        endAdornment: (
                                             <InputAdornment position="end">
                                                 <IconButton
-                                                    aria-label="toggle confirm password visibility"
-                                                    onClick={handleClickShowPasswordConfirmation}
-                                                    onMouseDown={handleMouseDownPassword}
+                                                    onClick={() =>
+                                                        setShowPasswordConfirmation(
+                                                            !showPasswordConfirmation
+                                                        )
+                                                    }
                                                     edge="end"
                                                 >
                                                     {showPasswordConfirmation ? (
-                                                        <VisibilityOff />
+                                                        <VisibilityIcon />
                                                     ) : (
-                                                        <Visibility />
+                                                        <VisibilityOffIcon />
                                                     )}
                                                 </IconButton>
                                             </InputAdornment>
-                                        }
-                                        label="confirm Password"
-                                    />
-                                </FormControl>
+                                        ),
+                                    }}
+                                    // {...bindPasswordConfirmation}
+                                />
                             </div>
                         </div>
-                        <div className="flex w-full justify-end mt-6">
-                            <Button type="submit" className="bg-[--dashboard-primary] text-white ">
+                        <div className="flex w-full justify-end mt-5 px-[35px]">
+                            <Button type="submit" className="dashboard__btn">
                                 Update
                             </Button>
                         </div>
