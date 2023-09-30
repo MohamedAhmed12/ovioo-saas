@@ -1,9 +1,8 @@
-import SessionProvider from "@/components/Providers/SessionProvider";
+import { NextAuthProvider } from "@/components/Providers/NextAuthProvider";
 import { ReduxProvider } from "@/components/Providers/ReduxProvider";
 import "@/styles/app/globals.scss";
 import localFont from "next/font/local";
 import { ReactNode } from "react";
-import { getServerSession } from "next-auth";
 
 const myFont = localFont({
     display: "swap",
@@ -39,14 +38,13 @@ const myFont = localFont({
 });
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-    const session = await getServerSession();
     return (
         <ReduxProvider>
-            <SessionProvider session={session}>
+            <NextAuthProvider>
                 <html lang="en">
                     <body className={myFont.className}>{children}</body>
                 </html>
-            </SessionProvider>
+            </NextAuthProvider>
         </ReduxProvider>
     );
 }
