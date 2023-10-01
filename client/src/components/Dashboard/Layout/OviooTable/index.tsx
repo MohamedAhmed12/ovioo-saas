@@ -56,10 +56,12 @@ export default function OviooTable({
                         {(rowsPerPage > 0
                             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rows
-                        ).map((row, i) => (
-                            <TableRow key={i}>
-                                {Object.values(row).map((cell) => (
-                                    <TableCell key={String(cell)}>{String(cell)}</TableCell>
+                        ).map((row, rowIndex) => (
+                            <TableRow key={rowIndex + "-row"}>
+                                {Object.values(row).map((cell, cellIndex) => (
+                                    <TableCell key={`${cellIndex}-${headers[cellIndex]}-cell`}>
+                                        {String(cell)}
+                                    </TableCell>
                                 ))}
 
                                 {actions && actions}
