@@ -11,9 +11,14 @@ export const useGraphError = (initialVal: { [key: string]: string }) => {
         if (Array.isArray(graphQLerrorMsgs)) {
             setErrors(graphQLerrorMsgs[0]);
         } else {
-            if (["BAD_REQUEST", "UNAUTHENTICATED"].includes(graphQLerror?.code)) {
-                setErrors({});
+            setErrors({});
+
+            if ([403, 404, 409].includes(graphQLerror?.originalError.statusCode)) {
                 toast.error(graphQLerrorMsgs);
+            }
+
+            if ([401].includes(graphQLerror?.originalError.statusCode)) {
+                throw new Error("You have to login in order to view this page.");
             }
         }
     };
