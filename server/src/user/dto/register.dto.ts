@@ -14,12 +14,7 @@ export class RegisterDto extends LoginDto {
   @IsString()
   @IsNotEmpty()
   @Field(() => String)
-  firstname: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Field()
-  lastname: string;
+  fullname: string;
 
   @IsStrongPassword()
   @MaxLength(32)

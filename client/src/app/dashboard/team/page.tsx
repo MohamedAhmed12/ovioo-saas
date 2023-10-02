@@ -8,20 +8,17 @@ import { useState } from "react";
 export default function Team() {
     const [teamMembers, setTeamMembers] = useState<UserInterface[]>([
         {
-            firstname: "owner",
-            lastname: "lastname",
+            fullname: "owner lastname",
             email: "owner@ovioo.com",
             role: RoleEnum.OWNER,
         },
         {
-            firstname: "member1",
-            lastname: "member lastname",
+            fullname: "member1 member lastname",
             email: "member@ovioo.com",
             role: RoleEnum.MEMBER,
         },
         {
-            firstname: "member2",
-            lastname: "member lastname",
+            fullname: "member2 member lastname",
             email: "member2@ovioo.com",
             role: RoleEnum.MEMBER,
         },

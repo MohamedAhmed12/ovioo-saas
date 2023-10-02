@@ -36,9 +36,7 @@ export default function TeamMembersCard({
                     >
                         <span className="flex items-center">
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                            <p className="mx-4 text-xs lg:text-base">
-                                {member.firstname} {member.lastname}
-                            </p>
+                            <p className="mx-4 text-xs lg:text-base">{member.fullname}</p>
                         </span>
 
                         {member.role == RoleEnum.OWNER ? (

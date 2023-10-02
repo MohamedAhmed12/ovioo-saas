@@ -13,8 +13,7 @@ export enum AuthProviderEnum {
 
 export interface User {
     id?: string;
-    firstname?: string;
-    lastname?: string;
+    fullname?: string;
     email: string;
     password?: string;
     company?: string;
@@ -26,8 +25,7 @@ export interface User {
 }
 
 export interface UserRegister {
-    firstname: string;
-    lastname: string;
+    fullname: string;
     email: string;
     company?: string;
     password: string;

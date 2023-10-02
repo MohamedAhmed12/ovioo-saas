@@ -27,8 +27,7 @@ const Login = gql`
     mutation ($user: LoginDto!) {
         login(user: $user) {
             id
-            firstname
-            lastname
+            fullname
             email
             avatar
             created_at

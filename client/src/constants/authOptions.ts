@@ -14,8 +14,7 @@ const FindOrCreateSSOUser = gql`
     mutation ($user: CreateSsoUserDto!) {
         findOrCreateSsoUser(user: $user) {
             id
-            firstname
-            lastname
+            fullname
             email
             avatar
             created_at
@@ -149,15 +148,13 @@ export const authOptions = {
 
             if (user) {
                 const client = getClient();
-                const { firstname, lastname } = splitName(user?.name);
 
                 try {
                     await client.mutate({
                         mutation: FindOrCreateSSOUser,
                         variables: {
                             user: {
-                                firstname,
-                                lastname,
+                                fullname: user.name,
                                 email: user.email,
                                 avatar: user.image,
                                 provider: account?.provider,

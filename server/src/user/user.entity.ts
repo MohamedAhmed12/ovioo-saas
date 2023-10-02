@@ -22,11 +22,7 @@ export class User extends BaseEntity {
 
   @Column('text')
   @Field(() => String)
-  firstname: string;
-
-  @Column('text')
-  @Field(() => String)
-  lastname: string;
+  fullname: string;
 
   @Column('text', { unique: true })
   @Field(() => String)

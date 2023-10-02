@@ -5,11 +5,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class CreateSsoUserDto {
   @IsString()
   @Field(() => String, { nullable: true })
-  firstname?: string;
-
-  @IsString()
-  @Field(() => String, { nullable: true })
-  lastname?: string;
+  fullname?: string;
 
   @IsEmail()
   @IsNotEmpty()

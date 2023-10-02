@@ -19,8 +19,7 @@ const Register = gql`
     mutation ($user: RegisterDto!) {
         register(user: $user) {
             id
-            firstname
-            lastname
+            fullname
             email
             avatar
             created_at
@@ -38,8 +37,7 @@ export default function RegisterForm() {
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const { errors, errorHandler } = useGraphError({});
-    const { value: firstname, bind: bindFirstname } = useInput("");
-    const { value: lastname, bind: bindLastname } = useInput("");
+    const { value: fullname, bind: bindFullname } = useInput("");
     const { value: email, bind: bindEmail } = useInput("");
     const { value: company, bind: bindCompany } = useInput("");
     const { value: password, bind: bindPassword } = useInput("");
@@ -54,8 +52,7 @@ export default function RegisterForm() {
                 mutation: Register,
                 variables: {
                     user: {
-                        firstname,
-                        lastname,
+                        fullname,
                         company,
                         email,
                         password,
@@ -93,21 +90,12 @@ export default function RegisterForm() {
             <Stack spacing={3}>
                 <TextField
                     required
-                    name="firstname"
-                    error={errors.hasOwnProperty("firstname")}
-                    helperText={errors["firstname"]}
-                    label="First name"
+                    name="fullname"
+                    error={errors.hasOwnProperty("fullname")}
+                    helperText={errors["fullname"]}
+                    label="Full name"
                     type="text"
-                    {...bindFirstname}
-                />
-                <TextField
-                    required
-                    name="lastname"
-                    error={errors.hasOwnProperty("lastname")}
-                    helperText={errors["lastname"]}
-                    label="Last name"
-                    type="text"
-                    {...bindLastname}
+                    {...bindFullname}
                 />
                 <TextField
                     name="company"

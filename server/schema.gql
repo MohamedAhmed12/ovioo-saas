@@ -5,8 +5,7 @@
 """users"""
 type User {
   id: ID!
-  firstname: String!
-  lastname: String!
+  fullname: String!
   email: String!
   avatar: String
   company: String
@@ -51,8 +50,7 @@ type Mutation {
 }
 
 input CreateSsoUserDto {
-  firstname: String
-  lastname: String
+  fullname: String
   email: String!
   avatar: String
   provider: String!
@@ -66,8 +64,7 @@ input LoginDto {
 input RegisterDto {
   email: String!
   password: String!
-  firstname: String!
-  lastname: String!
+  fullname: String!
   password_confirmation: String!
   company: String
   phone: Int

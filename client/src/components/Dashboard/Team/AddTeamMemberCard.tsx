@@ -18,8 +18,7 @@ export default function AddTeamMemberCard({
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [newMember, setNewMember] = useState<UserInterface>({
         email: "",
-        firstname: "",
-        lastname: "",
+        fullname: "",
         role: RoleEnum.MEMBER,
     });
 
@@ -34,8 +33,7 @@ export default function AddTeamMemberCard({
         setShowInfo(true);
         setNewMember({
             email: "",
-            firstname: "",
-            lastname: "",
+            fullname: "",
             role: RoleEnum.MEMBER,
         });
     };
@@ -88,28 +86,17 @@ export default function AddTeamMemberCard({
                             type="email"
                             id="email"
                         />
+
                         <TextField
                             className="dashboard-input"
                             margin="normal"
                             required
-                            value={newMember.firstname}
+                            value={newMember.fullname}
                             onChange={handleInputChange}
                             fullWidth
-                            id="first-name"
-                            label="first name"
-                            name="firstname"
-                            autoFocus
-                        />
-                        <TextField
-                            className="dashboard-input"
-                            margin="normal"
-                            required
-                            value={newMember.lastname}
-                            onChange={handleInputChange}
-                            fullWidth
-                            id="last-name"
-                            label="last name"
-                            name="lastname"
+                            id="full-name"
+                            label="full name"
+                            name="fullname"
                             autoFocus
                         />
                     </div>
