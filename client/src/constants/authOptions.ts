@@ -1,4 +1,4 @@
-import { useClient } from "@/hooks/useClient";
+import { getClient } from "@/utils/getClient";
 import { splitName } from "@/utils/helpers";
 import { gql } from "@apollo/client";
 import { sign } from "jsonwebtoken";
@@ -148,7 +148,7 @@ export const authOptions = {
             if (account?.provider == "credentials") return true;
 
             if (user) {
-                const client = useClient();
+                const client = getClient();
                 const { firstname, lastname } = splitName(user?.name);
 
                 try {

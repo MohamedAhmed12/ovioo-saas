@@ -1,9 +1,9 @@
 "use client";
 
-import { useClient } from "@/hooks/useClient";
 import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
+import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -47,7 +47,7 @@ export default function LoginForm() {
     const searchParam = useSearchParams();
     const callbackUrl = searchParam.get("callback") || "/dashboard/task";
 
-    const client = useClient();
+    const client = getClient();
     const [login] = useMutation(Login, { client });
 
     const handleSubmit = async () => {

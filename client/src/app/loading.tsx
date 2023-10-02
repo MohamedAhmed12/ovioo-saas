@@ -1,7 +1,7 @@
 import CircularProgress from "@mui/joy/CircularProgress";
 import Image from "next/image";
 
-export default function Loading({ bgTransparent = false }: { bgTransparent: boolean }) {
+export default function Loading({ bgTransparent = false }: { bgTransparent?: boolean }) {
     return (
         <div
             className={`flex justify-center items-center h-screen ${
