@@ -1,9 +1,9 @@
 "use client";
 
-import { useClient } from "@/hooks/useClient";
 import { useGraphError } from "@/hooks/useGraphError";
 import { useInput } from "@/hooks/useInput";
 import { AuthProviderEnum } from "@/interfaces";
+import { getClient } from "@/utils/getClient";
 import { gql } from "@apollo/client";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -30,7 +30,7 @@ const Register = gql`
 
 export default function RegisterForm() {
     const router = useRouter();
-    const client = useClient();
+    const client = getClient();
 
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -68,8 +68,8 @@ export default function RegisterForm() {
             await router.push("/dashboard/task");
         } catch (e: any) {
             errorHandler(e);
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
