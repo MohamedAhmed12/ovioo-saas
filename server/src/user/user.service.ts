@@ -1,17 +1,19 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compareSync } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { Profile } from 'src/profile/profile.entity';
 import { DeepPartial, Repository } from 'typeorm';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.entity';
-import { AuthGuardUserDto } from './dto/auth-guard-user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,9 +26,7 @@ export class UserService {
   ) {}
 
   async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
-    let user = await this.UserRepository.findOne({
-      where: { email: data.email },
-    });
+    let user = await this.me(data);
 
     if (!user) {
       user = await this.createUseWithRelatedEntities(data);
@@ -41,12 +41,12 @@ export class UserService {
     });
 
     if (!user)
-      throw new BadRequestException(
+      throw new NotFoundException(
         'Couldn’t find an Ovioo account associated with this email.',
       );
 
-    if (await !compareSync(data.password, user?.password))
-      throw new UnauthorizedException("That's not the right password.");
+    if (await !compare(data.password, user?.password))
+      throw new NotFoundException("That's not the right password.");
 
     return user;
   }
@@ -57,20 +57,59 @@ export class UserService {
     });
 
     if (user) {
-      throw new BadRequestException('Email already registered');
+      throw new ConflictException('Email is already registered');
     }
 
     return await this.createUseWithRelatedEntities(data);
   }
 
-  async me({ email, provider }: AuthGuardUserDto): Promise<User> {
-    return await this.UserRepository.findOneOrFail({
+  async me({
+    email,
+    provider,
+  }: {
+    email: string;
+    provider: string;
+  }): Promise<User> {
+    const user = await this.UserRepository.findOne({
       where: {
         email,
         provider,
       },
       relations: ['profile'],
     });
+
+    if (!user)
+      throw new UnauthorizedException(
+        'Couldn’t find an Ovioo account associated with this email.',
+      );
+
+    return user;
+  }
+
+  async changePassword(
+    data: ChangePasswordDto,
+    { email }: { email: string },
+  ): Promise<boolean> {
+    const authUser = await this.UserRepository.findOneBy({
+      email,
+    });
+
+    if (authUser.provider != 'credentials' || !authUser.password)
+      throw new BadRequestException();
+
+    const isValidCurrentPassword = await compare(
+      data.current_password,
+      authUser.password,
+    );
+
+    if (isValidCurrentPassword) {
+      authUser.password = await hash(data.password, 12);
+      await this.UserRepository.save(authUser);
+
+      return true;
+    }
+
+    return false;
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
@@ -79,6 +118,7 @@ export class UserService {
     const profile = this.profileRepository.create({
       company_name: data.company,
     });
+
     user.profile = profile;
 
     return await this.UserRepository.save(user);

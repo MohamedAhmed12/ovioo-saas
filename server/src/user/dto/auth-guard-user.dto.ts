@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 
 export class AuthGuardUserDto {
   @IsString()
@@ -12,7 +12,4 @@ export class AuthGuardUserDto {
 
   @IsString()
   provider: string;
-
-  @IsNumber()
-  provider_id: number;
 }
