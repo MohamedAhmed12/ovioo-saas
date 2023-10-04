@@ -1,6 +1,7 @@
 "use client";
 
 import DashBoardCard from "@/components/DashBoardCard";
+import { useAppSelector } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation, useQuery } from "@apollo/client";
@@ -83,7 +84,7 @@ export default function CompanyForm({ session }: { session: Session | null }) {
                     profile: formData,
                 },
             });
-            data && toast.success("Profile settings updated successfully");
+            data && toast.success("Company settings updated successfully");
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
@@ -96,7 +97,7 @@ export default function CompanyForm({ session }: { session: Session | null }) {
         !graphQLloading &&
         initialData.findProfile && (
             <div className="company-card px-40 flex flex-col lg:flex-col w-full">
-                <DashBoardCard handleSubmit={handleSubmit} headerTitle="profile settings">
+                <DashBoardCard handleSubmit={handleSubmit} headerTitle="company settings">
                     <>
                         <div className="flex flex-row">
                             <div className="w-full flex flex-col">
