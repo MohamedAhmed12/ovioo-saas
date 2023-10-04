@@ -13,7 +13,7 @@ export const useGraphError = (initialVal: { [key: string]: string }) => {
         } else {
             setErrors({});
 
-            if ([403, 404, 409].includes(graphQLerror?.originalError?.statusCode)) {
+            if ([403, 404, 409, 400].includes(graphQLerror?.originalError?.statusCode)) {
                 toast.error(graphQLerrorMsgs);
             }
 
