@@ -2,7 +2,6 @@
 
 import DashBoardCard from "@/components/DashBoardCard";
 import { useAppSelector } from "@/hooks/redux";
-import { useGraphError } from "@/hooks/useGraphError";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
 import Switch from "@mui/joy/Switch";
@@ -29,8 +28,6 @@ const UPDATE_PROFILE = gql`
 `;
 
 export default function NotificationSetting({ session }: { session: Session | null }): ReactNode {
-    const { errorHandler } = useGraphError({});
-    const isMounted = useRef(false);
     const initialData = useAppSelector((state) => state.userReducer.user);
     const client = getClient(session);
     const [updateProfile] = useMutation(UPDATE_PROFILE, {
@@ -38,7 +35,7 @@ export default function NotificationSetting({ session }: { session: Session | nu
     });
 
     const [formData, setFormData] = useState({
-        id: initialData.profile.id,
+        id: null,
         push_notification_enabled: false,
         mail_notification_enabled: false,
     });
@@ -50,30 +47,29 @@ export default function NotificationSetting({ session }: { session: Session | nu
             ...prevFormData,
             [name]: checked,
         }));
+
+        handleSubmit(name, checked);
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (name: string, checked: boolean) => {
         try {
             const { data } = await updateProfile({
                 variables: {
-                    profile: formData,
+                    profile: { ...formData, [name]: checked },
                 },
             });
+
+            data && toast.success("Notification settings updated successfully");
         } catch (e: any) {
             toast.error("Something went wrong!");
-            errorHandler(e);
         }
     };
-
-    useEffect(() => {
-        handleSubmit();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formData]);
 
     useEffect(() => {
         if (initialData) {
             setFormData((prevState) => ({
                 ...prevState,
+                id: initialData.profile.id,
                 push_notification_enabled: initialData.profile.push_notification_enabled,
                 mail_notification_enabled: initialData.profile.mail_notification_enabled,
             }));
