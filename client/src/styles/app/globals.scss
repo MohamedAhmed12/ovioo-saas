@@ -86,7 +86,7 @@ body {
             input,
             textarea {
                 & ~ fieldset {
-                    border-color: #7b91a7;
+                    border-color: #7b91a7 !important;
                 }
                 &:invalid ~ fieldset {
                     border-color: "red";

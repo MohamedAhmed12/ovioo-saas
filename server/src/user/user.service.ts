@@ -87,8 +87,8 @@ export class UserService {
   }
 
   async changePassword(
-    data: ChangePasswordDto,
     { email }: { email: string },
+    data: ChangePasswordDto,
   ): Promise<boolean> {
     const authUser = await this.UserRepository.findOneBy({
       email,
@@ -110,6 +110,21 @@ export class UserService {
     }
 
     return false;
+  }
+
+  async update(
+    { email }: { email: string },
+    { created_at, updated_at, ...data }: any,
+  ): Promise<User> {
+    console.log(data);
+
+    const user = await this.UserRepository.findOneBy({ email });
+    if (!user) throw new NotFoundException();
+
+    await this.UserRepository.merge(user, data);
+    this.UserRepository.update(user.id, user);
+
+    return user;
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {

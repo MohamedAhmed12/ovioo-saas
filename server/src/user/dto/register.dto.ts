@@ -19,12 +19,6 @@ export class RegisterDto extends LoginDto {
   fullname: string;
 
   @IsStrongPassword()
-  @MaxLength(32)
-  @MinLength(8)
-  @Field()
-  password: string;
-
-  @IsStrongPassword()
   @MaxLength(23)
   @MinLength(8)
   @Field()
@@ -38,7 +32,7 @@ export class RegisterDto extends LoginDto {
   company?: string;
 
   @IsNumber()
-  @Field(() => Int, { nullable: true })
+  @Field(() => Number, { nullable: true })
   phone?: number;
 
   @IsString()

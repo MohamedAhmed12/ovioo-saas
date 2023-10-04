@@ -8,6 +8,7 @@ import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UserService } from './user.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -40,6 +41,15 @@ export class UserResolver {
     @Args('data') data: ChangePasswordDto,
     @Context('user') authGuardUser: AuthGuardUserDto,
   ) {
-    return await this.userService.changePassword(data, authGuardUser);
+    return await this.userService.changePassword(authGuardUser, data);
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => User)
+  async updateUser(
+    @Args('data') data: UpdateUserDto,
+    @Context('user') authGuardUser: AuthGuardUserDto,
+  ) {
+    return await this.userService.update(authGuardUser, data);
   }
 }

@@ -14,6 +14,7 @@ export class LoginDto {
   @Field()
   email: string;
 
+  @IsStrongPassword()
   @MaxLength(32)
   @MinLength(8)
   @Field()
