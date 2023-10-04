@@ -10,7 +10,7 @@ import "@/styles/app/dashboard/layout.scss";
 import { getClient } from "@/utils/getClient";
 import { gql, useQuery } from "@apollo/client";
 import { Session } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 

@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
+import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
 import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -26,7 +27,9 @@ export class UserService {
   ) {}
 
   async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
-    let user = await this.me(data);
+    let user = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
 
     if (!user) {
       user = await this.createUseWithRelatedEntities(data);
@@ -102,14 +105,20 @@ export class UserService {
       authUser.password,
     );
 
-    if (isValidCurrentPassword) {
-      authUser.password = await hash(data.password, 12);
-      await this.UserRepository.save(authUser);
-
-      return true;
+    if (!isValidCurrentPassword) {
+      throw new GraphQLError('Invalid current password', {
+        extensions: {
+          originalError: {
+            message: [{ current_password: 'Invalid current password' }],
+          },
+        },
+      });
     }
 
-    return false;
+    authUser.password = await hash(data.password, 12);
+    await this.UserRepository.save(authUser);
+
+    return true;
   }
 
   async update(

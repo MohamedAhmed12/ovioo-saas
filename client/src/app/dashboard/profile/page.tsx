@@ -2,11 +2,7 @@ import NotificationSetting from "@/components/Dashboard/Profile/NotificationSett
 import PasswordSetting from "@/components/Dashboard/Profile/PasswordSetting";
 import ProfileSetting from "@/components/Dashboard/Profile/ProfileSetting";
 import { authOptions } from "@/constants/authOptions";
-import { useAppSelector } from "@/hooks/redux";
-import { getClient } from "@/utils/getClient";
-import { gql, useQuery } from "@apollo/client";
 import { getServerSession } from "next-auth";
-import { FormEvent } from "react";
 
 export default async function Profile() {
     const session = await getServerSession(authOptions);
