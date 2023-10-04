@@ -16,39 +16,39 @@ export class Profile extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column('text', { nullable: true })
+  @Column('text', { default: '', nullable: true })
   @Field(() => String, { nullable: true })
   company_name: string;
 
-  @Column('text', { nullable: true })
+  @Column('text', { default: '', nullable: true })
   @Field(() => String, { nullable: true })
   company_website: string;
 
-  @Column('text', { nullable: true })
+  @Column('text', { default: '', nullable: true })
   @Field(() => String, { nullable: true })
   business_info: string;
 
-  @Column('text', { nullable: true })
+  @Column('text', { default: '', nullable: true })
   @Field(() => String, { nullable: true })
   target_audience: string;
 
-  @Column('text', { nullable: true })
+  @Column('text', { default: '', nullable: true })
   @Field(() => String, { nullable: true })
   company_links: string;
 
-  @Column('boolean', { default: false })
+  @Column('boolean', { default: false, nullable: true })
   @Field(() => Boolean)
   push_notification_enabled: boolean;
 
-  @Column('boolean', { default: false })
+  @Column('boolean', { default: false, nullable: true })
   @Field(() => Boolean)
   mail_notification_enabled: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: true })
   @Field()
   created_at: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: true })
   @Field()
   updated_at: Date;
 

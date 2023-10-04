@@ -13,11 +13,11 @@ export const useGraphError = (initialVal: { [key: string]: string }) => {
         } else {
             setErrors({});
 
-            if ([403, 404, 409].includes(graphQLerror?.originalError.statusCode)) {
+            if ([403, 404, 409].includes(graphQLerror?.originalError?.statusCode)) {
                 toast.error(graphQLerrorMsgs);
             }
 
-            if ([401].includes(graphQLerror?.originalError.statusCode)) {
+            if ([401].includes(graphQLerror?.originalError?.statusCode)) {
                 throw new Error("You have to login in order to view this page.");
             }
         }

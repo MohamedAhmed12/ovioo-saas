@@ -46,6 +46,8 @@ type Mutation {
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   login(user: LoginDto!): User!
   register(user: RegisterDto!): User!
+  changePassword(data: ChangePasswordDto!): Boolean!
+  updateUser(data: UpdateUserDto!): User!
   updateProfile(profile: UpdateProfileDto!): Profile!
 }
 
@@ -67,8 +69,20 @@ input RegisterDto {
   fullname: String!
   password_confirmation: String!
   company: String
-  phone: Int
+  phone: Float
   provider: String!
+}
+
+input ChangePasswordDto {
+  current_password: String!
+  password: String!
+  password_confirmation: String!
+}
+
+input UpdateUserDto {
+  fullname: String
+  email: String
+  phone: Float
 }
 
 input UpdateProfileDto {

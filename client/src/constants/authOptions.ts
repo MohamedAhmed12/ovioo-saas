@@ -1,5 +1,4 @@
 import { getClient } from "@/utils/getClient";
-import { splitName } from "@/utils/helpers";
 import { gql } from "@apollo/client";
 import { sign } from "jsonwebtoken";
 import { Account, Profile, Session, User } from "next-auth";

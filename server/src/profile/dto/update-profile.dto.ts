@@ -15,24 +15,29 @@ export class UpdateProfileDto {
   id: number;
 
   @IsString()
+  @IsOptional()
   @Field(() => String, { nullable: true })
-  company_name: string;
+  company_name?: string;
 
   @IsString()
+  @IsOptional()
   @Field(() => String, { nullable: true })
-  company_website: string;
+  company_website?: string;
 
   @IsString()
+  @IsOptional()
   @Field(() => String, { nullable: true })
-  business_info: string;
+  business_info?: string;
 
   @IsString()
+  @IsOptional()
   @Field(() => String, { nullable: true })
-  target_audience: string;
+  target_audience?: string;
 
   @IsString()
+  @IsOptional()
   @Field(() => String, { nullable: true })
-  company_links: string;
+  company_links?: string;
 
   @IsBoolean()
   @IsOptional()
@@ -45,10 +50,12 @@ export class UpdateProfileDto {
   mail_notification_enabled?: boolean;
 
   @IsDate()
+  @IsOptional()
   @Field(() => Date, { nullable: true })
   created_at?: Date;
 
   @IsDate()
+  @IsOptional()
   @Field(() => Date, { nullable: true })
   updated_at?: Date;
 }
