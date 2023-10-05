@@ -6,6 +6,7 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
+import { TeamModule } from './team/team.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ormConfig = require('../ormconfig.json');
@@ -14,6 +15,7 @@ const ormConfig = require('../ormconfig.json');
   imports: [
     UserModule,
     ProfileModule,
+    TeamModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
