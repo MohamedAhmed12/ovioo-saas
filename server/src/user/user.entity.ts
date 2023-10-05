@@ -1,5 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcrypt';
+import { Profile } from 'src/profile/profile.entity';
+import { Team } from 'src/team/team.entity';
 import {
   BaseEntity,
   BeforeInsert,
@@ -7,11 +9,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
-import { Profile } from 'src/profile/profile.entity';
+import { UserRoleEnum } from './enums/user-role.enum';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -57,8 +60,20 @@ export class User extends BaseEntity {
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @JoinColumn()
-  @Field(() => Profile, { defaultValue: null })
+  @Field(() => Profile)
   profile: Profile;
+
+  @Column({
+    type: 'enum',
+    enum: UserRoleEnum,
+    default: UserRoleEnum.User,
+  })
+  @Field(() => UserRoleEnum)
+  role: UserRoleEnum;
+
+  @ManyToOne(() => Team, (team) => team.users, { cascade: true })
+  @Field(() => Team)
+  team: Team;
 
   @BeforeInsert()
   async hashPass() {

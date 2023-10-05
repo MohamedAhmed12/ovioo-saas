@@ -4,11 +4,12 @@ import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
 import { AuthGuardUserDto } from './dto/auth-guard-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -18,11 +19,6 @@ export class UserResolver {
   @Query(() => User)
   async me(@Context('user') authGuardUser: AuthGuardUserDto) {
     return this.userService.me(authGuardUser);
-  }
-
-  @Mutation(() => User)
-  async findOrCreateSsoUser(@Args('user') createSsoUserDto: CreateSsoUserDto) {
-    return this.userService.findOrCreateSsoUser(createSsoUserDto);
   }
 
   @Mutation(() => User)
@@ -51,5 +47,19 @@ export class UserResolver {
     @Context('user') authGuardUser: AuthGuardUserDto,
   ) {
     return await this.userService.update(authGuardUser, data);
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => User)
+  async createMember(
+    @Args('member') member: CreateMemberDto,
+    @Context('user') authUser: AuthGuardUserDto,
+  ) {
+    return this.userService.createMember(authUser, member);
+  }
+
+  @Mutation(() => User)
+  async findOrCreateSsoUser(@Args('user') createSsoUserDto: CreateSsoUserDto) {
+    return this.userService.findOrCreateSsoUser(createSsoUserDto);
   }
 }

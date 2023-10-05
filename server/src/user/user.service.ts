@@ -9,11 +9,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
+import { Team } from 'src/team/team.entity';
 import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { AuthProviderEnum } from './enums/auth-provider.enum';
+import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
 
 @Injectable()
@@ -24,19 +28,10 @@ export class UserService {
 
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
   ) {}
-
-  async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
-    let user = await this.UserRepository.findOne({
-      where: { email: data.email },
-    });
-
-    if (!user) {
-      user = await this.createUseWithRelatedEntities(data);
-    }
-
-    return user;
-  }
 
   async login(data: LoginDto): Promise<User> {
     const user = await this.UserRepository.findOne({
@@ -78,7 +73,7 @@ export class UserService {
         email,
         provider,
       },
-      relations: ['profile'],
+      relations: ['profile', 'team'],
     });
 
     if (!user)
@@ -136,14 +131,70 @@ export class UserService {
     return user;
   }
 
+  async createMember(
+    {
+      email,
+      provider,
+    }: {
+      email: string;
+      provider: string;
+    },
+    data: CreateMemberDto,
+  ): Promise<User> {
+    const currentUser: User = await this.me({ email, provider });
+
+    let member = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
+
+    if (member) {
+      throw new ConflictException('Email is already registered');
+    }
+
+    member = this.UserRepository.create({
+      ...data,
+      password: Math.random().toString(36).slice(-10),
+      team: currentUser.team,
+      provider: AuthProviderEnum.Credentials,
+      role: UserRoleEnum.Member,
+    });
+
+    const profile = this.profileRepository.create({
+      company_name: currentUser.profile.company_name,
+    });
+
+    member.profile = profile;
+
+    return await this.UserRepository.save(member);
+  }
+
+  async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
+    let user = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
+
+    if (!user) {
+      user = await this.createUseWithRelatedEntities(data);
+    }
+
+    return user;
+  }
+
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
-    const user = this.UserRepository.create(data);
+    let user = this.UserRepository.create(data);
+    user = await this.UserRepository.save(user);
 
     const profile = this.profileRepository.create({
       company_name: data.company,
     });
 
     user.profile = profile;
+
+    const team = this.teamRepository.create({
+      owner_id: user.id,
+    });
+
+    user.team = team;
 
     return await this.UserRepository.save(user);
   }
