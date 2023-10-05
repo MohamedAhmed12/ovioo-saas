@@ -1,7 +1,6 @@
 "use client";
 
 import DashBoardCard from "@/components/DashBoardCard";
-import { useAppSelector } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation, useQuery } from "@apollo/client";

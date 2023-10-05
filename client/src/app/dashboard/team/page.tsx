@@ -1,47 +1,56 @@
-"use client";
-
 import AddTeamMemberCard from "@/components/Dashboard/Team/AddTeamMemberCard";
 import TeamMembersCard from "@/components/Dashboard/Team/TeamMembersCard";
-import { RoleEnum, User as UserInterface } from "@/interfaces";
-import { useState } from "react";
+import { authOptions } from "@/constants/authOptions";
+import { getClient } from "@/utils/getClient";
+import { ApolloClient, gql } from "@apollo/client";
+import { getServerSession } from "next-auth";
 
-export default function Team() {
-    const [teamMembers, setTeamMembers] = useState<UserInterface[]>([
-        {
-            fullname: "owner lastname",
-            email: "owner@ovioo.com",
-            role: RoleEnum.OWNER,
-        },
-        {
-            fullname: "member1 member lastname",
-            email: "member@ovioo.com",
-            role: RoleEnum.MEMBER,
-        },
-        {
-            fullname: "member2 member lastname",
-            email: "member2@ovioo.com",
-            role: RoleEnum.MEMBER,
-        },
-    ]);
+const GET_TEAM = gql`
+    query {
+        getTeam {
+            id
+            owner_id
+            users {
+                id
+                fullname
+                avatar
+            }
+        }
+    }
+`;
 
-    const label = { inputProps: { "aria-label": "Switch demo" } };
+export default async function Team() {
+    let client: ApolloClient<any> | undefined = undefined;
+    const session = await getServerSession(authOptions);
 
-    const handleAddTeamMember = (newMember: UserInterface) =>
-        setTeamMembers([...teamMembers, newMember]);
+    client = getClient(session);
+
+    const {
+        loading: graphQLloading,
+        error,
+        data: team,
+    } = await client?.query({
+        query: GET_TEAM,
+    });
+
+    if (error) throw new Error();
 
     return (
-        <div className="team-card flex flex-col lg:flex-row w-full justify-between flex-wrap max-w-full">
-            <div className="new-user basis-[52%] flex flex-raw lg:flex-col px-5">
+        session &&
+        !graphQLloading &&
+        !error &&
+        team.getTeam && (
+            <div className="team-card flex flex-col lg:flex-row w-full justify-between flex-wrap max-w-full">
                 <AddTeamMemberCard
-                    handleSubmit={handleAddTeamMember}
+                    team={team.getTeam}
                     headerTitle="Add new member"
+                    session={session}
                 />
-            </div>
-            <div className="Company Team basis-[48%] flex flex-col lg:flex-col px-5">
-                {teamMembers.length > 1 && (
-                    <TeamMembersCard headerTitle="your team" teamMembers={teamMembers} />
+
+                {team.getTeam.users.length > 1 && (
+                    <TeamMembersCard headerTitle="your team" team={team.getTeam} />
                 )}
             </div>
-        </div>
+        )
     );
 }
