@@ -24,7 +24,7 @@ export class TeamService {
     });
 
     const ownerIndex = user.team.users.findIndex(
-      (owner: User) => owner.id == user.id,
+      (member: User) => member.id == user.team.owner_id,
     );
     const owner = user.team.users[+ownerIndex];
     user.team.users.splice(+ownerIndex, 1);
