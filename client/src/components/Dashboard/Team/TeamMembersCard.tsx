@@ -3,30 +3,64 @@
 import DashBoardCard from "@/components/DashBoardCard";
 import { useAppSelector } from "@/hooks/redux";
 import { Member, Team } from "@/interfaces";
+import { getClient } from "@/utils/getClient";
+import { gql, useMutation } from "@apollo/client";
 import EditIcon from "@mui/icons-material/Edit";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import StarIcon from "@mui/icons-material/Star";
 import { Avatar, IconButton, Menu, MenuItem, Stack } from "@mui/material";
-import { useState } from "react";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
+import { MouseEvent, useState } from "react";
+import toast from "react-hot-toast";
+
+const DELETEMEMBER = gql`
+    mutation ($member: DeleteMemberDto!) {
+        deleteMember(member: $member)
+    }
+`;
 
 export default function TeamMembersCard({
     headerTitle,
     team,
+    session,
 }: {
     headerTitle: string;
     team: Team;
+    session: Session | null;
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const router = useRouter();
+    const client = getClient(session);
+    const [deleteMember] = useMutation(DELETEMEMBER, { client });
 
     const currentUser = useAppSelector((state) => state.userReducer.user);
     if (!currentUser) return;
 
     const isCurrentUserOwner = team.owner_id == currentUser.id;
 
-    const handleToggle = (event: React.MouseEvent<HTMLElement>) => {
+    const handleToggle = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl((prevState) => (prevState == null ? event.currentTarget : null));
+    };
+
+    const handleRemoveMember = async (id: string) => {
+        try {
+            const { data } = await deleteMember({
+                variables: {
+                    member: {
+                        id,
+                    },
+                },
+            });
+            router.refresh();
+            handleToggle;
+            toast.success("Member deleted successfully.");
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
     };
 
     return (
@@ -112,7 +146,7 @@ export default function TeamMembersCard({
                                                     Transfer Ownership
                                                 </MenuItem>
                                                 <MenuItem
-                                                    onClick={handleToggle}
+                                                    onClick={() => handleRemoveMember(member.id)}
                                                     disableRipple
                                                     className="text-red-500"
                                                 >

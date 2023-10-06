@@ -76,7 +76,7 @@ export default function AddTeamMemberCard({
 
             setTimeout(() => {
                 setUserAdded(false);
-            }, 2000);
+            }, 2500);
         } catch (e: any) {
             errorHandler(e);
         }
@@ -103,7 +103,7 @@ export default function AddTeamMemberCard({
                                         className="items-center !rounded-[10px]"
                                     >
                                         New teammate was added! The invitation has been sent to
-                                        {formData.email}
+                                        <span className="ml-1">{formData.email}</span>
                                     </Alert>
                                 )}
                                 <Alert

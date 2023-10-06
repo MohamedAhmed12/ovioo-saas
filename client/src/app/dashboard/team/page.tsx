@@ -48,7 +48,11 @@ export default async function Team() {
                     session={session}
                 />
                 {team.getTeam.users.length > 1 && (
-                    <TeamMembersCard headerTitle="your team" team={team.getTeam} />
+                    <TeamMembersCard
+                        headerTitle="your team"
+                        team={team.getTeam}
+                        session={session}
+                    />
                 )}
             </div>
         )

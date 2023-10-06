@@ -192,14 +192,14 @@ export class UserService {
     data: DeleteMemberDto,
   ): Promise<boolean> {
     const currentUser: User = await this.me({ email, provider });
-    const member = await this.UserRepository.findOne({
-      where: { email: data.email },
-    });
+    const member = await this.UserRepository.findOneBy({ id: +data.id });
+
+    if (!member) throw new NotFoundException();
 
     if (
       !currentUser ||
-      currentUser.role !== UserRoleEnum.User ||
-      member.role != UserRoleEnum.Member
+      currentUser?.role !== UserRoleEnum.User ||
+      member?.role != UserRoleEnum.Member
     ) {
       throw new ForbiddenException('Not allowed');
     }

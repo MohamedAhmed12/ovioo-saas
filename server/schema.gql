@@ -104,7 +104,7 @@ input CreateMemberDto {
 }
 
 input DeleteMemberDto {
-  email: String!
+  id: String!
 }
 
 input CreateSsoUserDto {
