@@ -46,7 +46,6 @@ export default function PasswordSetting({ session }: { session: Session | null }
 
         try {
             const { data } = await changePassword({ variables: { data: formData } });
-            console.log(data);
 
             toast.success("Password changed successfully");
             errorHandler({});

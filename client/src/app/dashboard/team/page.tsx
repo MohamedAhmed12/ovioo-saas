@@ -31,6 +31,7 @@ export default async function Team() {
         data: team,
     } = await client?.query({
         query: GET_TEAM,
+        fetchPolicy: "no-cache",
     });
 
     if (error) throw new Error();
@@ -46,7 +47,6 @@ export default async function Team() {
                     headerTitle="Add new member"
                     session={session}
                 />
-
                 {team.getTeam.users.length > 1 && (
                     <TeamMembersCard headerTitle="your team" team={team.getTeam} />
                 )}

@@ -55,7 +55,7 @@ export class UserService {
     });
 
     if (user) {
-      throw new ConflictException('Email is already registered');
+      throw new ConflictException('Email has already been taken');
     }
 
     return await this.createUseWithRelatedEntities(data);
@@ -148,7 +148,18 @@ export class UserService {
     });
 
     if (member) {
-      throw new ConflictException('Email is already registered');
+      throw new GraphQLError('Email has already been taken', {
+        extensions: {
+          originalError: {
+            message: [
+              {
+                email:
+                  'Email has already been taken. Please choose a different email.',
+              },
+            ],
+          },
+        },
+      });
     }
 
     member = this.UserRepository.create({

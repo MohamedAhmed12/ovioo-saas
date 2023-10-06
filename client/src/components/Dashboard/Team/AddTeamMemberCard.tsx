@@ -3,6 +3,7 @@
 import DashBoardCard from "@/components/DashBoardCard";
 import { useAppSelector } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
+import { useGraphError } from "@/hooks/useGraphError";
 import { Team, User as UserInterface } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
@@ -11,8 +12,8 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import toast from "react-hot-toast";
 
 const CREATE_MEMBER = gql`
     mutation createMember($member: CreateMemberDto!) {
@@ -47,8 +48,10 @@ export default function AddTeamMemberCard({
         fullname: "",
     });
 
+    const router = useRouter();
     const { handleOnChange } = useForm(setFormData);
     const currentUser = useAppSelector((state) => state.userReducer.user);
+    const { errors, errorHandler } = useGraphError({});
     const client = getClient(session);
     const [createMember] = useMutation(CREATE_MEMBER, {
         client,
@@ -63,12 +66,19 @@ export default function AddTeamMemberCard({
         try {
             const { data } = await createMember({
                 variables: {
-                    profile: formData,
+                    member: formData,
                 },
             });
-            data && toast.success("Company settings updated successfully");
+
+            router.refresh();
+            setUserAdded(true);
+            errorHandler({});
+
+            setTimeout(() => {
+                setUserAdded(false);
+            }, 2000);
         } catch (e: any) {
-            toast.error("Something went wrong!");
+            errorHandler(e);
         }
 
         setLoading(false);
@@ -92,7 +102,7 @@ export default function AddTeamMemberCard({
                                         }}
                                         className="items-center !rounded-[10px]"
                                     >
-                                        The new teammate was added! The invitation has been sent to
+                                        New teammate was added! The invitation has been sent to
                                         {formData.email}
                                     </Alert>
                                 )}
@@ -114,12 +124,17 @@ export default function AddTeamMemberCard({
                                 margin="normal"
                                 required
                                 value={formData.email}
-                                onChange={handleOnChange}
+                                onChange={(e) => {
+                                    handleOnChange(e);
+                                    setUserAdded(false);
+                                }}
                                 fullWidth
                                 name="email"
                                 label="Email Address"
                                 type="email"
                                 id="email"
+                                error={errors.hasOwnProperty("email")}
+                                helperText={errors["email"]}
                             />
 
                             <TextField
@@ -127,12 +142,16 @@ export default function AddTeamMemberCard({
                                 margin="normal"
                                 required
                                 value={formData.fullname}
-                                onChange={handleOnChange}
+                                onChange={(e) => {
+                                    handleOnChange(e);
+                                    setUserAdded(false);
+                                }}
                                 fullWidth
                                 id="full-name"
                                 label="full name"
                                 name="fullname"
-                                autoFocus
+                                error={errors.hasOwnProperty("fullname")}
+                                helperText={errors["fullname"]}
                             />
                         </div>
                     </div>

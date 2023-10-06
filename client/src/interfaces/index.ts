@@ -4,6 +4,7 @@ export * from "./user";
 export * from "./table";
 export * from "./asset";
 export * from "./extension";
+export * from "./team";
 export * from "./notification";
 export * from "./store/main";
 export * from "./store/board";
