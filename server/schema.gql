@@ -66,6 +66,7 @@ type Mutation {
   changePassword(data: ChangePasswordDto!): Boolean!
   updateUser(data: UpdateUserDto!): User!
   createMember(member: CreateMemberDto!): User!
+  deleteMember(member: DeleteMemberDto!): Boolean!
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   updateProfile(profile: UpdateProfileDto!): Profile!
 }
@@ -100,6 +101,10 @@ input UpdateUserDto {
 input CreateMemberDto {
   email: String!
   fullname: String!
+}
+
+input DeleteMemberDto {
+  email: String!
 }
 
 input CreateSsoUserDto {

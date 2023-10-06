@@ -10,6 +10,8 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { DeleteResult } from 'typeorm';
+import { DeleteMemberDto } from './dto/delete-member.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -56,6 +58,15 @@ export class UserResolver {
     @Context('user') authUser: AuthGuardUserDto,
   ) {
     return this.userService.createMember(authUser, member);
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => Boolean)
+  async deleteMember(
+    @Context('user') authUser: AuthGuardUserDto,
+    @Args('member') member: DeleteMemberDto,
+  ) {
+    return this.userService.deleteMember(authUser, member);
   }
 
   @Mutation(() => User)

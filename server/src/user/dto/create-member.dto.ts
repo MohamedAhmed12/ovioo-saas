@@ -1,13 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { DeleteMemberDto } from './delete-member.dto';
 
 @InputType()
-export class CreateMemberDto {
-  @IsNotEmpty()
-  @IsEmail()
-  @Field()
-  email: string;
-
+export class CreateMemberDto extends DeleteMemberDto {
   @IsString()
   @IsNotEmpty()
   @Field(() => String)

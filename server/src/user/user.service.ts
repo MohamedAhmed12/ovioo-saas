@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -10,7 +11,7 @@ import { compare, hash } from 'bcrypt';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
 import { Team } from 'src/team/team.entity';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, DeleteResult, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
@@ -19,6 +20,7 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
+import { DeleteMemberDto } from './dto/delete-member.dto';
 
 @Injectable()
 export class UserService {
@@ -177,6 +179,33 @@ export class UserService {
     member.profile = profile;
 
     return await this.UserRepository.save(member);
+  }
+
+  async deleteMember(
+    {
+      email,
+      provider,
+    }: {
+      email: string;
+      provider: string;
+    },
+    data: DeleteMemberDto,
+  ): Promise<boolean> {
+    const currentUser: User = await this.me({ email, provider });
+    const member = await this.UserRepository.findOne({
+      where: { email: data.email },
+    });
+
+    if (
+      !currentUser ||
+      currentUser.role !== UserRoleEnum.User ||
+      member.role != UserRoleEnum.Member
+    ) {
+      throw new ForbiddenException('Not allowed');
+    }
+
+    await this.UserRepository.delete(member.id);
+    return true;
   }
 
   async findOrCreateSsoUser(data: CreateSsoUserDto): Promise<User> {
