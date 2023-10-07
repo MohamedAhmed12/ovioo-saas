@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 import { sign } from "jsonwebtoken";
 import { Account, Profile, Session, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
-import { JWT } from "next-auth/jwt";
+import { JWT, Secret } from "next-auth/jwt";
 import CredentialsProvider, { CredentialInput } from "next-auth/providers/credentials";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
@@ -116,7 +116,7 @@ export const authOptions = {
     },
     callbacks: {
         async session({ session, token }: { session: Session; token: JWT }): Promise<Session> {
-            session.access_token = sign(token, process.env.NEXTAUTH_SECRET);
+            session.access_token = sign(token, process.env.NEXTAUTH_SECRET as Secret);
             return Promise.resolve(session);
         },
         async jwt({ token, account, user }: { token: JWT; account: Account | null; user: User }) {

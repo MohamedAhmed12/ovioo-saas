@@ -51,13 +51,14 @@ export const PyramidSection = () => {
                         <Breadcrumbs aria-label="breadcrumb" className="mb-12">
                             {titles.map((title, index) => (
                                 <Typography
-                                    variant="h5"
-                                    key={index}
-                                    className={
-                                        activeStep == index
-                                            ? "selected text-secondary underline underline-offset-[20px]"
-                                            : ""
-                                    }
+                                    variant="body1"
+                                    key={title}
+                                    className={`text-2xl
+                                        ${
+                                            activeStep == index
+                                                ? "selected text-secondary underline underline-offset-[20px]"
+                                                : ""
+                                        }`}
                                     onClick={() => handleTitleClick(index)}
                                 >
                                     {title}
@@ -76,12 +77,22 @@ export const PyramidSection = () => {
                             position="static"
                             activeStep={activeStep}
                             nextButton={
-                                <Button size="small" onClick={handleNext} variant="outlined">
+                                <Button
+                                    size="small"
+                                    onClick={handleNext}
+                                    variant="outlined"
+                                    aria-label="EastIcon"
+                                >
                                     <EastIcon />
                                 </Button>
                             }
                             backButton={
-                                <Button size="small" onClick={handleBack} variant="outlined">
+                                <Button
+                                    size="small"
+                                    onClick={handleBack}
+                                    variant="outlined"
+                                    aria-label="WestIcon"
+                                >
                                     <WestIcon fontSize="small" />
                                 </Button>
                             }

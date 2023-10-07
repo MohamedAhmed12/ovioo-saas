@@ -25,7 +25,7 @@ export default function FAQ({ faq }: { faq: FAQInterface[] }) {
                 <div className="accordion-wrapper w-full mt-20">
                     {faq.map(({ question, answer }: FAQInterface, index: number) => (
                         <Accordion
-                            key={index}
+                            key={question}
                             expanded={expanded === index}
                             onChange={handleChange(index)}
                             className="cursor-pointer justify-center flex-col p-0"
