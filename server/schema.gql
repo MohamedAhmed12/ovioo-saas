@@ -2,13 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""teams"""
-type Team {
+"""tasks"""
+type Task {
   id: ID!
-  name: String
-  owner_id: Float!
-  users: [User!]!
+  project: Project!
 }
+
+"""profiles"""
+type Profile {
+  id: ID!
+  company_name: String
+  company_website: String
+  business_info: String
+  target_audience: String
+  company_links: String
+  push_notification_enabled: Boolean!
+  mail_notification_enabled: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 """users"""
 type User {
@@ -26,11 +44,6 @@ type User {
   team: Team!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 enum UserRoleEnum {
   User
   Member
@@ -38,19 +51,29 @@ enum UserRoleEnum {
   Designer
 }
 
-"""profiles"""
-type Profile {
+"""teams"""
+type Team {
   id: ID!
-  company_name: String
-  company_website: String
-  business_info: String
-  target_audience: String
-  company_links: String
-  push_notification_enabled: Boolean!
-  mail_notification_enabled: Boolean!
-  created_at: DateTime!
-  updated_at: DateTime!
-  user: User!
+  name: String
+  owner_id: Float!
+  users: [User!]!
+  projects: [Project!]!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
+}
+
+"""asset"""
+type Asset {
+  id: ID!
+  project: Project!
 }
 
 type Query {
@@ -70,6 +93,7 @@ type Mutation {
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
+  createProject(data: CreateProjectDto!): Project!
 }
 
 input LoginDto {
@@ -126,4 +150,9 @@ input UpdateProfileDto {
   mail_notification_enabled: Boolean
   created_at: DateTime
   updated_at: DateTime
+}
+
+input CreateProjectDto {
+  title: String!
+  description: String!
 }

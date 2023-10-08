@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Project } from 'src/project/project.entity';
 import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
@@ -26,4 +27,8 @@ export class Team extends BaseEntity {
   @OneToMany(() => User, (user) => user.team, { cascade: ['update'] })
   @Field(() => [User])
   users: User[];
+
+  @OneToMany(() => Project, (project) => project.team)
+  @Field(() => [Project])
+  projects: Project[];
 }
