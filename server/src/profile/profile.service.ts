@@ -41,7 +41,7 @@ export class ProfileService {
       throw new NotFoundException('Couldn’t find profile matches id.');
 
     await this.profileRepository.merge(profile, data);
-    this.profileRepository.update(profile.id, profile);
+    await this.profileRepository.update(profile.id, profile);
 
     return profile;
   }

@@ -94,6 +94,7 @@ type Mutation {
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
   createProject(data: CreateProjectDto!): Project!
+  updateProject(data: UpdateProjectDto!): Boolean!
 }
 
 input LoginDto {
@@ -155,4 +156,10 @@ input UpdateProfileDto {
 input CreateProjectDto {
   title: String!
   description: String!
+}
+
+input UpdateProjectDto {
+  title: String!
+  description: String!
+  id: String!
 }
