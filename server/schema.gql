@@ -82,7 +82,7 @@ type Query {
   findProfile: Profile!
   getTeam: Team!
   listProjects: [Project!]!
-  showProject(data: Float!): Project!
+  showProject(id: String!): Project!
 }
 
 type Mutation {
@@ -97,6 +97,7 @@ type Mutation {
   transferOwnership(id: String!): Boolean!
   createProject(data: CreateProjectDto!): Project!
   updateProject(data: UpdateProjectDto!): Boolean!
+  deleteProject(id: String!): Boolean!
 }
 
 input LoginDto {

@@ -35,8 +35,8 @@ export class ProjectService {
     return authUser.team.projects;
   }
 
-  async showProject(id: number): Promise<Project> {
-    return await this.projectRepository.findOneBy({ id });
+  async showProject(id: string): Promise<Project> {
+    return await this.projectRepository.findOneBy({ id: +id });
   }
 
   async createProject(
@@ -69,5 +69,9 @@ export class ProjectService {
 
     project = await this.projectRepository.merge(project, data);
     return await !!this.projectRepository.update(project.id, project);
+  }
+
+  async deleteProject(id: string): Promise<boolean> {
+    return await !!this.projectRepository.delete(id);
   }
 }

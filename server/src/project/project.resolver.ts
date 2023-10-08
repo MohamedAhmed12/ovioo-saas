@@ -19,7 +19,7 @@ export class ProjectResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => Project)
-  async showProject(@Args('data') id: number) {
+  async showProject(@Args('id') id: string) {
     return await this.projectService.showProject(id);
   }
 
@@ -36,5 +36,11 @@ export class ProjectResolver {
   @Mutation(() => Boolean)
   async updateProject(@Args('data') data: UpdateProjectDto) {
     return await this.projectService.updateProject(data);
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => Boolean)
+  async deleteProject(@Args('id') id: string) {
+    return this.projectService.deleteProject(id);
   }
 }
