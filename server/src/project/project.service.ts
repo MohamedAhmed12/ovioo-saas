@@ -32,9 +32,11 @@ export class ProjectService {
       relations: ['team.projects'],
     });
 
-    if (!authUser) throw new ForbiddenException('Not allowed');
-
     return authUser.team.projects;
+  }
+
+  async showProject(id: number): Promise<Project> {
+    return await this.projectRepository.findOneBy({ id });
   }
 
   async createProject(

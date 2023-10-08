@@ -18,6 +18,12 @@ export class ProjectResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Query(() => Project)
+  async showProject(@Args('data') id: number) {
+    return await this.projectService.showProject(id);
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation(() => Project)
   async createProject(
     @Args('data') data: CreateProjectDto,
