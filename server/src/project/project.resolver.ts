@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { CreateProjectDto } from './dto/create-project.dto copy';
@@ -10,6 +10,12 @@ import { ProjectService } from './project.service';
 @Resolver(() => Project)
 export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
+
+  @UseGuards(AuthGuard)
+  @Query(() => [Project])
+  async listProjects(@Context('user') authUser: AuthGuardUserDto) {
+    return await this.projectService.listProjects(authUser);
+  }
 
   @UseGuards(AuthGuard)
   @Mutation(() => Project)

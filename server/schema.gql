@@ -81,6 +81,7 @@ type Query {
   me: User!
   findProfile: Profile!
   getTeam: Team!
+  listProjects: [Project!]!
 }
 
 type Mutation {

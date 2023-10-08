@@ -20,6 +20,23 @@ export class ProjectService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async listProjects({
+    email,
+    provider,
+  }: AuthGuardUserDto): Promise<Project[]> {
+    const authUser = await this.userRepository.findOne({
+      where: {
+        email,
+        provider,
+      },
+      relations: ['team.projects'],
+    });
+
+    if (!authUser) throw new ForbiddenException('Not allowed');
+
+    return authUser.team.projects;
+  }
+
   async createProject(
     { email, provider }: AuthGuardUserDto,
     data: CreateProjectDto,
