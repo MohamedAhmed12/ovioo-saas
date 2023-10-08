@@ -11,16 +11,16 @@ import { compare, hash } from 'bcrypt';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
 import { Team } from 'src/team/team.entity';
-import { DeepPartial, DeleteResult, Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
+import { DeleteMemberDto } from './dto/delete-member.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
-import { DeleteMemberDto } from './dto/delete-member.dto';
 
 @Injectable()
 export class UserService {

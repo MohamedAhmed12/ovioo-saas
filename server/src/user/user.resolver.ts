@@ -6,12 +6,11 @@ import { AuthGuardUserDto } from './dto/auth-guard-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
+import { DeleteMemberDto } from './dto/delete-member.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
-import { DeleteResult } from 'typeorm';
-import { DeleteMemberDto } from './dto/delete-member.dto';
 
 @Resolver(() => User)
 export class UserResolver {

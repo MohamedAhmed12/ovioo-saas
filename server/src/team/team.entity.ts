@@ -23,7 +23,7 @@ export class Team extends BaseEntity {
   @Field(() => Number)
   owner_id: number;
 
-  @OneToMany(() => User, (user) => user.team)
+  @OneToMany(() => User, (user) => user.team, { cascade: ['update'] })
   @Field(() => [User])
   users: User[];
 }

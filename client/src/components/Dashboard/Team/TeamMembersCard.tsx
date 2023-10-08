@@ -5,19 +5,28 @@ import { useAppSelector } from "@/hooks/redux";
 import { Member, Team } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
+import StarIcon from "@mui/icons-material/Star";
+import Dropdown from "@mui/joy/Dropdown";
+import IconButton from "@mui/joy/IconButton";
+import Menu from "@mui/joy/Menu";
+import MenuButton from "@mui/joy/MenuButton";
+import MenuItem from "@mui/joy/MenuItem";
+import { Avatar, Stack } from "@mui/material";
+import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import EditIcon from "@mui/icons-material/Edit";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import StarIcon from "@mui/icons-material/Star";
-import { Avatar, IconButton, Menu, MenuItem, Stack } from "@mui/material";
-import { Session } from "next-auth";
-import { useRouter } from "next/navigation";
-import { MouseEvent, useState } from "react";
-import toast from "react-hot-toast";
 
-const DELETEMEMBER = gql`
+const DELETE_MEMBER = gql`
     mutation ($member: DeleteMemberDto!) {
         deleteMember(member: $member)
+    }
+`;
+const TRANSFER_OWNERSHIP = gql`
+    mutation ($id: String!) {
+        transferOwnership(id: $id)
     }
 `;
 
@@ -30,20 +39,28 @@ export default function TeamMembersCard({
     team: Team;
     session: Session | null;
 }) {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-
     const router = useRouter();
     const client = getClient(session);
-    const [deleteMember] = useMutation(DELETEMEMBER, { client });
-
+    const [deleteMember] = useMutation(DELETE_MEMBER, { client });
+    const [transferOwnership] = useMutation(TRANSFER_OWNERSHIP, { client });
     const currentUser = useAppSelector((state) => state.userReducer.user);
+
     if (!currentUser) return;
 
     const isCurrentUserOwner = team.owner_id == currentUser.id;
 
-    const handleToggle = (event: MouseEvent<HTMLElement>) => {
-        setAnchorEl((prevState) => (prevState == null ? event.currentTarget : null));
+    const handleTransferOwnership = async (id: string) => {
+        try {
+            const { data } = await transferOwnership({
+                variables: {
+                    id,
+                },
+            });
+            router.refresh();
+            toast.success("The selected member has been nominated by the owner.");
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
     };
 
     const handleRemoveMember = async (id: string) => {
@@ -56,7 +73,6 @@ export default function TeamMembersCard({
                 },
             });
             router.refresh();
-            handleToggle;
             toast.success("Member deleted successfully.");
         } catch (e: any) {
             toast.error("Something went wrong!");
@@ -67,13 +83,13 @@ export default function TeamMembersCard({
         <div className="Company Team basis-[48%] flex flex-col lg:flex-col px-5">
             <DashBoardCard headerTitle={headerTitle}>
                 <div className="flex flex-col">
-                    {team.users.map((member: Member) => (
+                    {team.users.map((member: Member, index: number) => (
                         <Stack
                             direction="row"
                             spacing={{ sm: "2", lg: "5" }}
                             justifyContent="space-between"
                             alignItems="center"
-                            key={member.id}
+                            key={index}
                             className="mt-4"
                         >
                             <span className="flex items-center">
@@ -84,71 +100,62 @@ export default function TeamMembersCard({
                             {member.id == team.owner_id ? (
                                 <span className="flex text-slate-400">
                                     <span
-                                        className={`sm:mx-2 lg:ml-2 
-                                        ${isCurrentUserOwner ? "lg:mr-4" : "s"}
+                                        className={`sm:mx-1 
+                                        ${isCurrentUserOwner && "lg:mr-3"}
                                          tracking-wider text-xs lg:text-base capitalize`}
                                     >
                                         owner
                                     </span>
                                     <StarIcon
-                                        sx={{ fontSize: "1.25rem", lineHeight: "1.75rem" }}
+                                        className="!w-7"
+                                        sx={{ fontSize: "1.35rem", lineHeight: "1.75rem" }}
                                     ></StarIcon>
                                 </span>
                             ) : (
                                 <span className="flex items-center">
-                                    <span className="sm:mx-2 lg:mx-2 !mr-4 text-xs lg:text-base capitalize text-slate-400">
+                                    <span
+                                        className={`
+                                        sm:mx-1 text-xs lg:text-base capitalize text-slate-400
+                                        ${!isCurrentUserOwner && "lg:mr-5"}`}
+                                    >
                                         member
                                     </span>
 
                                     {isCurrentUserOwner && (
-                                        <>
-                                            <IconButton
-                                                aria-label="more"
-                                                id="long-button"
-                                                aria-controls={open ? "long-menu" : undefined}
-                                                aria-expanded={open ? "true" : undefined}
-                                                aria-haspopup="true"
-                                                onClick={handleToggle}
-                                                className="p-0 w-4"
-                                                sx={{ color: "rgb(148 163 184)" }}
+                                        <Dropdown>
+                                            <MenuButton
+                                                slots={{ root: IconButton }}
+                                                slotProps={{
+                                                    root: { variant: "outlined", color: "neutral" },
+                                                }}
+                                                sx={{
+                                                    color: "rgb(148 163 184)",
+                                                    minWidth: "unset",
+                                                }}
+                                                className="!border-none hover:!bg-transparent !p-0"
                                             >
                                                 <MoreVertIcon />
-                                            </IconButton>
+                                            </MenuButton>
                                             <Menu
-                                                id="long-menu"
-                                                MenuListProps={{
-                                                    "aria-labelledby": "long-button",
-                                                    className: "ovioo-card",
-                                                }}
                                                 slotProps={{
-                                                    paper: {
-                                                        className: "!bg-transparent",
+                                                    root: {
+                                                        className: "ovioo-card",
                                                     },
                                                 }}
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleToggle}
-                                                anchorOrigin={{
-                                                    vertical: "bottom",
-                                                    horizontal: "right",
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: "top",
-                                                    horizontal: "right",
-                                                }}
+                                                placement="bottom-end"
                                             >
                                                 <MenuItem
-                                                    onClick={handleToggle}
-                                                    disableRipple
-                                                    className="dashboard__link"
+                                                    onClick={() =>
+                                                        handleTransferOwnership(member.id)
+                                                    }
+                                                    className={`!text-blue-500 hover:!brightness-125 hover:!bg-transparent`}
                                                 >
                                                     <EditIcon fontSize="small" className="mr-3" />
                                                     Transfer Ownership
                                                 </MenuItem>
                                                 <MenuItem
                                                     onClick={() => handleRemoveMember(member.id)}
-                                                    disableRipple
-                                                    className="text-red-500"
+                                                    className={`!text-red-500 hover:!brightness-125 hover:!bg-transparent`}
                                                 >
                                                     <FileCopyIcon
                                                         fontSize="small"
@@ -157,7 +164,7 @@ export default function TeamMembersCard({
                                                     Remove member
                                                 </MenuItem>
                                             </Menu>
-                                        </>
+                                        </Dropdown>
                                     )}
                                 </span>
                             )}
