@@ -48,12 +48,13 @@ export default function Projects() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [graphQLloading, data]);
-    // , dispatch, projects
+
     const handleToggleModal = () => {
         setOpen((prevState) => (prevState = !prevState));
     };
 
     return (
+        session &&
         projects && (
             <div className="flex justify-start flex-wrap">
                 {projects.map((project: ProjectInterface, i: number) => (
@@ -61,11 +62,16 @@ export default function Projects() {
                         project={project}
                         key={project.id}
                         actionURL={`/dashboard/project/${project.id}`}
+                        client={apolloClient}
                     />
                 ))}
 
                 <AddNewProjectCard handleToggleModal={handleToggleModal} />
-                <AddNewProjectCardModal open={open} handleToggleModal={handleToggleModal} />
+                <AddNewProjectCardModal
+                    open={open}
+                    handleToggleModal={handleToggleModal}
+                    client={apolloClient}
+                />
             </div>
         )
     );

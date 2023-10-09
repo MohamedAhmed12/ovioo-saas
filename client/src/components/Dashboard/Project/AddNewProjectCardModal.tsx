@@ -1,18 +1,63 @@
 import DashBoardCard from "@/components/DashBoardCard";
+import { useAppDispatch } from "@/hooks/redux";
+import { useForm } from "@/hooks/useForm";
+import { pushNewProject } from "@/store/features/project";
+import { ApolloClient, gql, useMutation } from "@apollo/client";
 import EastIcon from "@mui/icons-material/East";
 import { Box, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Image from "next/image";
-import { MouseEvent } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
+import toast from "react-hot-toast";
+
+const CREATE_PROJECT = gql`
+    mutation ($data: CreateProjectDto!) {
+        createProject(data: $data) {
+            id
+            title
+            description
+        }
+    }
+`;
 
 export default function AddNewProjectCardModal({
     open,
     handleToggleModal,
+    client,
 }: {
     open: boolean;
     handleToggleModal: (e: MouseEvent<HTMLElement> | null) => void;
+    client: ApolloClient<any> | undefined;
 }) {
-    const createProject = () => {};
+    const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+    });
+
+    const dispatch = useAppDispatch();
+    const { handleOnChange } = useForm(setFormData);
+    const [createProject] = useMutation(CREATE_PROJECT, { client });
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setLoading(true);
+
+        try {
+            const { data } = await createProject({
+                variables: {
+                    data: formData,
+                },
+            });
+
+            dispatch(pushNewProject(data.createProject));
+            data && toast.success("Project created successfully");
+            handleToggleModal(null);
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+        setLoading(false);
+    };
 
     return (
         <Modal
@@ -26,7 +71,7 @@ export default function AddNewProjectCardModal({
                 <DashBoardCard
                     headerTitle="add new project"
                     style={{ maxWidth: 500, padding: "45px 40px" }}
-                    handleSubmit={createProject}
+                    handleSubmit={handleSubmit}
                 >
                     <>
                         <div className="flex flex-col lg:flex-row justify-between items-center w-full mb-8">
@@ -56,19 +101,20 @@ export default function AddNewProjectCardModal({
                                 id="title"
                                 label="Title"
                                 name="title"
-                                autoComplete="title"
-                                autoFocus
+                                value={formData.title || ""}
+                                onChange={handleOnChange}
                             />
                             <TextField
                                 className="dashboard-input"
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="additional-info"
+                                name="description"
                                 label="Additional Information"
-                                type="email"
-                                id="email"
-                                autoComplete="current-password"
+                                type="description"
+                                id="description"
+                                value={formData.description || ""}
+                                onChange={handleOnChange}
                             />
                         </div>
                         <div className="flex w-full justify-end mt-6">
