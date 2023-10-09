@@ -7,7 +7,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { FormEvent } from "react";
 
 const SHOW_PROJECT = gql`

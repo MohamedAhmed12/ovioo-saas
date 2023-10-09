@@ -1,13 +1,15 @@
-import userReducer from "./features/user";
 import { configureStore } from "@reduxjs/toolkit";
-import mainReducer from "./features/main";
 import boardReducer from "./features/board";
+import mainReducer from "./features/main";
+import projectReducer from "./features/project";
+import userReducer from "./features/user";
 
 export const store = configureStore({
     reducer: {
         mainReducer,
         boardReducer,
         userReducer,
+        projectReducer,
     },
 });
 
