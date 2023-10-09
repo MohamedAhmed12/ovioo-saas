@@ -34,10 +34,10 @@ export class Project extends BaseEntity {
   team: Team;
 
   @OneToMany(() => Task, (task) => task.project)
-  @Field(() => [Task])
+  @Field(() => [Task], { defaultValue: [] })
   tasks: Task[];
 
   @OneToMany(() => Asset, (asset) => asset.project)
-  @Field(() => [Asset])
+  @Field(() => [Asset], { defaultValue: [] })
   assets: Asset[];
 }

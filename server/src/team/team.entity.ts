@@ -25,10 +25,10 @@ export class Team extends BaseEntity {
   owner_id: number;
 
   @OneToMany(() => User, (user) => user.team, { cascade: ['update'] })
-  @Field(() => [User])
+  @Field(() => [User], { defaultValue: [] })
   users: User[];
 
   @OneToMany(() => Project, (project) => project.team)
-  @Field(() => [Project])
+  @Field(() => [Project], { defaultValue: [] })
   projects: Project[];
 }

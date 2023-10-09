@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskInterface } from "@/interfaces";
+import { Project as ProjectInterface } from "@/interfaces";
 import "@/styles/components/dashboard/project/project-card.scss";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -20,11 +20,11 @@ import { MouseEvent, useState } from "react";
 export default function ProjectCard({
     project,
     readOnly = false,
-    actionURL
+    actionURL,
 }: {
-    project: { id: number; name: string; tasks: TaskInterface[] };
+    project: ProjectInterface;
     readOnly?: boolean;
-    actionURL:string
+    actionURL: string;
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -40,7 +40,7 @@ export default function ProjectCard({
                     <CardHeader
                         avatar={
                             <p className="text-base dashboard-primary">
-                                {project.tasks.length} tasks
+                                {project?.tasks?.length || 0} tasks
                             </p>
                         }
                         action={
@@ -89,7 +89,7 @@ export default function ProjectCard({
                     <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
                 </Link>
                 <Link href={actionURL}>
-                    <h3 className="text-lg">{project.name}</h3>
+                    <h3 className="text-lg">{project.title}</h3>
                 </Link>
 
                 {!readOnly && (
