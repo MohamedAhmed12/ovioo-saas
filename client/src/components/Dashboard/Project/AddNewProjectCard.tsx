@@ -7,7 +7,7 @@ import { MouseEvent } from "react";
 export default function AddNewProjectCard({
     handleToggleModal,
 }: {
-    handleToggleModal: (e: MouseEvent<HTMLElement> | null) => void;
+    handleToggleModal: () => void;
 }) {
     return (
         <Card className="ovioo-card min-w-[250px] mx-5 my-5" onClick={handleToggleModal}>

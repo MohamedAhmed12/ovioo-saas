@@ -29,9 +29,12 @@ export const projectSlice = createSlice({
         pushNewProject: (state, action) => {
             state.projects.push(action.payload);
         },
+        replaceProject: (state, action) => {            
+           state.projects= state.projects.map(project => action.payload.id == project.id ? { ...project, ...action.payload } : project);
+        },
     },
 });
 
-export const { setProjects, deleteProject, pushNewProject } = projectSlice.actions;
+export const { setProjects, deleteProject, pushNewProject, replaceProject } = projectSlice.actions;
 
 export default projectSlice.reducer;

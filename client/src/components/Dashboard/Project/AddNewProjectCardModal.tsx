@@ -1,13 +1,14 @@
 import DashBoardCard from "@/components/DashBoardCard";
 import { useAppDispatch } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
-import { pushNewProject } from "@/store/features/project";
+import { Project as ProjectInterface } from "@/interfaces";
+import { pushNewProject, replaceProject } from "@/store/features/project";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
 import EastIcon from "@mui/icons-material/East";
 import { Box, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Image from "next/image";
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const CREATE_PROJECT = gql`
@@ -20,14 +21,22 @@ const CREATE_PROJECT = gql`
     }
 `;
 
+const EDIT_PROJECT = gql`
+    mutation ($data: UpdateProjectDto!) {
+        updateProject(data: $data)
+    }
+`;
+
 export default function AddNewProjectCardModal({
     open,
     handleToggleModal,
     client,
+    projectToEdit
 }: {
     open: boolean;
-    handleToggleModal: (e: MouseEvent<HTMLElement> | null) => void;
+    handleToggleModal: () => void;
     client: ApolloClient<any> | undefined;
+    projectToEdit: ProjectInterface | {}
 }) {
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -38,8 +47,18 @@ export default function AddNewProjectCardModal({
     const dispatch = useAppDispatch();
     const { handleOnChange } = useForm(setFormData);
     const [createProject] = useMutation(CREATE_PROJECT, { client });
+    const [updateProject] = useMutation(EDIT_PROJECT, { client });
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        if (Object.keys(projectToEdit).length > 0) {
+            setFormData({
+                title: (projectToEdit as ProjectInterface)?.title,
+                description: (projectToEdit as ProjectInterface)?.description,
+            });
+        }
+    }, [projectToEdit]);
+
+    const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
 
@@ -52,17 +71,48 @@ export default function AddNewProjectCardModal({
 
             dispatch(pushNewProject(data.createProject));
             data && toast.success("Project created successfully");
-            handleToggleModal(null);
+            handleClose()
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
         setLoading(false);
     };
 
+    const handleEdit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setLoading(true);
+
+        try {
+            const { data } = await updateProject({
+                variables: {
+                    data: { id: (projectToEdit as ProjectInterface).id, ...formData },
+                },
+            });
+
+            if (data.updateProject) {
+                dispatch(replaceProject({ id: projectToEdit.id, ...formData}));
+                data && toast.success("Project edited successfully");
+                handleClose()
+            }
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+        setLoading(false);
+    };
+
+
+    const handleClose = () => {
+        handleToggleModal()
+        setFormData({
+            title: "",
+            description: "",
+        });
+    }
+
     return (
         <Modal
             open={open}
-            onClose={() => handleToggleModal(null)}
+            onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             className="flex justify-center items-center px-90"
@@ -70,16 +120,16 @@ export default function AddNewProjectCardModal({
             <Box>
                 <DashBoardCard
                     headerTitle="add new project"
-                    style={{ maxWidth: 500, padding: "45px 40px" }}
-                    handleSubmit={handleSubmit}
+                    style={{ maxWidth: 500, padding: "45px 40px", margin: 0, maxHeight: 480 }}
+                    handleSubmit={projectToEdit ? handleEdit : handleCreate}
                 >
                     <>
-                        <div className="flex flex-col lg:flex-row justify-between items-center w-full mb-8">
+                        <div className="flex flex-row justify-between items-center w-full mb-8">
                             <div className="basis-3/12">
                                 <Image
                                     src="https://picsum.photos/id/12/400/400"
-                                    width="500"
-                                    height="500"
+                                    width="150"
+                                    height="150"
                                     alt="profile"
                                     className="rounded-full max-w-full"
                                 />
@@ -101,7 +151,7 @@ export default function AddNewProjectCardModal({
                                 id="title"
                                 label="Title"
                                 name="title"
-                                value={formData.title || ""}
+                                value={formData.title}
                                 onChange={handleOnChange}
                             />
                             <TextField
@@ -113,17 +163,17 @@ export default function AddNewProjectCardModal({
                                 label="Additional Information"
                                 type="description"
                                 id="description"
-                                value={formData.description || ""}
+                                value={formData.description}
                                 onChange={handleOnChange}
                             />
                         </div>
-                        <div className="flex w-full justify-end mt-6">
+                        <div className="flex w-full justify-end">
                             <button
                                 type="submit"
-                                className="dashboard__btn capitalize px-9 py-3 font-bold text-base tracking-wider rounded-[4px]"
+                                className="dashboard__btn capitalize px-9 py-3 font-bold tracking-wider rounded-[4px]"
                             >
-                                create project
-                                <EastIcon className="dark:text-white ml-2" />
+                                {projectToEdit ? "edit project" : "create project"}
+                                <EastIcon className="dark:text-white ml-2 !text-base lg:!text-2xl" />
                             </button>
                         </div>
                     </>

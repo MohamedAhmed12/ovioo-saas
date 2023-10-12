@@ -33,11 +33,13 @@ export default function ProjectCard({
     readOnly = false,
     actionURL,
     client,
+    onEditProject
 }: {
     project: ProjectInterface;
     readOnly?: boolean;
     actionURL: string;
     client: ApolloClient<any> | undefined;
+    onEditProject: (project: ProjectInterface) => void
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -45,6 +47,10 @@ export default function ProjectCard({
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [deleteProject] = useMutation(DELETE_PROJECT, { client });
+
+    const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
+        setAnchorEl(event?.currentTarget ? event.currentTarget : null);
+    };
 
     const handleDeleteProject = async (id: string) => {
         try {
@@ -62,8 +68,9 @@ export default function ProjectCard({
         handleToggle(null);
     };
 
-    const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
-        setAnchorEl(event?.currentTarget ? event.currentTarget : null);
+    const handleEditProject = () => {
+        onEditProject(project)
+        handleToggle(null);
     };
 
     return (
@@ -105,7 +112,7 @@ export default function ProjectCard({
                             },
                         }}
                     >
-                        <MenuItem onClick={() => handleToggle(null)}>
+                        <MenuItem onClick={handleEditProject}>
                             <EditIcon fontSize="small" className="mr-3" />
                             edit project
                         </MenuItem>

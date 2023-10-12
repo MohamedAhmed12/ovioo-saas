@@ -17,7 +17,7 @@ export default function DashBoardCard({
     style?: CSSProperties;
 }) {
     return (
-        <Card component="main" className="ovioo-card with-shadow mt10 mb-10 w-full">
+        <Card component="main" className="ovioo-card with-shadow mt-10 mb-10 w-full">
             {headerTitle && (
                 <CardHeader
                     className="bg-slate-300 dark:bg-slate-500 w-full capitalize font-semibold text-start items-center"

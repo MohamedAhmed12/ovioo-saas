@@ -4,7 +4,7 @@ import AddNewProjectCard from "@/components/Dashboard/Project/AddNewProjectCard"
 import AddNewProjectCardModal from "@/components/Dashboard/Project/AddNewProjectCardModal";
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Project as ProjectInterface } from "@/interfaces";
+import { Project, Project as ProjectInterface } from "@/interfaces";
 import { setProjects } from "@/store/features/project";
 import { getClient } from "@/utils/getClient";
 import { gql, useQuery } from "@apollo/client";
@@ -24,6 +24,7 @@ const FETCH_PROJECTS = gql`
 
 export default function Projects() {
     const [open, setOpen] = useState(false);
+    const [projectToEdit, setProjectToEdit] = useState({});
     const projects = useAppSelector((state) => state.projectReducer.projects);
     const dispatch = useAppDispatch();
     const { data: session, status } = useSession({
@@ -49,6 +50,10 @@ export default function Projects() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [graphQLloading, data]);
 
+    const handleEditProject = (project: ProjectInterface) => {
+        setProjectToEdit(project)
+        handleToggleModal()
+    };
     const handleToggleModal = () => {
         setOpen((prevState) => (prevState = !prevState));
     };
@@ -63,6 +68,7 @@ export default function Projects() {
                         key={project.id}
                         actionURL={`/dashboard/project/${project.id}`}
                         client={apolloClient}
+                        onEditProject={handleEditProject}
                     />
                 ))}
 
@@ -71,6 +77,7 @@ export default function Projects() {
                     open={open}
                     handleToggleModal={handleToggleModal}
                     client={apolloClient}
+                    projectToEdit={projectToEdit}
                 />
             </div>
         )
