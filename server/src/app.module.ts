@@ -1,3 +1,4 @@
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -26,6 +27,8 @@ const ormConfig = require('../ormconfig.json');
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
       installSubscriptionHandlers: true,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot(ormConfig[0]),
   ],
