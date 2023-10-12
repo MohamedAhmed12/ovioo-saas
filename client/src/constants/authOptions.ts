@@ -97,7 +97,7 @@ export const authOptions = {
         }),
         LinkedInProvider({
             clientId: process.env.LINKEDIN_CLIENT_ID || "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+            clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "",
         }),
         CredentialsProvider({
             type: "credentials",
