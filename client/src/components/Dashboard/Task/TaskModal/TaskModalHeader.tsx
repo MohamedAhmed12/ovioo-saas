@@ -35,8 +35,8 @@ export default function TaskModalHeader({
     };
 
     return (
-        <div className="flex task__header justify-between mb-5">
-            <div className="flex basis-1/2 items-center px-8">
+        <div className="flex flex-col-reverse lg:flex-row task__header justify-between max-w-full">
+            <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-8 flex-wrap max-w-full">
                 <OviooDropDown
                     options={Object.values(TaskStatus)}
                     onSelected={handleStatusChanged}
@@ -50,8 +50,8 @@ export default function TaskModalHeader({
                     className="ml-3"
                 />
             </div>
-            <div className="basis-1/2 flex justify-end px-8">
-                <DeleteOutlineIcon color="error" fontSize="medium" onClick={setOpenDeleteModal} />
+            <div className="basis-1/2 flex justify-end px-8 lg:items-center">
+                <DeleteOutlineIcon color="error" fontSize="large" onClick={setOpenDeleteModal} />
             </div>
             {isDeleteModalOpen && (
                 <DeleteModal

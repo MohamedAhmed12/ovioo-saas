@@ -69,7 +69,7 @@ export default function TaskModal({
                     setIsTaskModalOpen={setIsTaskModalOpen}
                 />
 
-                <div className="flex flex-col lg:flex-row task__body-wrapper">
+                <div className="flex flex-col-reverse lg:flex-row task__body-wrapper">
                     <TaskModalBody
                         task={task}
                         subtasks={task.subtasks}

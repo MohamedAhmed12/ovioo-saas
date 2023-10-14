@@ -41,7 +41,7 @@ export default function TaskTypeDropDown() {
             inputLabel="Type"
             initialVal={0}
             onSelected={onSelected}
-            className="task-type__dropdown"
+            className="task-type__dropdown !my-4"
         >
                 {TaskTypes.map(({ title, info, extraInfo, plan }, i) => (
                     <MenuItem
