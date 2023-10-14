@@ -33,7 +33,7 @@ export class UserService {
 
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>,
-  ) {}
+  ) { }
 
   async login(data: LoginDto): Promise<User> {
     const user = await this.UserRepository.findOne({
@@ -122,8 +122,6 @@ export class UserService {
     { email }: { email: string },
     { created_at, updated_at, ...data }: any,
   ): Promise<User> {
-    console.log(data);
-
     const user = await this.UserRepository.findOneBy({ email });
     if (!user) throw new NotFoundException();
 

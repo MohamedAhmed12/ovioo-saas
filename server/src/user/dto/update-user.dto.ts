@@ -12,6 +12,11 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   @Field(() => String, { nullable: true })
+  avatar?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
   fullname?: string;
 
   @IsEmail()

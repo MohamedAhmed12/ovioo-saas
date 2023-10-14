@@ -122,6 +122,7 @@ input ChangePasswordDto {
 }
 
 input UpdateUserDto {
+  avatar: String
   fullname: String
   email: String
   phone: Float
