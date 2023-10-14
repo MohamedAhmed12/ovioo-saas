@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ["picsum.photos"],
+        domains: ["picsum.photos", "ovioo-test-2.s3.eu-west-1.amazonaws.com"],
     },
     fastRefresh: true,
     concurrentFeatures: true,
