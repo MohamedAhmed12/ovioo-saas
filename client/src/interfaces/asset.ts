@@ -5,6 +5,6 @@ export interface Asset {
 }
 
 export interface AssetList {
-    title: string,
+    title?: string,
     assets: Asset[]
 }

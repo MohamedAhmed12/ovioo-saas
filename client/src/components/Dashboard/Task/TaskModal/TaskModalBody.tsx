@@ -1,15 +1,28 @@
-import { SubTaskInterface, TaskInterface } from "@/interfaces";
+import { AssetList as AssetListInterface, SubTaskInterface, TaskInterface } from "@/interfaces";
 import { useState } from "react";
 import Subtask from "../Subtask";
 import Attachement from "./Attachement";
 
-const images = [
-    "https://picsum.photos/id/1/400/400",
-    "https://picsum.photos/id/12/400/400",
-    "https://picsum.photos/id/33/400/400",
-    "https://picsum.photos/id/45/400/400",
-    "https://picsum.photos/id/51/400/400",
-    "https://picsum.photos/id/66/400/400",
+const assetsList: AssetListInterface[] = [
+    {
+        assets: [
+            {
+                src: "https://picsum.photos/id/100/400/400",
+                alt: "img logo",
+                type: "png",
+            },
+            {
+                src: "https://picsum.photos/id/200/400/400",
+                alt: "img logo 2",
+                type: "png",
+            },
+            {
+                src: "/videos/sample-video.webm",
+                alt: "video",
+                type: "mp4",
+            },
+        ],
+    },
 ];
 
 export default function TaskModalBody({
@@ -63,9 +76,8 @@ export default function TaskModalBody({
                     />
                 )}
             </div>
-            <div className="mt-8 flex flex-col space-y-3">
-                <Attachement images={images} />
-            </div>
+
+            <Attachement assetsList={assetsList} />
         </div>
     );
 }

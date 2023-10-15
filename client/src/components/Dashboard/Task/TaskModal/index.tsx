@@ -61,6 +61,7 @@ export default function TaskModal({
                     maxWidth: "80%",
                 },
             }}
+            className="task-modal"
         >
             <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
                 <TaskModalHeader

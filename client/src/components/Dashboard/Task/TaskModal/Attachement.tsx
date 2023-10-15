@@ -1,25 +1,11 @@
-import { ImageListItem } from "@mui/material";
-import Image from "next/image";
+import AssetList from "@/components/Dashboard/Asset/AssetList";
+import { AssetList as AssetListInterface } from "@/interfaces";
 
-export default function Attachement({ images }: { images: string[] }) {
+export default function Attachement({ assetsList }: { assetsList: AssetListInterface[] }) {
     return (
         <>
-            <p className="text-gray-500 tracking-widest text-sm">Attachments</p>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3">
-                {images.map((image, i) => (
-                    <ImageListItem key={i + "img"} className="h-full p-2">
-                        <Image
-                            src="/images/smile.jpg"
-                            alt="smile"
-                            width="1000"
-                            height="1000"
-                            objectFit="crop"
-                            className="w-full h-full rounded-lg"
-                        />
-                    </ImageListItem>
-                ))}
-            </div>
+            <p className="text-gray-500 tracking-widest text-sm mt-8 mb-3">Attachments</p>
+            <AssetList assetsList={assetsList} />
         </>
     );
 }

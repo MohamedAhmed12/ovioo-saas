@@ -1,11 +1,8 @@
-"use client";
-
 import { Asset as AssetInterface } from "@/interfaces";
 import "@/styles/components/dashboard/asset/asset-list.scss";
 import CardContent from "@mui/joy/CardContent";
 import CardCover from "@mui/joy/CardCover";
 import Typography from "@mui/joy/Typography";
-import Image from "next/image";
 
 export default function VideoAssetCard({ asset }: { asset: AssetInterface }) {
     return (

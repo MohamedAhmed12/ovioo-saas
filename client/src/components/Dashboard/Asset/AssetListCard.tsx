@@ -46,7 +46,7 @@ export default function AssetListCard({
                 options={sortbyOptions.map((option) => option.title)}
                 initialVal={initialVal}
             />
-            <AssetList assetsList={assetsList} />
+            <AssetList assetsList={assetsList} readOnly/>
         </DashBoardCard>
     );
 }
