@@ -10,11 +10,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
+import { Task } from 'src/task/task.entity';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -74,6 +76,10 @@ export class User extends BaseEntity {
   @ManyToOne(() => Team, (team) => team.users, { cascade: true })
   @Field(() => Team)
   team: Team;
+
+  @OneToMany(() => Task, (task) => task.designer)
+  @Field(() => [Task])
+  tasks: Task[];
 
   @BeforeInsert()
   async hashPass() {

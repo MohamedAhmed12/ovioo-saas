@@ -29,11 +29,11 @@ export class Project extends BaseEntity {
   @Field(() => String)
   description: string;
 
-  @ManyToOne(() => Team, (team) => team.projects, { cascade: true })
+  @ManyToOne(() => Team, (team) => team.projects)
   @Field(() => Team)
   team: Team;
 
-  @OneToMany(() => Task, (task) => task.project)
+  @OneToMany(() => Task, (task) => task.project, { cascade: true })
   @Field(() => [Task], { defaultValue: [] })
   tasks: Task[];
 
