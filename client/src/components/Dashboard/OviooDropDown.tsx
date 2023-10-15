@@ -9,7 +9,7 @@ export default function OviooDropDown({
     initialVal,
 }: {
     onSelected: (selectedVal: string) => void;
-    options: string[];
+    options: any[];
     initialVal: string | number;
 }) {
     return (
@@ -19,8 +19,8 @@ export default function OviooDropDown({
             className="!min-w-[280px] lg:!min-w-fit"
         >
             {options.map((option, i) => (
-                <MenuItem value={option} key={option}>
-                    {option}
+                <MenuItem value={option.id || option.key} key={option}>
+                    {option.title || option.name}
                 </MenuItem>
             ))}
         </OviooDropDownWrapper>

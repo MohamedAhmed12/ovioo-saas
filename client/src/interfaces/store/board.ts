@@ -1,31 +1,34 @@
+import { Project } from "../project";
+
 export enum TaskStatus {
     InQueue = "In queue",
     InProgress = "In progress",
     REVIEW = "Review",
     OnHold = "On hold",
-    DONE = "Done"
+    DONE = "Done",
 }
 
 export interface SubTaskInterface {
-    id: number,
-    title: string,
-    isCompleted: boolean
+    id: number;
+    title: string;
+    isCompleted: boolean;
 }
 
 export interface TaskInterface {
-    id: number,
-    title?: string,
-    description?: string,
-    status?: TaskStatus,
-    subtasks?: SubTaskInterface[] | undefined
-};
+    id: number;
+    title?: string;
+    description?: string;
+    status?: TaskStatus;
+    subtasks?: SubTaskInterface[] | undefined;
+    project: Project;
+}
 
 export interface ColumnInterface {
-    id: number,
-    title: string,
-    tasks: TaskInterface[] | [],
-};
+    id: number;
+    title: string;
+    tasks: TaskInterface[] | [];
+}
 
 export interface BoardState {
-    columns: ColumnInterface[]
+    columns: ColumnInterface[];
 }
