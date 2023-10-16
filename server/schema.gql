@@ -22,15 +22,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""teams"""
-type Team {
-  id: ID!
-  name: String
-  owner_id: Float!
-  users: [User!]!
-  projects: [Project!]!
-}
-
 """users"""
 type User {
   id: ID!
@@ -55,6 +46,16 @@ enum UserRoleEnum {
   Designer
 }
 
+"""teams"""
+type Team {
+  id: ID!
+  name: String
+  owner_id: Float!
+  members: [User!]!
+  projects: [Project!]!
+  tasks: [Task!]!
+}
+
 """tasks"""
 type Task {
   id: ID!
@@ -63,6 +64,7 @@ type Task {
   type: TaskTypesEnum
   status: TaskStatusEnum
   project: Project!
+  team: Team!
   designer: User
   children: [Task!]
   parent: Task

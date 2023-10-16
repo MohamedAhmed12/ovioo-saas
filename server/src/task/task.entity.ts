@@ -1,18 +1,17 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Project } from 'src/project/project.entity';
+import { Team } from 'src/team/team.entity';
+import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskTypesEnum } from './enums/task-types';
-import { User } from 'src/user/user.entity';
 
 @Entity('tasks')
 @ObjectType({ description: 'tasks' })
@@ -47,6 +46,10 @@ export class Task extends BaseEntity {
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
   @Field(() => Project)
   project: Project;
+
+  @ManyToOne(() => Team, (team) => team.tasks, { onDelete: 'CASCADE' })
+  @Field(() => Team)
+  team: Team;
 
   @ManyToOne(() => User, (user) => user.tasks)
   @Field(() => User, { nullable: true })

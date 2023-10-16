@@ -1,4 +1,4 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';
 import { UseGuards } from '@nestjs/common';

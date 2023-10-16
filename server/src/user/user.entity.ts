@@ -77,6 +77,7 @@ export class User extends BaseEntity {
   @Field(() => Team)
   team: Team;
 
+  // as a designer not an owner
   @OneToMany(() => Task, (task) => task.designer)
   @Field(() => [Task])
   tasks: Task[];
