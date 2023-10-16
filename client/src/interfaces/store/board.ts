@@ -1,10 +1,10 @@
 import { Project } from "../project";
 
 export enum TaskStatus {
-    InQueue = "In queue",
-    InProgress = "In progress",
+    IN_QUEUE = "In queue",
+    IN_PROGRESS = "In progress",
     REVIEW = "Review",
-    OnHold = "On hold",
+    ON_HOLD = "On hold",
     DONE = "Done",
 }
 
@@ -18,13 +18,12 @@ export interface TaskInterface {
     id: number;
     title?: string;
     description?: string;
-    status?: TaskStatus;
+    status: TaskStatus;
     subtasks?: SubTaskInterface[] | undefined;
     project: Project;
 }
 
 export interface ColumnInterface {
-    id: number;
     title: string;
     tasks: TaskInterface[] | [];
 }

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtPayload, verify } from 'jsonwebtoken';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -38,8 +39,15 @@ export class AuthGuard implements CanActivate {
     const token = type === 'Bearer' ? rest : undefined;
 
     try {
-      const decodedToken = await verify(token, process.env.JWT_TOKEN);
-      return decodedToken;
+      const { email, provider } = await verify(token, process.env.JWT_TOKEN);
+      const authUser = await User.findOne({
+        where: {
+          email,
+          provider,
+        },
+      });
+
+      return authUser;
     } catch (err) {
       const message = 'Token error:' + err.message;
       throw new ForbiddenException(message);

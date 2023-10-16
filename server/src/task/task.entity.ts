@@ -28,20 +28,16 @@ export class Task extends BaseEntity {
   @Field(() => String, { nullable: true })
   description: string;
 
-  @Column({
-    type: 'enum',
-    enum: TaskTypesEnum,
-  })
-  @Field(() => TaskTypesEnum, { nullable: true })
-  type: TaskTypesEnum;
+  @Column('text')
+  @Field(() => String, { nullable: true })
+  type: string;
 
   @Column({
-    type: 'enum',
-    enum: TaskStatusEnum,
-    default: TaskStatusEnum.InQueue,
+    type: 'text',
+    default: TaskStatusEnum.IN_QUEUE,
   })
-  @Field(() => TaskStatusEnum, { nullable: true })
-  status: TaskStatusEnum;
+  @Field(() => String, { nullable: true })
+  status: string;
 
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
   @Field(() => Project)

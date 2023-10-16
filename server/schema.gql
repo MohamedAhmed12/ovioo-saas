@@ -61,36 +61,13 @@ type Task {
   id: ID!
   title: String!
   description: String
-  type: TaskTypesEnum
-  status: TaskStatusEnum
+  type: String
+  status: String
   project: Project!
   team: Team!
   designer: User
   children: [Task!]
   parent: Task
-}
-
-enum TaskTypesEnum {
-  Webflow
-  LogoAndIdentity
-  Website
-  LandingPage
-  MobileApp
-  CustomIllustration
-  Animation
-  Packing
-  BannerAndDigital
-  Email
-  Book
-  Photo
-}
-
-enum TaskStatusEnum {
-  InQueue
-  InProgress
-  REVIEW
-  OnHold
-  DONE
 }
 
 """project"""
@@ -196,6 +173,21 @@ input CreateTaskDto {
   title: String!
   project_id: String!
   type: TaskTypesEnum!
+}
+
+enum TaskTypesEnum {
+  Webflow
+  LogoAndIdentity
+  Website
+  LandingPage
+  MobileApp
+  CustomIllustration
+  Animation
+  Packing
+  BannerAndDigital
+  Email
+  Book
+  Photo
 }
 
 input CreateProjectDto {

@@ -1,7 +1,7 @@
 export const TaskKanbanColors = {
-    InQueue: "#3498db",
-    InProgress: "#2ecc71",
+    InQueue: "#9b59b6",
+    InProgress: "#3498db",
     REVIEW: "#f39c12",
     OnHold: "#f1c40f",
-    DONE: "#9b59b6",
+    DONE: "#27ae60",
 };

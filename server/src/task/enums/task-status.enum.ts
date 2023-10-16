@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum TaskStatusEnum {
-  InQueue = 'In queue',
-  InProgress = 'In progress',
+  IN_QUEUE = 'In queue',
+  IN_PROGRESS = 'In progress',
   REVIEW = 'Review',
-  OnHold = 'On hold',
+  ON_HOLD = 'On hold',
   DONE = 'Done',
 }
 

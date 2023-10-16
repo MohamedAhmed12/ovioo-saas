@@ -1,25 +1,30 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { TaskStatus } from "@/interfaces";
-import { addTask, dragTask } from "@/store/features/board";
+import { useAppDispatch } from "@/hooks/redux";
+import { TaskInterface, TaskStatus } from "@/interfaces";
+import { dragTask } from "@/store/features/board";
 import { Typography } from "@mui/material";
 import { DragEvent, FocusEvent, useState } from "react";
 import Task from "./Task";
 
-export default function Column({ title, color }: { title: TaskStatus; color: string }) {
+export default function Column({
+    tasks,
+    title,
+    color,
+}: {
+    tasks: TaskInterface[];
+    title: TaskStatus;
+    color: string;
+}) {
     const dispatch = useAppDispatch();
     const [showNewTask, setShowNewTask] = useState<boolean>(false);
     const [taskTitle, setTaskTitle] = useState("");
 
-    const columns = useAppSelector((state) => state.boardReducer.columns);
-    const col = columns.find((col, i) => col.title === title) || columns[0];
-
     const handleOnDrop = (e: DragEvent<HTMLDivElement>) => {
-        const { prevColId, taskId } = JSON.parse(e.dataTransfer.getData("text"));
+        const { task } = JSON.parse(e.dataTransfer.getData("text"));
 
-        if (col.id !== prevColId) {
-            dispatch(dragTask({ colId: col.id, prevColId, taskId }));
+        if (task.status !== title) {
+            dispatch(dragTask({ task, newColStatus: title }));
         }
     };
 
@@ -28,32 +33,25 @@ export default function Column({ title, color }: { title: TaskStatus; color: str
     };
 
     const handleOnBlur = (e: FocusEvent<HTMLInputElement>) => {
-        if (e?.target?.value) {
-            dispatch(
-                addTask({
-                    id: 113,
-                    title: e.target.value,
-                    status: TaskStatus.InQueue,
-                    colId: col.id,
-                })
-            );
-        }
-        setTaskTitle("");
+      
     };
 
     return (
-        <div onDrop={handleOnDrop} onDragOver={handleOnDragOver} className="mx-5 min-w-[280px] ">
-            <p className=" font-semibold flex items-center gap-2 tracking-widest md:tracking-[.2em]">
+        <div
+            onDrop={handleOnDrop}
+            onDragOver={handleOnDragOver}
+            className="column mx-5 min-w-[280px] "
+        >
+            <p className="font-semibold flex items-center gap-2 tracking-widest md:tracking-[.2em]">
                 <span
                     className="rounded-full w-4 h-4"
                     style={{ backgroundColor: `${color}` }}
                 ></span>
-                {title} ({col?.tasks.length || 0})
+                {title} ({tasks?.length || 0})
             </p>
 
-            {col?.tasks?.map((task, index) => (
-                <Task key={index} task={task} colId={col.id} />
-            ))}
+            {tasks &&
+                tasks.map((task, index) => <Task key={index} task={task} />)}
 
             {showNewTask && (
                 <input
@@ -73,6 +71,8 @@ export default function Column({ title, color }: { title: TaskStatus; color: str
             >
                 + new task
             </Typography>
+
+            {/* <CreateTaskBackdrop /> */}
         </div>
     );
 }

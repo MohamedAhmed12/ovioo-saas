@@ -2,11 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { Project } from 'src/project/project.entity';
+import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.entity';
-import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
-import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class TaskService {
@@ -19,16 +19,14 @@ export class TaskService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async listTasks({ email, provider }: AuthGuardUserDto): Promise<Task[]> {
-    const authUser = await this.userRepository.findOne({
+  async listTasks({ id }: AuthGuardUserDto) {
+    return await this.taskRepository.find({
       where: {
-        email,
-        provider,
+        team: {
+          owner_id: id,
+        },
       },
-      relations: ['team.tasks'],
     });
-
-    return authUser.team.tasks;
   }
 
   async createTask(data: CreateTaskDto): Promise<Task> {

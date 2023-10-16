@@ -1,192 +1,50 @@
-import { BoardState, ColumnInterface, TaskInterface, TaskStatus } from '@/interfaces';
-import { createSlice } from '@reduxjs/toolkit';
+import { ColumnInterface, TaskInterface, TaskStatus } from "@/interfaces";
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: BoardState = {
-    columns: [
-        {
-            id: 1,
-            title: TaskStatus.InQueue,
-            tasks: [
-                {
-                    id: 1,
-                    title: "Build UI for onboarding flow",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Sign up page",
-                            isCompleted: true
-                        },
-                        {
-                            id: 2,
-                            title: "Sign in page",
-                            isCompleted: false
-                        },
-                        {
-                            id: 3,
-                            title: "Welcome page",
-                            isCompleted: false
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: "Build UI for search",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Search page",
-                            isCompleted: false
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    title: "Build settings UI",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Account page",
-                            isCompleted: false
-                        },
-                        {
-                            id: 2,
-                            title: "Billing page",
-                            isCompleted: false
-                        }
-                    ]
-                },
-            ]
-        },
-        {
-            id: 2,
-            title: TaskStatus.InProgress,
-            tasks: [
-                {
-                    id: 1,
-                    title: "Design settings and search pages",
-                    description: "",
-                    status: TaskStatus.InProgress,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Settings - Account page",
-                            isCompleted: true
-                        },
-                        {
-                            id: 2,
-                            title: "Settings - Billing page",
-                            isCompleted: true
-                        },
-                    ]
-                },
-                {
-                    id: 2,
-                    title: "Add account management endpoints",
-                    description: "",
-                    status: TaskStatus.InProgress,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Upgrade plan",
-                            isCompleted: true
-                        },
-
-                    ]
-                },
-                {
-                    id: 3,
-                    title: "Design onboarding flow",
-                    description: "",
-                    status: TaskStatus.InProgress,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Sign up page",
-                            isCompleted: true
-                        },
-                        {
-                            id: 2,
-                            title: "Sign in page",
-                            isCompleted: false
-                        },
-                        {
-                            id: 3,
-                            title: "Welcome page",
-                            isCompleted: false
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    title: "Add search enpoints",
-                    description: "",
-                    status: TaskStatus.InProgress,
-                },
-            ]
-        },
-        {
-            id: 3,
-            title: TaskStatus.REVIEW,
-            tasks: [
-                {
-                    id: 1,
-                    title: "Conduct 5 wireframe tests",
-                    description: "Ensure the layout continues to make sense and we have strong buy-in from potential users.",
-                    status: TaskStatus.DONE,
-                    subtasks: [
-                        {
-                            id: 1,
-                            title: "Complete 5 wireframe prototype tests",
-                            isCompleted: true
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: "Create wireframe prototype",
-                    description: "Create a greyscale clickable wireframe prototype to test our asssumptions so far.",
-                    status: TaskStatus.DONE,
-                },
-                {
-                    id: 3,
-                    title: "Market discovery",
-                    description: "We need to define and refine our core product. Interviews will help us learn common pain points and help us define the strongest MVP.",
-                    status: TaskStatus.DONE,
-                },
-            ]
-        },
-        {
-            id: 4,
-            title: TaskStatus.OnHold,
-            tasks: []
-        },
-        {
-            id: 5,
-            title: TaskStatus.DONE,
-            tasks: []
-        }
-    ]
-}
+const initialState: { tasks: Record<TaskStatus, TaskInterface[]> | null } = {
+    tasks: null,
+};
 
 export const boardSlice = createSlice({
-    name: 'board',
+    name: "board",
     initialState,
     reducers: {
+        setTasks: (state, action) => {
+            state.tasks = action.payload.reduce(
+                (
+                    result: Record<TaskStatus, TaskInterface[]>,
+                    task: TaskInterface
+                ) => {
+                    if (!result[task.status]) result[task.status] = [];
+                    result[task.status].push(task);
+
+                    return result;
+                },
+                {}
+            );
+        },
         editBoard: (state, action) => {
             state.columns = action.payload.newColumns;
         },
-        addTask: (state, { payload }: { payload: TaskInterface & { colId: number } }) => {
+        addTask: (
+            state,
+            { payload }: { payload: TaskInterface & { colId: number } }
+        ) => {
             const { title, status, description, subtasks } = payload;
-            const task: TaskInterface = { id: 55, title, description, subtasks, status };
-            const column: ColumnInterface | undefined = state.columns.find((col: ColumnInterface | undefined, index: number) => index === payload.colId || 0);
+            const task: TaskInterface = {
+                id: 55,
+                title,
+                description,
+                subtasks,
+                status,
+            };
+            const column: ColumnInterface | undefined = state.columns.find(
+                (col: ColumnInterface | undefined, index: number) =>
+                    index === payload.colId || 0
+            );
 
-            if (column && column.tasks && task) (column.tasks as TaskInterface[]).push(task as TaskInterface);
+            if (column && column.tasks && task)
+                (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         editTask: (state, action) => {
             const {
@@ -198,11 +56,17 @@ export const boardSlice = createSlice({
                 newColIndex,
                 taskIndex,
             } = action.payload;
-            const column = state.columns.find((col: ColumnInterface, index: number) => index === newColIndex);
+            const column = state.columns.find(
+                (col: ColumnInterface, index: number) => index === newColIndex
+            );
 
             if (column == undefined) return;
 
-            let task = column && column.tasks.find((task: TaskInterface, index) => index === taskIndex);
+            let task =
+                column &&
+                column.tasks.find(
+                    (task: TaskInterface, index) => index === taskIndex
+                );
 
             if (task == undefined) return;
 
@@ -216,28 +80,47 @@ export const boardSlice = createSlice({
 
             if (prevColIndex === newColIndex) return;
 
-            const newCol = state.columns.find((col: ColumnInterface, index: number) => index === newColIndex);
-            if (newCol && newCol.tasks && task) (column.tasks as TaskInterface[]).push(task as TaskInterface);
+            const newCol = state.columns.find(
+                (col: ColumnInterface, index: number) => index === newColIndex
+            );
+            if (newCol && newCol.tasks && task)
+                (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         dragTask: (state, action) => {
-            const { colId, prevColId, taskId } = action.payload;
-            const prevCol: ColumnInterface | undefined = state.columns.find((col: ColumnInterface, i) => col.id === prevColId);
+            const {
+                task,
+                newColStatus,
+            }: { task: TaskInterface; newColStatus: TaskStatus } =
+                action.payload;
 
-            if (!prevCol) return;
+            if (!state.tasks) return;
 
-            const newCol: ColumnInterface | undefined = state.columns.find((col: ColumnInterface, i) => col.id === colId);
-            const taskIndex: number = Object.keys(prevCol.tasks).findIndex((key) => prevCol.tasks[+key].id === taskId);
-            const task: TaskInterface = prevCol.tasks.splice(taskIndex, 1)[0];
+            const taskCurrentIndex: number = state.tasks[task.status].findIndex(
+                (elm) => elm.id == task.id
+            );
 
-            if (newCol) {
-                (newCol.tasks as TaskInterface[]).push(task);
+            if (taskCurrentIndex != -1) {
+                console.log(3);
+                state.tasks[task.status].splice(taskCurrentIndex, 1);
+
+                if (!state.tasks[newColStatus]) state.tasks[newColStatus] = [];
+                console.log(state.tasks[newColStatus].push(task));
             }
         },
         setSubtaskCompleted: (state, action) => {
             const payload = action.payload;
-            const col = state.columns.find((col: ColumnInterface, i) => i === payload.colIndex);
-            const task = col && col.tasks.find((task: TaskInterface, i) => i === payload.taskIndex);
-            const subtask = (task && task.subtasks) && task.subtasks.find((subtask, i) => i === payload.index);
+            const col = state.columns.find(
+                (col: ColumnInterface, i) => i === payload.colIndex
+            );
+            const task =
+                col &&
+                col.tasks.find(
+                    (task: TaskInterface, i) => i === payload.taskIndex
+                );
+            const subtask =
+                task &&
+                task.subtasks &&
+                task.subtasks.find((subtask, i) => i === payload.index);
 
             if (subtask) subtask.isCompleted = !subtask.isCompleted;
         },
@@ -246,14 +129,27 @@ export const boardSlice = createSlice({
         },
         deleteTask: (state, action) => {
             const { taskId, colId } = action.payload;
-            const col = state.columns.find((col: ColumnInterface, i) => col.id === colId);
+            const col = state.columns.find(
+                (col: ColumnInterface, i) => col.id === colId
+            );
 
             if (col != undefined) {
-                col.tasks = col.tasks.filter((task: TaskInterface, i) => task.id !== taskId);
+                col.tasks = col.tasks.filter(
+                    (task: TaskInterface, i) => task.id !== taskId
+                );
             }
         },
-    }
+    },
 });
 
-export const { editBoard, addTask, editTask, dragTask, setSubtaskCompleted, setTaskStatus, deleteTask } = boardSlice.actions;
+export const {
+    setTasks,
+    editBoard,
+    addTask,
+    editTask,
+    dragTask,
+    setSubtaskCompleted,
+    setTaskStatus,
+    deleteTask,
+} = boardSlice.actions;
 export default boardSlice.reducer;
