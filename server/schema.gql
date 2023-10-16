@@ -58,14 +58,14 @@ enum UserRoleEnum {
 """tasks"""
 type Task {
   id: ID!
-  title: String
+  title: String!
   description: String
-  type: TaskTypesEnum!
-  status: TaskStatusEnum!
+  type: TaskTypesEnum
+  status: TaskStatusEnum
   project: Project!
-  designer: User!
-  children: [Task!]!
-  parent: Task!
+  designer: User
+  children: [Task!]
+  parent: Task
 }
 
 enum TaskTypesEnum {
@@ -126,6 +126,7 @@ type Mutation {
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
+  createTask(data: CreateTaskDto!): Task!
   createProject(data: CreateProjectDto!): Project!
   updateProject(data: UpdateProjectDto!): Boolean!
   deleteProject(id: String!): Boolean!
@@ -186,6 +187,12 @@ input UpdateProfileDto {
   mail_notification_enabled: Boolean
   created_at: DateTime
   updated_at: DateTime
+}
+
+input CreateTaskDto {
+  title: String!
+  project_id: String!
+  type: TaskTypesEnum!
 }
 
 input CreateProjectDto {

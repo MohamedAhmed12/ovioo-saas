@@ -8,7 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskTypesEnum } from './enums/task-types';
@@ -21,8 +21,8 @@ export class Task extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column('text', { default: '' })
-  @Field(() => String, { nullable: true })
+  @Column('text')
+  @Field(() => String)
   title: string;
 
   @Column('text', { default: '' })
@@ -33,7 +33,7 @@ export class Task extends BaseEntity {
     type: 'enum',
     enum: TaskTypesEnum,
   })
-  @Field(() => TaskTypesEnum)
+  @Field(() => TaskTypesEnum, { nullable: true })
   type: TaskTypesEnum;
 
   @Column({
@@ -41,7 +41,7 @@ export class Task extends BaseEntity {
     enum: TaskStatusEnum,
     default: TaskStatusEnum.InQueue,
   })
-  @Field(() => TaskStatusEnum)
+  @Field(() => TaskStatusEnum, { nullable: true })
   status: TaskStatusEnum;
 
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
@@ -49,14 +49,14 @@ export class Task extends BaseEntity {
   project: Project;
 
   @ManyToOne(() => User, (user) => user.tasks)
-  @Field(() => User, { defaultValue: null })
+  @Field(() => User, { nullable: true })
   designer: User;
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })
-  @Field(() => [Task])
+  @Field(() => [Task], { nullable: true })
   children: Task[];
 
   @ManyToOne(() => Task, (task) => task.children)
-  @Field(() => Task)
+  @Field(() => Task, { nullable: true })
   parent: Task;
 }
