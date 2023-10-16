@@ -114,6 +114,7 @@ type Query {
   me: User!
   findProfile: Profile!
   getTeam: Team!
+  listTasks: [Task!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
 }
