@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const FETCH_PROJECTS = gql`
+const LIST_PROJECTS = gql`
     query {
         listProjects {
             id
@@ -39,7 +39,7 @@ export default function Projects() {
         loading: graphQLloading,
         error,
         data,
-    } = useQuery(FETCH_PROJECTS, { client: apolloClient });
+    } = useQuery(LIST_PROJECTS, { client: apolloClient });
 
     if (error) throw new Error(JSON.stringify(error));
 

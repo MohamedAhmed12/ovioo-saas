@@ -29,13 +29,16 @@ export default function OviooDropDownWrapper({
     return (
         <FormControl
             sx={{ minWidth: 120, maxWidth: 150 }}
-            className={`ovioo-dropdown-wrapper !mr-4 ${className}`}
+            className={`ovioo-dropdown-wrapper ${className}`}
         >
             <Select
                 value={val}
                 onChange={handleChange}
                 SelectDisplayProps={{
                     className: "dark:bg-slate-400",
+                }}
+                MenuProps={{
+                    className: "ovioo-dropDown-paper",
                 }}
             >
                 {inputLabel && (

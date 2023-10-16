@@ -40,7 +40,7 @@ export default function TaskModalHeader({
                 <OviooDropDown
                     options={Object.values(TaskStatus)}
                     onSelected={handleStatusChanged}
-                    initialVal={task.status || TaskStatus.InQueue}
+                    initialVal={task.status || TaskStatus.IN_QUEUE}
                 />
                 <TaskTypeDropDown />
                 <Avatar

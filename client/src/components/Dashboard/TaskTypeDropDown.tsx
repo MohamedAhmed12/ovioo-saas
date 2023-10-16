@@ -9,9 +9,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Image from "next/image";
 import OviooDropDownWrapper from "./OviooDropDownWrapper";
 
-export default function TaskTypeDropDown() {
-    const onSelected = () => {};
-
+export default function TaskTypeDropDown({
+    onSelected,
+}: {
+    onSelected: (selectedVal: string) => void;
+}) {
     const infoComponent = (info: string[], extraInfo: string | null) => {
         return (
             <span>
@@ -43,27 +45,35 @@ export default function TaskTypeDropDown() {
             onSelected={onSelected}
             className="task-type__dropdown !my-4"
         >
-                {TaskTypes.map(({ title, info, extraInfo, plan }, i) => (
-                    <MenuItem
-                        value={title}
-                        key={title}
-                        className="task-type__option flex items-center !py-2"
-                        aria-label="fff"
-                    >
-                        <span className="basis-[90%] flex items-center">
-                            <Tooltip title={plan} className="task-type__option-text mr-2">
-                                <Image src={`/svg/${plan}.svg`} width={20} height={20} alt="pro icon" />
-                            </Tooltip>
-                            {title}
-                        </span>
+            {TaskTypes.map(({ title, info, extraInfo, plan }, i) => (
+                <MenuItem
+                    value={title}
+                    key={title}
+                    className="task-type__option flex items-center !py-2"
+                    aria-label="fff"
+                >
+                    <span className="basis-[90%] flex items-center">
+                        <Tooltip
+                            title={plan}
+                            className="task-type__option-text mr-2"
+                        >
+                            <Image
+                                src={`/svg/${plan}.svg`}
+                                width={20}
+                                height={20}
+                                alt="pro icon"
+                            />
+                        </Tooltip>
+                        {title}
+                    </span>
 
-                        <span className="task-type__option-text basis-[10%] ml-2">
-                            <Tooltip title={infoComponent(info, extraInfo)}>
-                                <InfoIcon />
-                            </Tooltip>
-                        </span>
-                    </MenuItem>
-                ))}
+                    <span className="task-type__option-text basis-[10%] ml-2">
+                        <Tooltip title={infoComponent(info, extraInfo)}>
+                            <InfoIcon />
+                        </Tooltip>
+                    </span>
+                </MenuItem>
+            ))}
         </OviooDropDownWrapper>
     );
 }

@@ -1,5 +1,4 @@
 import { Project as ProjectInterface } from "@/interfaces/project";
-import { gql } from "@apollo/client";
 import { createSlice } from "@reduxjs/toolkit";
 
 

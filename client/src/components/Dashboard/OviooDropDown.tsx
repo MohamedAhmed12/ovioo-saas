@@ -16,10 +16,10 @@ export default function OviooDropDown({
         <OviooDropDownWrapper
             initialVal={initialVal}
             onSelected={onSelected}
-            className="!min-w-[280px] lg:!min-w-fit"
+            className="ovioo-dropDown"
         >
             {options.map((option, i) => (
-                <MenuItem value={option.id || option.key} key={option}>
+                <MenuItem value={option.id || option.key} key={option + i}>
                     {option.title || option.name}
                 </MenuItem>
             ))}

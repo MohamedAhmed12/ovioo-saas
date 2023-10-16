@@ -2,7 +2,7 @@ import { SubTaskInterface, TaskInterface } from "@/interfaces";
 import { DragEvent, useState } from "react";
 import TaskModal from "./TaskModal";
 
-export default function Task({ task, colId }: { task: TaskInterface; colId: number }) {
+export default function Task({ task }: { task: TaskInterface }) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
     let completed = 0;
@@ -17,7 +17,7 @@ export default function Task({ task, colId }: { task: TaskInterface; colId: numb
     }
 
     const handleOnDrag = (e: DragEvent<HTMLDivElement>) => {
-        e.dataTransfer.setData("text", JSON.stringify({ taskId: task.id, prevColId: colId }));
+        e.dataTransfer.setData("text", JSON.stringify({ task: task }));
     };
 
     return (
@@ -43,7 +43,7 @@ export default function Task({ task, colId }: { task: TaskInterface; colId: numb
             <TaskModal
                 open={isTaskModalOpen}
                 task={task}
-                colId={colId}
+                // colId={colId}
                 setIsTaskModalOpen={setIsTaskModalOpen}
             />
         </div>
