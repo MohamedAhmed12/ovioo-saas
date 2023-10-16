@@ -83,7 +83,7 @@ export default function TeamMembersCard({
         <div className="Company Team basis-[48%] flex flex-col lg:flex-col px-5">
             <DashBoardCard headerTitle={headerTitle}>
                 <div className="flex flex-col">
-                    {team.users.map((member: Member, index: number) => (
+                    {team.members.map((member: Member, index: number) => (
                         <Stack
                             direction="row"
                             spacing={{ sm: "2", lg: "5" }}

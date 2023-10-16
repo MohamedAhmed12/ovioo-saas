@@ -25,15 +25,15 @@ export class TeamService {
         email,
         provider,
       },
-      relations: ['team.users'],
+      relations: ['team.members'],
     });
 
-    const ownerIndex = user.team.users.findIndex(
+    const ownerIndex = user.team.members.findIndex(
       (member: User) => member.id == user.team.owner_id,
     );
-    const owner = user.team.users[+ownerIndex];
-    user.team.users.splice(+ownerIndex, 1);
-    user.team.users.unshift(owner);
+    const owner = user.team.members[+ownerIndex];
+    user.team.members.splice(+ownerIndex, 1);
+    user.team.members.unshift(owner);
 
     return user.team;
   }
@@ -47,7 +47,7 @@ export class TeamService {
         email,
         provider,
       },
-      relations: ['team.users'],
+      relations: ['team.members'],
     });
 
     if (
@@ -58,7 +58,7 @@ export class TeamService {
 
     let memberIndex = -1;
 
-    authUser.team.users.map((user, i) => {
+    authUser.team.members.map((user, i) => {
       if (user.id === +memberId) {
         user.role = UserRoleEnum.User;
         memberIndex = i;
@@ -70,7 +70,7 @@ export class TeamService {
     if (memberIndex == -1)
       throw new NotFoundException('Couldn’t find team member matches this id.');
 
-    this.userRepository.save(authUser.team.users);
+    this.userRepository.save(authUser.team.members);
 
     authUser.team.owner_id = +memberId;
     this.teamRepository.save(authUser.team);

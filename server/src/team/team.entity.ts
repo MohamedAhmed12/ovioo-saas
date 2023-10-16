@@ -26,7 +26,7 @@ export class Team extends BaseEntity {
 
   @OneToMany(() => User, (user) => user.team, { cascade: ['update'] })
   @Field(() => [User], { defaultValue: [] })
-  users: User[];
+  members: User[];
 
   @OneToMany(() => Project, (project) => project.team)
   @Field(() => [Project], { defaultValue: [] })

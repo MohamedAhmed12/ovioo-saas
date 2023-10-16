@@ -73,7 +73,7 @@ export class User extends BaseEntity {
   @Field(() => UserRoleEnum)
   role: UserRoleEnum;
 
-  @ManyToOne(() => Team, (team) => team.users, { cascade: true })
+  @ManyToOne(() => Team, (team) => team.members, { cascade: true })
   @Field(() => Team)
   team: Team;
 

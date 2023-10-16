@@ -47,7 +47,7 @@ export default async function Team() {
                     headerTitle="Add new member"
                     session={session}
                 />
-                {team.getTeam.users.length > 1 && (
+                {team.getTeam.members.length > 1 && (
                     <TeamMembersCard
                         headerTitle="your team"
                         team={team.getTeam}
