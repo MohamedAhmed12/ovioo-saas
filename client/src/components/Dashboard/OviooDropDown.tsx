@@ -6,14 +6,17 @@ import OviooDropDownWrapper from "./OviooDropDownWrapper";
 export default function OviooDropDown({
     onSelected,
     options,
+    inputLabel,
     initialVal,
 }: {
     onSelected: (selectedVal: string) => void;
     options: any[];
-    initialVal: string | number;
+    inputLabel?: string;
+    initialVal?: string | number;
 }) {
     return (
         <OviooDropDownWrapper
+            inputLabel={inputLabel}
             initialVal={initialVal}
             onSelected={onSelected}
             className="ovioo-dropDown"

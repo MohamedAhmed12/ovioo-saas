@@ -59,11 +59,13 @@ export default function Column({
                 + new task
             </Typography>
 
-            <CreateTaskBackdrop
-                open={openCreateTask}
-                status={title}
-                handleClose={() => setOpenCreateTask(false)}
-            />
+            {openCreateTask && (
+                <CreateTaskBackdrop
+                    open={openCreateTask}
+                    status={title}
+                    handleClose={() => setOpenCreateTask(false)}
+                />
+            )}
         </div>
     );
 }

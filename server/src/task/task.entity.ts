@@ -11,7 +11,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
-import { TaskTypesEnum } from './enums/task-types';
 import { TaskType } from './task-type.entity';
 
 @Entity('tasks')

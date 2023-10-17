@@ -15,7 +15,7 @@ export default function OviooDropDownWrapper({
 }: {
     onSelected: (selectedVal: string) => void;
     children: ReactNode;
-    initialVal: string | number;
+    initialVal?: string | number;
     inputLabel?: string;
     className?: string;
 }) {

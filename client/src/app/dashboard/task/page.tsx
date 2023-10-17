@@ -22,8 +22,15 @@ const LIST_TASKS = gql`
             }
             description
             title
-            type
             status
+            project {
+                id
+                title
+            }
+            type {
+                id
+                title
+            }
         }
     }
 `;

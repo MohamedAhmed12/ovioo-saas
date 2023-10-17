@@ -1,7 +1,7 @@
 import { ColumnInterface, TaskInterface, TaskStatus } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: { tasks: Record<TaskStatus, TaskInterface[]> | null } = {
+const initialState: { tasks: any } = {
     tasks: null,
 };
 
@@ -22,6 +22,13 @@ export const boardSlice = createSlice({
                 },
                 {}
             );
+        },
+        pushNewTask: (state, action) => {
+            const { status } = action.payload;
+            state.tasks = {
+                ...state.tasks,
+                [status]: [...(state.tasks[status] || []), action.payload],
+            };
         },
         editBoard: (state, action) => {
             state.columns = action.payload.newColumns;
@@ -144,6 +151,7 @@ export const boardSlice = createSlice({
 
 export const {
     setTasks,
+    pushNewTask,
     editBoard,
     addTask,
     editTask,

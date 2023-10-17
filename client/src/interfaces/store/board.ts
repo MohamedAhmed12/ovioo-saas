@@ -8,6 +8,14 @@ export enum TaskStatus {
     DONE = "Done",
 }
 
+export interface TaskTypeInterface {
+    id: number;
+    title: string;
+    info: string[];
+    extraInfo: string;
+    plan: string;
+}
+
 export interface SubTaskInterface {
     id: number;
     title: string;
