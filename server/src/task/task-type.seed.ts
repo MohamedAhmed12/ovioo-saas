@@ -167,6 +167,10 @@ export class TaskTypeSeeder {
         plan: 'standard',
       },
     ];
-    await this.taskTypeRepository.save(taskTypes);
+
+    const taskTypesTable = await this.taskTypeRepository.find();
+    if (taskTypesTable.length === 0) {
+      await this.taskTypeRepository.save(taskTypes);
+    }
   }
 }

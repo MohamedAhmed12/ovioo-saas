@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskType } from './task-type.entity';
+import { User } from 'src/user/user.entity';
 
 @Resolver(() => Task)
 export class TaskResolver {
@@ -19,7 +20,7 @@ export class TaskResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Task])
-  async listTasks(@Context('user') authUser: AuthGuardUserDto) {
+  async listTasks(@Context('user') authUser: User) {
     return await this.taskService.listTasks(authUser);
   }
 

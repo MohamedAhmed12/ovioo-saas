@@ -60,7 +60,10 @@ export class User extends BaseEntity {
   @Field()
   updated_at: Date;
 
-  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  @OneToOne(() => Profile, (profile) => profile.user, {
+    cascade: true,
+    eager: true,
+  })
   @JoinColumn()
   @Field(() => Profile)
   profile: Profile;
@@ -73,7 +76,7 @@ export class User extends BaseEntity {
   @Field(() => UserRoleEnum)
   role: UserRoleEnum;
 
-  @ManyToOne(() => Team, (team) => team.members, { cascade: true })
+  @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
   @Field(() => Team)
   team: Team;
 

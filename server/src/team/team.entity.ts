@@ -33,7 +33,7 @@ export class Team extends BaseEntity {
   @Field(() => [Project], { defaultValue: [] })
   projects: Project[];
 
-  @OneToMany(() => Task, (task) => task.team, { cascade: true })
+  @OneToMany(() => Task, (task) => task.team, { cascade: true, lazy: true })
   @Field(() => [Task], { defaultValue: [] })
   tasks: Task[];
 }

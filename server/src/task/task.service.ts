@@ -26,14 +26,8 @@ export class TaskService {
     return await this.taskTypeRepository.find();
   }
 
-  async listTasks({ id }: AuthGuardUserDto) {
-    return await this.taskRepository.find({
-      where: {
-        team: {
-          owner_id: id,
-        },
-      },
-    });
+  async listTasks(authUser: User) {
+    return await authUser.team.tasks;
   }
 
   async createTask(data: CreateTaskDto): Promise<Task> {
@@ -60,9 +54,21 @@ export class TaskService {
         },
       });
 
+    const type = await this.taskTypeRepository.findOneBy({ id: data.type_id });
+
+    if (!type)
+      throw new GraphQLError('Couldn’t find the selected type', {
+        extensions: {
+          originalError: {
+            message: [{ type: 'Couldn’t find the selected type' }],
+          },
+        },
+      });
+
     const task = await this.taskRepository.create(data);
     task.project = project;
     task.team = project.team;
+    task.type = type;
     return await this.taskRepository.save(task);
   }
 }
