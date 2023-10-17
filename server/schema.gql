@@ -75,6 +75,7 @@ type Task {
   project: Project!
   team: Team!
   designer: User
+  assets: [Asset!]!
   children: [Task!]
   parent: Task
 }
@@ -92,7 +93,9 @@ type Project {
 """asset"""
 type Asset {
   id: ID!
+  path: String!
   project: Project!
+  task: Task!
 }
 
 type Query {

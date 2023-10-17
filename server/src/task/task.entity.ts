@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
+import { Asset } from 'src/asset/asset.entity';
 
 @Entity('tasks')
 @ObjectType({ description: 'tasks' })
@@ -56,6 +57,10 @@ export class Task extends BaseEntity {
   @ManyToOne(() => User, (user) => user.tasks)
   @Field(() => User, { nullable: true })
   designer: User;
+
+  @OneToMany(() => Asset, (asset) => asset.task, { eager: true })
+  @Field(() => [Asset], { defaultValue: [] })
+  assets: Asset[];
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })
   @Field(() => [Task], { nullable: true })
