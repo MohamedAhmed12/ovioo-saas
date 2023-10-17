@@ -46,7 +46,10 @@ export class Task extends BaseEntity {
   @Field(() => Project)
   project: Project;
 
-  @ManyToOne(() => Team, (team) => team.tasks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Team, (team) => team.tasks, {
+    onDelete: 'CASCADE',
+    lazy: true,
+  })
   @Field(() => Team)
   team: Team;
 

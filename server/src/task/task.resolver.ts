@@ -25,6 +25,12 @@ export class TaskResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Query(() => Task)
+  async showTask(@Context('user') authUser: User, @Args('id') id: string) {
+    return await this.taskService.showTask(authUser, id);
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation(() => Task)
   async createTask(@Args('data') data: CreateTaskDto) {
     return await this.taskService.createTask(data);

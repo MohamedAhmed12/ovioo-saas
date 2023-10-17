@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { Project } from 'src/project/project.entity';
@@ -22,12 +26,25 @@ export class TaskService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async listTaskTypes() {
+  async listTaskTypes(): Promise<TaskType[]> {
     return await this.taskTypeRepository.find();
   }
 
-  async listTasks(authUser: User) {
+  async listTasks(authUser: User): Promise<Task[]> {
     return await authUser.team.tasks;
+  }
+
+  async showTask(authUser: User, id: string): Promise<Task> {
+    const task = await this.taskRepository.findOneBy({ id: +id });
+    const taskTeam = await task.team;
+
+    if (!task)
+      throw new NotFoundException('Couldn’t find task matches this id.');
+
+    if (taskTeam.id != authUser.team.id)
+      throw new UnauthorizedException('You are not allowed to view this task.');
+
+    return task;
   }
 
   async createTask(data: CreateTaskDto): Promise<Task> {

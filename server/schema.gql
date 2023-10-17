@@ -102,6 +102,7 @@ type Query {
   getTeam: Team!
   listTaskTypes: [TaskType!]!
   listTasks: [Task!]!
+  showTask(id: String!): Task!
   listProjects: [Project!]!
   showProject(id: String!): Project!
 }
