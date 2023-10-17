@@ -5,10 +5,17 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { TaskType } from './task-type.entity';
 
 @Resolver(() => Task)
 export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
+
+  @UseGuards(AuthGuard)
+  @Query(() => [TaskType])
+  async listTaskTypes() {
+    return await this.taskService.listTaskTypes();
+  }
 
   @UseGuards(AuthGuard)
   @Query(() => [Task])

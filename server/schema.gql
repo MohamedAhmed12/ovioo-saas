@@ -56,13 +56,22 @@ type Team {
   tasks: [Task!]!
 }
 
+"""task-types"""
+type TaskType {
+  id: ID!
+  title: String
+  info: [String!]
+  extraInfo: String
+  plan: String
+}
+
 """tasks"""
 type Task {
   id: ID!
   title: String!
   description: String
-  type: String
   status: String
+  type: TaskType!
   project: Project!
   team: Team!
   designer: User
@@ -91,6 +100,7 @@ type Query {
   me: User!
   findProfile: Profile!
   getTeam: Team!
+  listTaskTypes: [TaskType!]!
   listTasks: [Task!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
@@ -172,22 +182,16 @@ input UpdateProfileDto {
 input CreateTaskDto {
   title: String!
   project_id: String!
-  type: TaskTypesEnum!
+  type_id: String!
+  status: TaskStatusEnum!
 }
 
-enum TaskTypesEnum {
-  Webflow
-  LogoAndIdentity
-  Website
-  LandingPage
-  MobileApp
-  CustomIllustration
-  Animation
-  Packing
-  BannerAndDigital
-  Email
-  Book
-  Photo
+enum TaskStatusEnum {
+  IN_QUEUE
+  IN_PROGRESS
+  REVIEW
+  ON_HOLD
+  DONE
 }
 
 input CreateProjectDto {

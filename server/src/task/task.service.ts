@@ -7,17 +7,24 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.entity';
+import { TaskType } from './task-type.entity';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    @InjectRepository(TaskType)
+    private readonly taskTypeRepository: Repository<TaskType>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async listTaskTypes() {
+    return await this.taskTypeRepository.find();
+  }
 
   async listTasks({ id }: AuthGuardUserDto) {
     return await this.taskRepository.find({

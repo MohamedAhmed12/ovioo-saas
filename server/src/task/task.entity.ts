@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskTypesEnum } from './enums/task-types';
+import { TaskType } from './task-type.entity';
 
 @Entity('tasks')
 @ObjectType({ description: 'tasks' })
@@ -28,16 +29,16 @@ export class Task extends BaseEntity {
   @Field(() => String, { nullable: true })
   description: string;
 
-  @Column('text')
-  @Field(() => String, { nullable: true })
-  type: string;
-
   @Column({
     type: 'text',
     default: TaskStatusEnum.IN_QUEUE,
   })
   @Field(() => String, { nullable: true })
   status: string;
+
+  @ManyToOne(() => TaskType, (type) => type.tasks)
+  @Field(() => TaskType)
+  type: TaskType;
 
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
   @Field(() => Project)
