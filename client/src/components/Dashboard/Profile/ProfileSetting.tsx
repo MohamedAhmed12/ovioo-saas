@@ -5,10 +5,12 @@ import { useAppSelector } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
 import { useGraphError } from "@/hooks/useGraphError";
 import { getClient } from "@/utils/getClient";
+import { uploadFiles } from "@/utils/helpers";
 import { gql, useMutation } from "@apollo/client";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { Button } from "@mui/joy";
+import { CircularProgress } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Session } from "next-auth";
 import Image from "next/image";
@@ -29,8 +31,13 @@ const UPDATE_USER = gql`
     }
 `;
 
-export default function ProfileSetting({ session }: { session: Session | null }): ReactNode {
+export default function ProfileSetting({
+    session,
+}: {
+    session: Session | null;
+}): ReactNode {
     const [loading, setLoading] = useState(false);
+    const [avatarLoading, setAvatarLoading] = useState(false);
     const [formData, setFormData] = useState({
         avatar: "",
         fullname: "",
@@ -47,39 +54,17 @@ export default function ProfileSetting({ session }: { session: Session | null })
     });
 
     const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-        try {
-            const files = e?.target?.files;
+        setAvatarLoading(true);
 
-            if (!files || files?.length === 0) return;
+        const res = await uploadFiles(e, session);
+        setFormData((prevState: any) => ({
+            ...prevState,
+            avatar: res?.[0] || formData.avatar,
+        }));
 
-            const form = new FormData();
-            for (let i = 0; i < files.length; i++) {
-                form.append('files[]', files[i])
-            }
+        setAvatarLoading(false);
+    };
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/file/upload`, {
-                method: 'POST',
-                body: form,
-                headers: {
-                    authorization: `Bearer ${session?.access_token}`
-                }
-            });
-
-
-            if (response.ok) {
-                const responseData = await response.json();
-
-                await setFormData((prevState) => ({
-                    ...prevState,
-                    avatar: responseData?.[0]?.Location || formData.avatar,
-                }));
-            } else {
-                toast.error("Something went wrong!");
-            }
-        } catch (e: any) {
-            toast.error("Something went wrong!");
-        }
-    }
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
@@ -111,35 +96,49 @@ export default function ProfileSetting({ session }: { session: Session | null })
     }, [initialData]);
 
     return (
-        <DashBoardCard handleSubmit={handleSubmit} headerTitle="profile settings">
+        <DashBoardCard
+            handleSubmit={handleSubmit}
+            headerTitle="profile settings"
+        >
             <>
                 <div className="flex flex-row">
                     <div className="basis-1/5 flex flex-col mr-16">
-                        {
-                            formData.avatar
-                                ? <Image
-                                    src={formData.avatar}
-                                    width="500"
-                                    height="500"
-                                    alt="profile"
-                                    className="rounded-full mb-4"
-                                    style={{ width: 150, height: 150 }}
-                                />
-                                : <AccountCircleIcon style={{ width: 150, height: 150 }} />
-                        }
+                        {formData.avatar ? (
+                            <Image
+                                src={formData.avatar}
+                                width="500"
+                                height="500"
+                                alt="profile"
+                                className="rounded-full mb-4"
+                                style={{ width: 150, height: 150 }}
+                            />
+                        ) : (
+                            <AccountCircleIcon
+                                style={{ width: 150, height: 150 }}
+                            />
+                        )}
 
-                        <Button
-                            component="label"
-                            role={undefined}
-                            tabIndex={-1}
-                            startDecorator={
-                                <AddAPhotoIcon />
-                            }
-                            className="w-40 !bg-transparent"
-                        >
-                            <span className="mt-1">Edit photo</span>
-                            <input type="file" className="dashboard-file-upload" onChange={handleAvatarUpload} multiple />
-                        </Button>
+                        {avatarLoading ? (
+                            <div className="w-full flex justify-center mt-1">
+                                <CircularProgress color="inherit" />
+                            </div>
+                        ) : (
+                            <Button
+                                component="label"
+                                role={undefined}
+                                tabIndex={-1}
+                                startDecorator={<AddAPhotoIcon />}
+                                className="w-40 !bg-transparent mt-1"
+                            >
+                                <span>Edit photo</span>
+                                <input
+                                    type="file"
+                                    className="dashboard-file-upload"
+                                    onChange={handleAvatarUpload}
+                                    multiple
+                                />
+                            </Button>
+                        )}
                     </div>
                     <div className="basis-4/5 flex flex-col">
                         <TextField
@@ -177,7 +176,11 @@ export default function ProfileSetting({ session }: { session: Session | null })
                     </div>
                 </div>
                 <div className="flex w-full justify-end mt-5">
-                    <Button loading={loading} type="submit" className="dashboard__btn">
+                    <Button
+                        loading={loading}
+                        type="submit"
+                        className="dashboard__btn"
+                    >
                         Update
                     </Button>
                 </div>
