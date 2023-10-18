@@ -15,8 +15,9 @@ export const boardSlice = createSlice({
                     result: Record<TaskStatus, TaskInterface[]>,
                     task: TaskInterface
                 ) => {
-                    if (!result[task.status]) result[task.status] = [];
-                    result[task.status].push(task);
+                    if (!result[task.status as TaskStatus])
+                        result[task.status as TaskStatus] = [];
+                    result[task.status as TaskStatus].push(task);
 
                     return result;
                 },

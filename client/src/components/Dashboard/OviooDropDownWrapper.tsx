@@ -29,7 +29,7 @@ export default function OviooDropDownWrapper({
     return (
         <FormControl
             sx={{ minWidth: 120, maxWidth: 150 }}
-            className={`ovioo-dropdown-wrapper ${className}`}
+            className={`ovioo-dropdown__wrapper ${className}`}
         >
             <Select
                 value={val}

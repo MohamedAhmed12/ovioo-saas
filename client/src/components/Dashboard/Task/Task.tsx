@@ -40,12 +40,13 @@ export default function Task({ task }: { task: TaskInterface }) {
                 )}
             </div>
 
-            <TaskModal
-                open={isTaskModalOpen}
-                task={task}
-                // colId={colId}
-                setIsTaskModalOpen={setIsTaskModalOpen}
-            />
+            {isTaskModalOpen && (
+                <TaskModal
+                    open={true}
+                    taskId={task.id}
+                    setIsTaskModalOpen={setIsTaskModalOpen}
+                />
+            )}
         </div>
     );
 }

@@ -1,4 +1,6 @@
+import { Asset } from "../asset";
 import { Project } from "../project";
+import { UserInterface } from "../user";
 
 export enum TaskStatus {
     IN_QUEUE = "In queue",
@@ -23,12 +25,15 @@ export interface SubTaskInterface {
 }
 
 export interface TaskInterface {
-    id: number;
+    id: string;
     title?: string;
     description?: string;
-    status: TaskStatus;
+    status: string;
     subtasks?: SubTaskInterface[] | undefined;
     project: Project;
+    type: TaskType;
+    designer?: UserInterface;
+    assets: Asset[];
 }
 
 export interface ColumnInterface {
@@ -38,4 +43,12 @@ export interface ColumnInterface {
 
 export interface BoardState {
     columns: ColumnInterface[];
+}
+
+export interface TaskType {
+    id: string;
+    title?: string;
+    info?: string[];
+    extraInfo?: string;
+    plan?: string;
 }

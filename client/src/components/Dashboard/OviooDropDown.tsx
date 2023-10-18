@@ -8,22 +8,27 @@ export default function OviooDropDown({
     options,
     inputLabel,
     initialVal,
+    className,
 }: {
     onSelected: (selectedVal: string) => void;
     options: any[];
     inputLabel?: string;
     initialVal?: string | number;
+    className?: string;
 }) {
     return (
         <OviooDropDownWrapper
             inputLabel={inputLabel}
             initialVal={initialVal}
             onSelected={onSelected}
-            className="ovioo-dropDown"
+            className={className}
         >
             {options.map((option, i) => (
-                <MenuItem value={option.id || option.key} key={option + i}>
-                    {option.title || option.name}
+                <MenuItem
+                    value={option.id || option.key || option}
+                    key={option + i}
+                >
+                    {option.title || option.name || option}
                 </MenuItem>
             ))}
         </OviooDropDownWrapper>

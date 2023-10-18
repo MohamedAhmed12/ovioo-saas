@@ -130,7 +130,7 @@ export default function CreateTaskBackdrop({
                     headerTitle="Add new Task"
                 >
                     <div className="flex flex-col items-center">
-                        <TaskTypeDropDown onSelected={handlSelectType} />
+                        <TaskTypeDropDown onSelected={handlSelectType} client={client}/>
 
                         <OviooDropDown
                             inputLabel="Project"

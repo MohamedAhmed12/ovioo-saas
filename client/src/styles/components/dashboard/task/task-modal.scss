@@ -5,7 +5,25 @@
         height: 129.75px;
         padding: 0;
     }
-    .ovioo-dropDown-wrapper{
-        margin-right: 16px;
+    .task-modal__header {
+        .task-type__dropdown {
+            max-width: 280px !important;
+            width: 280px !important;
+            margin-right: 16px;
+            margin-left: 16px;
+            .MuiInputBase-formControl {
+                max-width: 100%;
+            }
+        }
+    }
+    .ovioo-dropdown__wrapper {
+        .MuiInputBase-formControl {
+            width: fit-content;
+        }
+        &.project-dropdown {
+            .MuiInputBase-formControl {
+                width: 250px;
+            }
+        }
     }
 }

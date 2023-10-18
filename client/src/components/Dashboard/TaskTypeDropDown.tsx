@@ -25,10 +25,12 @@ const LIST_TASK_TYPES = gql`
 export default function TaskTypeDropDown({
     onSelected,
     client,
+    initialVal,
 }: {
     onSelected: (selectedVal: string) => void;
     client?: ApolloClient<any> | undefined;
-}) {
+    initialVal?: string | number;
+}) {    
     const { data: session } = useSession({ required: true });
     client = client || getClient(session);
 
@@ -68,7 +70,7 @@ export default function TaskTypeDropDown({
         data.listTaskTypes && (
             <OviooDropDownWrapper
                 inputLabel="Type"
-                initialVal={0}
+                initialVal={initialVal}
                 onSelected={onSelected}
                 className="task-type__dropdown !my-4"
             >

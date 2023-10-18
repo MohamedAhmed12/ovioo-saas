@@ -15,22 +15,8 @@ const LIST_TASKS = gql`
     query ListTasks {
         listTasks {
             id
-            designer {
-                id
-                fullname
-                avatar
-            }
-            description
             title
             status
-            project {
-                id
-                title
-            }
-            type {
-                id
-                title
-            }
         }
     }
 `;
