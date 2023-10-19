@@ -5,7 +5,7 @@ import { ManagedUpload } from 'aws-sdk/clients/s3';
 @Injectable()
 export class UploadService {
   private s3: S3;
-  
+
   constructor() {
     this.s3 = new S3({
       accessKeyId: process.env.S3_ACCESS_KEY,
@@ -14,27 +14,31 @@ export class UploadService {
     });
   }
 
-  async uploadFiles(files: Express.Multer.File[]): Promise<ManagedUpload.SendData[]> {
+  async uploadFiles(
+    files: Express.Multer.File[],
+  ): Promise<ManagedUpload.SendData[]> {
     const filesPaths = [];
 
     for (const file of files) {
-      const params =
-      {
+      const params = {
         Bucket: process.env.S3_BUCKET,
         Key: String(file.originalname),
         Body: file.buffer,
-        ACL: "public-read",
+        ACL: 'public-read',
         ContentType: file.mimetype,
-        ContentDisposition: "inline",
-        CreateBucketConfiguration:
-        {
-          LocationConstraint: "eu-west-1"
-        }
+        ContentDisposition: 'inline',
+        CreateBucketConfiguration: {
+          LocationConstraint: 'eu-west-1',
+        },
       };
 
       try {
         const path = await this.s3.upload(params).promise();
-        path && filesPaths.push(path);
+        path &&
+          filesPaths.push({
+            type: file.mimetype,
+            s3Path: path,
+          });
       } catch (error) {
         console.error(`Error uploading file ${file.originalname}:`, error);
       }

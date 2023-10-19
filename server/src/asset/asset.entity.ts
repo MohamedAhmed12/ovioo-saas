@@ -2,11 +2,11 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Project } from 'src/project/project.entity';
 import { Task } from 'src/task/task.entity';
 import {
-    BaseEntity,
-    Column,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity('asset')
@@ -18,7 +18,19 @@ export class Asset extends BaseEntity {
 
   @Column('text')
   @Field(() => String)
-  path: string;
+  src: string;
+
+  @Column('text', { nullable: true })
+  @Field(() => String)
+  alt: string;
+
+  @Column('text')
+  @Field(() => String)
+  type: string;
+
+  @Column('text')
+  @Field(() => String)
+  version_id: string;
 
   @ManyToOne(() => Project, (project) => project.assets, { cascade: true })
   @Field(() => Project)

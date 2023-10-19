@@ -36,7 +36,7 @@ type User {
   profile: Profile!
   role: UserRoleEnum!
   team: Team!
-  tasks: [Task!]!
+  assignedTasks: [Task!]!
 }
 
 enum UserRoleEnum {
@@ -93,7 +93,10 @@ type Project {
 """asset"""
 type Asset {
   id: ID!
-  path: String!
+  src: String!
+  alt: String!
+  type: String!
+  version_id: String!
   project: Project!
   task: Task!
 }
@@ -121,6 +124,8 @@ type Mutation {
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
+  createAssets(data: CreateAssetDto!): [Asset!]!
+  deleteAsset(asset: DeleteAssetDto!): Boolean!
   createProject(data: CreateProjectDto!): Project!
   updateProject(data: UpdateProjectDto!): Boolean!
   deleteProject(id: String!): Boolean!
@@ -196,6 +201,24 @@ enum TaskStatusEnum {
   REVIEW
   ON_HOLD
   DONE
+}
+
+input CreateAssetDto {
+  assets: [AssetDto!]!
+  task_id: String!
+}
+
+input AssetDto {
+  src: String!
+  version_id: String!
+  alt: String!
+  type: String!
+}
+
+input DeleteAssetDto {
+  id: String!
+  src: String!
+  version_id: String!
 }
 
 input CreateProjectDto {
