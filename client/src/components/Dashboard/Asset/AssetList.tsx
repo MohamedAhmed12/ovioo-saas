@@ -15,7 +15,7 @@ import { gql, useMutation } from "@apollo/client";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import { CardHeader, IconButton } from "@mui/material";
+import { CardHeader, IconButton, Menu, MenuItem } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
@@ -40,7 +40,11 @@ const CREATE_ASSET = gql`
         }
     }
 `;
-
+const DOWNLOAD_ASSET = gql`
+    mutation Mutation($alt: String!) {
+        downloadAsset(alt: $alt)
+    }
+`;
 
 export default function AssetList({
     task,
@@ -60,12 +64,10 @@ export default function AssetList({
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [createAssets] = useMutation(CREATE_ASSET, { client });
+    const [downloadAsset] = useMutation(DOWNLOAD_ASSET, { client });
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
     };
     const handleAssetsUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         setLoading(true);
@@ -102,7 +104,23 @@ export default function AssetList({
         setLoading(false);
     };
     const handleDownload = async (alt: string) => {
-     
+        try {
+            const { data } = await downloadAsset({
+                variables: { alt },
+            });
+
+            const a = document.createElement("a");
+            a.href = data.downloadAsset;
+            a.download = alt;
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+
+        setAnchorEl(null);
     };
 
     const getAssetToRender = (asset: AssetInterface) => {
@@ -152,7 +170,7 @@ export default function AssetList({
                             />
                             {getAssetToRender(asset)}
                         </Card>
-                        {/* <Menu
+                        <Menu
                             key={`menu-${asset.id}`}
                             id="long-menu"
                             MenuListProps={{
@@ -160,7 +178,7 @@ export default function AssetList({
                             }}
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
-                            onClose={handleClose}
+                            onClose={() => setAnchorEl(null)}
                             slotProps={{
                                 paper: {
                                     style: {
@@ -176,7 +194,7 @@ export default function AssetList({
                             <MenuItem onClick={() => handleDelete(asset)}>
                                 delete
                             </MenuItem>
-                        </Menu> */}
+                        </Menu>
                     </>
                 ))}
 
