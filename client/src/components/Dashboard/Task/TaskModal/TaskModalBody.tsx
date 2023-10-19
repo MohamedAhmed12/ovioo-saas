@@ -1,8 +1,9 @@
 import { SubTaskInterface, TaskInterface } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import OviooDropDown from "../../OviooDropDown";
 import Attachement from "./Attachement";
 
@@ -14,20 +15,34 @@ const LIST_PROJECTS = gql`
         }
     }
 `;
+const DELETE_ASSET = gql`
+    mutation Mutation($asset: DeleteAssetDto!) {
+        deleteAsset(asset: $asset)
+    }
+`;
 
 export default function TaskModalBody({
     task,
     subtasks,
+    colId,
+    title,
     setTitle,
+    setTaskData,
 }: {
     task: TaskInterface;
     subtasks: SubTaskInterface[] | undefined;
+    colId: number;
+    title: string;
     setTitle: (e: string) => void;
+    setTaskData: (task: any) => void;
 }) {
     const [description, setDescription] = useState("");
+    // const [isFirstLoad, setIsFirstLoad] = useState(true);
+    //
 
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
+    const [deleteAsset] = useMutation(DELETE_ASSET, { client });
     const { error, data } = useQuery(LIST_PROJECTS, {
         client,
         fetchPolicy: "no-cache",
@@ -37,9 +52,39 @@ export default function TaskModalBody({
 
     const handletypeSelected = (project: string) => {};
 
+    const handleDeleteAsset = async ({
+        id,
+        alt,
+    }: {
+        id: string;
+        alt: string;
+    }) => {
+        try {
+            return console.log(setTaskData);
+            
+            const { data } = await deleteAsset({
+                variables: {
+                    asset: {
+                        id,
+                        alt,
+                    },
+                },
+            });
+
+            if (data.deleteAsset) {
+                setTaskData((prevState: any) => ({
+                    ...prevState,
+                    assets: task.assets.filter((asset) => asset.id != id),
+                }));
+                toast.success("Deleted successfully");
+            }
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+    };
     return (
         data?.listProjects && (
-            <div className="basis-1/2 p-8">
+            <div className="task-modal__body basis-1/2 p-8">
                 <input
                     value={task.title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -65,8 +110,23 @@ export default function TaskModalBody({
                     onSelected={handletypeSelected}
                     className="project-dropdown"
                 />
+                <div className="mt-8 flex flex-col space-y-3">
+                    {subtasks && (
+                        <Subtask
+                            subtasks={subtasks}
+                            setSubtasks={(
+                                newSubtasks: SubTaskInterface[] | undefined
+                            ) => (subtasks = newSubtasks)}
+                            taskId={task.id}
+                            colId={colId}
+                        />
+                    )}
+                </div> 
 
-                <Attachement assets={task.assets} />
+                <Attachement
+                    task={task}
+                    handleDeleteAsset={handleDeleteAsset}
+                />
             </div>
         )
     );
