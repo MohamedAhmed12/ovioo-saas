@@ -3,7 +3,7 @@
 import {
     Asset as AssetInterface,
     TaskInterface,
-    s3PathInterface
+    s3PathInterface,
 } from "@/interfaces";
 import { setTaskAssets } from "@/store/features/task";
 import "@/styles/components/dashboard/asset/asset-list.scss";
@@ -34,6 +34,11 @@ const CREATE_ASSET = gql`
         }
     }
 `;
+const DELETE_ASSET = gql`
+    mutation Mutation($asset: DeleteAssetDto!) {
+        deleteAsset(asset: $asset)
+    }
+`;
 
 export default function AssetList({
     task,
@@ -52,6 +57,7 @@ export default function AssetList({
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [createAssets] = useMutation(CREATE_ASSET, { client });
+    const [deleteAsset] = useMutation(DELETE_ASSET, { client });
 
     const handleAssetsUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         setLoading(true);
@@ -83,9 +89,27 @@ export default function AssetList({
             }
         } catch (e: any) {
             toast.error("Something went wrong!");
+            AssetUploadCleanup(assets);
         }
 
         setLoading(false);
+    };
+
+    const AssetUploadCleanup = (assets: AssetInterface[]) => {
+        /* Delete assets from S3 if creation of assets record
+         * on our serverfailed
+         * If "id" provided then it will delete both in DB & S3
+         */
+        assets.map(async ({ id, alt }: { id: string; alt: string }) => {
+            const { data } = await deleteAsset({
+                variables: {
+                    asset: {
+                        id,
+                        alt,
+                    },
+                },
+            });
+        });
     };
 
     return (

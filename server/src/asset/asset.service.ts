@@ -43,7 +43,10 @@ export class AssetService {
   }
 
   async deleteAsset(asset: DeleteAssetDto): Promise<boolean> {
-    const res = await !!this.assetRepository.delete(asset.id);
+    const res = asset?.id
+      ? await !!this.assetRepository.delete(asset.id)
+      : true;
+
     const S3Res = await this.s3
       .deleteObject({
         Bucket: process.env.S3_BUCKET,

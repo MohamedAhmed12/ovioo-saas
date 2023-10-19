@@ -1,11 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class DeleteAssetDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   id: number;
 
   @IsNotEmpty()

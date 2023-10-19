@@ -215,7 +215,7 @@ input AssetDto {
 }
 
 input DeleteAssetDto {
-  id: String!
+  id: String
   alt: String!
 }
 
