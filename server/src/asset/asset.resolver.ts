@@ -13,11 +13,8 @@ export class AssetResolver {
 
   @UseGuards(AuthGuard)
   @Mutation(() => [Asset])
-  async createAssets(
-    @Context('user') authUser: User,
-    @Args('data') data: CreateAssetDto,
-  ) {
-    return await this.assetService.createAssets(authUser, data);
+  async createAssets(@Args('data') data: CreateAssetDto) {
+    return await this.assetService.createAssets(data);
   }
 
   @UseGuards(AuthGuard)

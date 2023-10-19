@@ -11,10 +11,5 @@ export class DeleteAssetDto {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-  src: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
-  version_id: string;
+  alt: string;
 }

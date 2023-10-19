@@ -4,15 +4,7 @@ import { ManagedUpload } from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class UploadService {
-  private s3: S3;
-
-  constructor() {
-    this.s3 = new S3({
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_KEY_SECRET,
-      region: 'eu-west-1',
-    });
-  }
+  private s3: S3 = new S3();
 
   async uploadFiles(
     files: Express.Multer.File[],

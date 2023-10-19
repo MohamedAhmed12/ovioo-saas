@@ -217,8 +217,7 @@ input AssetDto {
 
 input DeleteAssetDto {
   id: String!
-  src: String!
-  version_id: String!
+  alt: String!
 }
 
 input CreateProjectDto {
