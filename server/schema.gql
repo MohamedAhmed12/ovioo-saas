@@ -123,6 +123,7 @@ type Mutation {
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
+  deleteTask(id: String!): Boolean!
   createAssets(data: CreateAssetDto!): [Asset!]!
   deleteAsset(asset: DeleteAssetDto!): Boolean!
   downloadAsset(alt: String!): String!

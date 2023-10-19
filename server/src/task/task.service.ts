@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.entity';
 import { TaskType } from './task-type.entity';
+import { AssetService } from 'src/asset/asset.service';
 
 @Injectable()
 export class TaskService {
@@ -24,6 +25,7 @@ export class TaskService {
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly assetService: AssetService,
   ) {}
 
   async listTaskTypes(): Promise<TaskType[]> {
@@ -87,5 +89,20 @@ export class TaskService {
     task.team = project.team;
     task.type = type;
     return await this.taskRepository.save(task);
+  }
+
+  async deleteTask(id: string): Promise<boolean> {
+    const task = await this.taskRepository.findOneBy({ id: +id });
+    const assets = task.assets;
+    const isTaskDeleted = await this.taskRepository.delete(id);
+
+    if (isTaskDeleted.affected) {
+      assets.forEach((asset) => {
+        this.assetService.deleteAsset(asset);
+      });
+      return true;
+    }
+
+    return false;
   }
 }

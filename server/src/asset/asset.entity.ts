@@ -5,6 +5,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -32,7 +33,7 @@ export class Asset extends BaseEntity {
   @Field(() => Project)
   project: Project;
 
-  @ManyToOne(() => Task, (task) => task.assets, { cascade: true })
+  @ManyToOne(() => Task, (task) => task.assets, { onDelete: 'CASCADE' })
   @Field(() => Task)
   task: Task;
 }
