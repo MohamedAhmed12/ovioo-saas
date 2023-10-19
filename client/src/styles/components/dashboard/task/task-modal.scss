@@ -33,5 +33,11 @@
                 width: 250px;
             }
         }
+        &.task-status-dropdown{
+            width: 147px;
+            .MuiInputBase-formControl {
+                width: 147px;
+            }
+        }
     }
 }
