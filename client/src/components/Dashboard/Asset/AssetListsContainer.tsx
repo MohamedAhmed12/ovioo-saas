@@ -2,7 +2,7 @@
 
 import DashBoardCard from "@/components/DashBoardCard";
 import OviooDropDown from "@/components/Dashboard/OviooDropDown";
-import { AssetList as AssetListInterface } from "@/interfaces";
+import { Asset } from "@/interfaces";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
@@ -13,11 +13,11 @@ const sortbyOptions = [
     { title: "projects", path: "/dashboard/asset/project" },
 ];
 
-export default function AssetListCard({
+export default function AssetListsContainer({
     assetsList,
     sortBy,
 }: {
-    assetsList: AssetListInterface[];
+    assetsList: Asset[];
     sortBy: string;
 }) {
     const router = useRouter();
@@ -46,7 +46,7 @@ export default function AssetListCard({
                 options={sortbyOptions.map((option) => option.title)}
                 initialVal={initialVal}
             />
-            <AssetList assetsList={assetsList} readOnly/>
+            <AssetList assetsList={assetsList} readOnly />
         </DashBoardCard>
     );
 }

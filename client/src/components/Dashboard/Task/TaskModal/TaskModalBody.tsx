@@ -1,13 +1,10 @@
 import { SubTaskInterface, TaskInterface } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import OviooDropDown from "../../OviooDropDown";
 import Attachement from "./Attachement";
-import { useDispatch } from "react-redux";
-import { setSelectedTask, setTaskAssets } from "@/store/features/task";
 
 const LIST_PROJECTS = gql`
     query {
@@ -15,11 +12,6 @@ const LIST_PROJECTS = gql`
             id
             title
         }
-    }
-`;
-const DELETE_ASSET = gql`
-    mutation Mutation($asset: DeleteAssetDto!) {
-        deleteAsset(asset: $asset)
     }
 `;
 
@@ -37,13 +29,9 @@ export default function TaskModalBody({
     setTitle: (e: string) => void;
 }) {
     const [description, setDescription] = useState("");
-    // const [isFirstLoad, setIsFirstLoad] = useState(true);
-    //
 
-    const dispatch = useDispatch();
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
-    const [deleteAsset] = useMutation(DELETE_ASSET, { client });
     const { error, data } = useQuery(LIST_PROJECTS, {
         client,
         fetchPolicy: "no-cache",
@@ -53,31 +41,6 @@ export default function TaskModalBody({
 
     const handletypeSelected = (project: string) => {};
 
-    const handleDeleteAsset = async ({
-        id,
-        alt,
-    }: {
-        id: string;
-        alt: string;
-    }) => {
-        try {
-            const { data } = await deleteAsset({
-                variables: {
-                    asset: {
-                        id,
-                        alt,
-                    },
-                },
-            });
-
-            if (data.deleteAsset) {
-                dispatch(setTaskAssets(task.assets.filter((asset) => asset.id != id)));
-                toast.success("Deleted successfully");
-            }
-        } catch (e: any) {
-            toast.error("Something went wrong!");
-        }
-    };
     return (
         data?.listProjects && (
             <div className="task-modal__body basis-1/2 p-[25px]">
@@ -106,7 +69,7 @@ export default function TaskModalBody({
                     onSelected={handletypeSelected}
                     className="project-dropdown"
                 />
-                {/* 
+                
                 <div className="mt-8 flex flex-col space-y-3">
                     {subtasks && (
                         <Subtask
@@ -118,11 +81,11 @@ export default function TaskModalBody({
                             colId={colId}
                         />
                     )}
-                </div> */}
+                </div>
 
                 <Attachement
                     task={task}
-                    handleDeleteAsset={handleDeleteAsset}
+                    client={client}
                 />
             </div>
         )

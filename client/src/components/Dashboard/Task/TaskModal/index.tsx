@@ -1,4 +1,5 @@
-import { useAppDispatch } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { setSelectedTask } from "@/store/features/task";
 import "@/styles/components/dashboard/task/task-modal.scss";
 import { getClient } from "@/utils/getClient";
 import { gql, useQuery } from "@apollo/client";
@@ -54,28 +55,10 @@ export default function TaskModal({
 }) {
     const [loading, setLoading] = useState(false);
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);
-    const [formData, setFormData] = useState({
-        id: "",
-        designer: {
-            id: "",
-            fullname: "",
-            avatar: "",
-        },
-        description: "",
-        title: "",
-        status: "",
-        project: {
-            id: "",
-        },
-        type: {
-            id: "",
-        },
-        assets: [],
-        children: [],
-    });
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+    const task = useAppSelector((state) => state.taskReducer.selectedTask);
     const dispatch = useAppDispatch();
     const { data: session, status } = useSession({ required: true });
     const client = getClient(session);
@@ -95,12 +78,12 @@ export default function TaskModal({
 
     useEffect(() => {
         if (!graphQLloading && data?.showTask) {
-            setFormData(data?.showTask);
+            // settask(data?.showTask);
+            dispatch(setSelectedTask(data?.showTask));
             setInitialDataLoaded(true);
         }
-    }, [graphQLloading, data, data?.showTask]);
+    }, [graphQLloading, data, data?.showTask, dispatch]);
 
-    // const [title, setTitle] = useState(task.title || "");
     // console.log("task moal mounte");
 
     const onSubmit = () => {
@@ -119,22 +102,20 @@ export default function TaskModal({
                 PaperProps={{
                     style: {
                         backgroundColor: "transparent",
-                        width: "80%",
-                        maxWidth: "80%",
+                        width: "85%",
+                        maxWidth: "85%",
                     },
                 }}
                 className="task-modal"
             >
                 <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
                     <TaskModalHeader
-                        task={formData}
+                        task={task}
                         setIsTaskModalOpen={setIsTaskModalOpen}
                     />
 
                     <div className="flex flex-col-reverse lg:flex-row task__body-wrapper">
-                        <TaskModalBody
-                            task={formData}
-                        />
+                        <TaskModalBody task={task} />
                         <Chat />
                     </div>
                 </div>
