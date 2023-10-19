@@ -31,16 +31,6 @@ export class AssetService {
 
     const assetsList = await Promise.all(
       assets.map(async (assetData) => {
-        console.log(
-          assetData,
-          this.s3.getSignedUrl('getObject', {
-            Bucket: process.env.S3_BUCKET,
-            Key: assetData.src,
-            ResponseContentDisposition:
-              'attachment; filename="your-filename.ext"',
-          }),
-        );
-
         const asset = await this.assetRepository.create(assetData);
         asset.task = task;
         asset.project = await task.project;
@@ -52,7 +42,7 @@ export class AssetService {
     return await this.assetRepository.save(assetsList);
   }
 
-  async deleteAsset(asset: DeleteAssetDto) {
+  async deleteAsset(asset: DeleteAssetDto): Promise<boolean> {
     const res = await !!this.assetRepository.delete(asset.id);
     const S3Res = await this.s3
       .deleteObject({
@@ -62,5 +52,13 @@ export class AssetService {
       .promise();
 
     return res && !S3Res.DeleteMarker;
+  }
+
+  async downloadAsset(Key: string): Promise<string> {
+    return this.s3.getSignedUrl('getObject', {
+      Bucket: process.env.S3_BUCKET,
+      Key,
+      ResponseContentDisposition: `attachment; filename="${Key}"`,
+    });
   }
 }

@@ -96,7 +96,6 @@ type Asset {
   src: String!
   alt: String!
   type: String!
-  version_id: String!
   project: Project!
   task: Task!
 }
@@ -126,6 +125,7 @@ type Mutation {
   createTask(data: CreateTaskDto!): Task!
   createAssets(data: CreateAssetDto!): [Asset!]!
   deleteAsset(asset: DeleteAssetDto!): Boolean!
+  downloadAsset(alt: String!): String!
   createProject(data: CreateProjectDto!): Project!
   updateProject(data: UpdateProjectDto!): Boolean!
   deleteProject(id: String!): Boolean!
@@ -210,7 +210,6 @@ input CreateAssetDto {
 
 input AssetDto {
   src: String!
-  version_id: String!
   alt: String!
   type: String!
 }

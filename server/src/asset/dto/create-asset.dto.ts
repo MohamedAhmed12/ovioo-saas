@@ -23,11 +23,6 @@ class AssetDto {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-  version_id: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
   alt: string;
 
   @IsNotEmpty()

@@ -22,4 +22,10 @@ export class AssetResolver {
   async deleteAsset(@Args('asset') asset: DeleteAssetDto) {
     return await this.assetService.deleteAsset(asset);
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => String)
+  async downloadAsset(@Args('alt') alt: string) {
+    return await this.assetService.downloadAsset(alt);
+  }
 }

@@ -28,10 +28,6 @@ export class Asset extends BaseEntity {
   @Field(() => String)
   type: string;
 
-  @Column('text')
-  @Field(() => String)
-  version_id: string;
-
   @ManyToOne(() => Project, (project) => project.assets, { cascade: true })
   @Field(() => Project)
   project: Project;
