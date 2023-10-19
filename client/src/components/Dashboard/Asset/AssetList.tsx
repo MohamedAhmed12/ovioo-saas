@@ -1,34 +1,65 @@
 "use client";
 
 import {
-    Asset,
     Asset as AssetInterface,
     ImgExtensionEnum,
+    TaskInterface,
     VideoExtensionEnum,
+    s3PathInterface,
 } from "@/interfaces";
+import { setTaskAssets } from "@/store/features/task";
 import "@/styles/components/dashboard/asset/asset-list.scss";
-import { ObjectHasVal } from "@/utils/helpers";
+import { getClient } from "@/utils/getClient";
+import { ObjectHasVal, uploadFiles } from "@/utils/helpers";
+import { gql, useMutation } from "@apollo/client";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import { CardHeader, IconButton } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { ChangeEvent, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import AddAssetCard from "./AddAssetCard";
 import LinkAssetCard from "./Cards/DefaultCard";
 import MediaCard from "./Cards/MediaCard";
 
+const CREATE_ASSET = gql`
+    mutation Mutation($data: CreateAssetDto!) {
+        createAssets(data: $data) {
+            id
+            src
+            alt
+            type
+            project {
+                id
+            }
+            task {
+                id
+            }
+        }
+    }
+`;
+
+
 export default function AssetList({
-    assets,
+    task,
     readOnly,
     title,
+    handleDelete,
 }: {
-    assets: Asset[];
+    task: TaskInterface;
     readOnly?: boolean;
     title?: string;
+    handleDelete: (asset: AssetInterface) => void;
 }) {
+    const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const dispatch = useDispatch();
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+    const [createAssets] = useMutation(CREATE_ASSET, { client });
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -36,8 +67,43 @@ export default function AssetList({
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleDownload = () => {};
-    const handleDelete = () => {};
+    const handleAssetsUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+        setLoading(true);
+
+        let assets = await uploadFiles(e, session);
+        assets = assets.map(
+            ({ type, s3Path }: { type: string; s3Path: s3PathInterface }) => ({
+                alt: s3Path.Key,
+                src: s3Path.Location,
+                type,
+            })
+        );
+
+        try {
+            const { data } = await createAssets({
+                variables: {
+                    data: {
+                        task_id: task.id,
+                        assets,
+                    },
+                },
+            });
+
+            if (data?.createAssets) {
+                dispatch(
+                    setTaskAssets([...task.assets, ...data?.createAssets])
+                );
+                toast.success("Uploaded successfully");
+            }
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+
+        setLoading(false);
+    };
+    const handleDownload = async (alt: string) => {
+     
+    };
 
     const getAssetToRender = (asset: AssetInterface) => {
         if (
@@ -66,49 +132,60 @@ export default function AssetList({
                 flexDirection="row"
                 className="flex gap-6 flex-wrap"
             >
-                {assets.map((asset) => (
-                    <Card
-                        key={asset.id}
-                        component="li"
-                        className="!bg-gray-200"
-                    >
-                        <CardHeader
-                            action={
-                                <IconButton
-                                    aria-label="settings"
-                                    onClick={handleClick}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
-                            }
-                            className="absolute z-[100] !p-3 right-[1px] top-[1px] !bg-transparent"
-                        />
-                        {getAssetToRender(asset)}
-                    </Card>
+                {task.assets.map((asset) => (
+                    <>
+                        <Card
+                            key={`card-${asset.id}`}
+                            component="li"
+                            className="!bg-gray-200"
+                        >
+                            <CardHeader
+                                action={
+                                    <IconButton
+                                        aria-label="settings"
+                                        onClick={handleClick}
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                }
+                                className="absolute z-[100] !p-3 right-[1px] top-[1px] !bg-transparent"
+                            />
+                            {getAssetToRender(asset)}
+                        </Card>
+                        {/* <Menu
+                            key={`menu-${asset.id}`}
+                            id="long-menu"
+                            MenuListProps={{
+                                "aria-labelledby": "long-button",
+                            }}
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                            slotProps={{
+                                paper: {
+                                    style: {
+                                        maxHeight: 48 * 4.5,
+                                        width: "20ch",
+                                    },
+                                },
+                            }}
+                        >
+                            <MenuItem onClick={() => handleDownload(asset.alt)}>
+                                download
+                            </MenuItem>
+                            <MenuItem onClick={() => handleDelete(asset)}>
+                                delete
+                            </MenuItem>
+                        </Menu> */}
+                    </>
                 ))}
 
-                <Menu
-                    id="long-menu"
-                    MenuListProps={{
-                        "aria-labelledby": "long-button",
-                    }}
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    slotProps={{
-                        paper: {
-                            style: {
-                                maxHeight: 48 * 4.5,
-                                width: "20ch",
-                            },
-                        },
-                    }}
-                >
-                    <MenuItem onClick={handleDownload}>download</MenuItem>
-                    <MenuItem onClick={handleDelete}>delete</MenuItem>
-                </Menu>
-
-                {!readOnly && <AddAssetCard />}
+                {!readOnly && (
+                    <AddAssetCard
+                        handleAssetsUpload={handleAssetsUpload}
+                        loading={loading}
+                    />
+                )}
             </Box>
         </Box>
     );

@@ -34,6 +34,7 @@ export interface TaskInterface {
     type: TaskType;
     designer?: UserInterface;
     assets: Asset[];
+    children?: TaskInterface[];
 }
 
 export interface ColumnInterface {

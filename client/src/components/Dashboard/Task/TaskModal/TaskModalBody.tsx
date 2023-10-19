@@ -6,6 +6,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import OviooDropDown from "../../OviooDropDown";
 import Attachement from "./Attachement";
+import { useDispatch } from "react-redux";
+import { setSelectedTask, setTaskAssets } from "@/store/features/task";
 
 const LIST_PROJECTS = gql`
     query {
@@ -27,19 +29,18 @@ export default function TaskModalBody({
     colId,
     title,
     setTitle,
-    setTaskData,
 }: {
     task: TaskInterface;
     subtasks: SubTaskInterface[] | undefined;
     colId: number;
     title: string;
     setTitle: (e: string) => void;
-    setTaskData: (task: any) => void;
 }) {
     const [description, setDescription] = useState("");
     // const [isFirstLoad, setIsFirstLoad] = useState(true);
     //
 
+    const dispatch = useDispatch();
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [deleteAsset] = useMutation(DELETE_ASSET, { client });
@@ -60,8 +61,6 @@ export default function TaskModalBody({
         alt: string;
     }) => {
         try {
-            return console.log(setTaskData);
-            
             const { data } = await deleteAsset({
                 variables: {
                     asset: {
@@ -72,10 +71,7 @@ export default function TaskModalBody({
             });
 
             if (data.deleteAsset) {
-                setTaskData((prevState: any) => ({
-                    ...prevState,
-                    assets: task.assets.filter((asset) => asset.id != id),
-                }));
+                dispatch(setTaskAssets(task.assets.filter((asset) => asset.id != id)));
                 toast.success("Deleted successfully");
             }
         } catch (e: any) {
@@ -84,7 +80,7 @@ export default function TaskModalBody({
     };
     return (
         data?.listProjects && (
-            <div className="task-modal__body basis-1/2 p-8">
+            <div className="task-modal__body basis-1/2 p-[25px]">
                 <input
                     value={task.title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -110,6 +106,7 @@ export default function TaskModalBody({
                     onSelected={handletypeSelected}
                     className="project-dropdown"
                 />
+                {/* 
                 <div className="mt-8 flex flex-col space-y-3">
                     {subtasks && (
                         <Subtask
@@ -121,7 +118,7 @@ export default function TaskModalBody({
                             colId={colId}
                         />
                     )}
-                </div> 
+                </div> */}
 
                 <Attachement
                     task={task}

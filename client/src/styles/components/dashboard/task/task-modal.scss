@@ -7,12 +7,20 @@
     }
     .task-modal__header {
         .task-type__dropdown {
-            max-width: 280px !important;
-            width: 280px !important;
+            max-width: 235px !important;
+            width: 235px !important;
             margin-right: 16px;
             margin-left: 16px;
             .MuiInputBase-formControl {
-                max-width: 100%;
+                width: 100%;
+            }
+        }
+    }
+    .task-modal__body {
+        .assets__default-card {
+            .default-card__text {
+                font-size: 1.5rem;
+                max-height: 100%;
             }
         }
     }

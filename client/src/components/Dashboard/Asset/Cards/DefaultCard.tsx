@@ -14,11 +14,11 @@ export default function DefaultCard({ asset }: { asset: AssetInterface }) {
             target="_blank"
             rel="noopener noreferrer"
         >
-            <div className="h-full w-full flex justify-center items-center">
+            <div className="h-full w-full flex justify-center items-center text-ellipsis px-3">
                 {asset.type == "link" ? (
                     <LinkIcon className="!text-8xl m-auto rotate-[135deg]" />
                 ) : (
-                    <span className="text-6xl">{asset.alt}</span>
+                    <span className="default-card__text truncate">{asset.alt}</span>
                 )}
             </div>
 
@@ -32,7 +32,7 @@ export default function DefaultCard({ asset }: { asset: AssetInterface }) {
                         <DownloadIcon fontSize="large" className="mt-10" />
                     )}
                 </div>
-                <span className="px-4 py-2 w-full text-start">{asset.alt}</span>
+                <span className="px-4 pb-4 w-full text-start truncate">{asset.alt}</span>
             </div>
         </a>
     );
