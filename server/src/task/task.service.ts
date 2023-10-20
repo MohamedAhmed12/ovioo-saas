@@ -92,7 +92,7 @@ export class TaskService {
   }
 
   async updateTask(data: UpdateTaskDto): Promise<Task> {
-    let task = await this.taskRepository.findOne({
+    const task = await this.taskRepository.findOne({
       where: {
         id: data.id,
       },
@@ -101,29 +101,14 @@ export class TaskService {
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
 
-    if (data.type_id && data.type_id != task?.type?.id) {
-      task.type = await this.taskTypeRepository.findOneByOrFail({
-        id: data.type_id,
-      });
-    }
-    if (data.project_id && data.project_id != task?.project?.id) {
-      task.project = await this.projectRepository.findOneByOrFail({
-        id: data.project_id,
-      });
-    }
-    if (data.designer_id && data.designer_id != task?.designer?.id) {
-      task.designer = await this.userRepository.findOneByOrFail({
-        id: data.designer_id,
-      });
-    }
+    await this.taskRepository
+      .createQueryBuilder()
+      .update(task)
+      .set(data)
+      .where('id = :id', { id: task.id })
+      .execute();
 
-    task = await this.taskRepository.merge(task, {
-      title: data.title,
-      description: data.description,
-      status: data.status,
-    });
-
-    return await this.taskRepository.save(task);
+    return task;
   }
 
   async deleteTask(id: string): Promise<boolean> {

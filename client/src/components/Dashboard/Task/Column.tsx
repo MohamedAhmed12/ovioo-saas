@@ -4,10 +4,9 @@ import { useAppDispatch } from "@/hooks/redux";
 import { TaskInterface, TaskStatus } from "@/interfaces";
 import { dragTask } from "@/store/features/board";
 import { Typography } from "@mui/material";
-import { DragEvent, FocusEvent, useState } from "react";
-import Task from "./Task";
-import CreateTaskForm from "./CreateTaskBackdrop";
+import { DragEvent, useState } from "react";
 import CreateTaskBackdrop from "./CreateTaskBackdrop";
+import Task from "./Task";
 
 export default function Column({
     tasks,
@@ -20,7 +19,6 @@ export default function Column({
 }) {
     const dispatch = useAppDispatch();
     const [openCreateTask, setOpenCreateTask] = useState<boolean>(false);
-    const [taskTitle, setTaskTitle] = useState("");
 
     const handleOnDrop = (e: DragEvent<HTMLDivElement>) => {
         const { task } = JSON.parse(e.dataTransfer.getData("text"));

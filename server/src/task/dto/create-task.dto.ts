@@ -11,7 +11,7 @@ export class CreateTaskDto {
 
   @IsNotEmpty()
   @IsString()
-  @Field(() => TaskStatusEnum)
+  @Field(() => String)
   status: TaskStatusEnum;
 
   @IsNotEmpty()

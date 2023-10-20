@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import {
   BaseEntity,
   Column,
@@ -9,7 +9,8 @@ import {
 import { Task } from './task.entity';
 
 @Entity('task_types')
-@ObjectType({ description: 'task-types' })
+@ObjectType('task_types')
+@InputType({ description: 'task-types' })
 export class TaskType extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)

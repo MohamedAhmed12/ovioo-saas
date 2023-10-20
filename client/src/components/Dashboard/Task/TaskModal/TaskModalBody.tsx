@@ -1,8 +1,7 @@
-import { SubTaskInterface, TaskInterface } from "@/interfaces";
+import { TaskInterface } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import OviooDropDown from "../../OviooDropDown";
 import Attachement from "./Attachement";
 
@@ -17,19 +16,11 @@ const LIST_PROJECTS = gql`
 
 export default function TaskModalBody({
     task,
-    subtasks,
-    colId,
-    title,
-    setTitle,
+    handleOnChange,
 }: {
     task: TaskInterface;
-    subtasks: SubTaskInterface[] | undefined;
-    colId: number;
-    title: string;
-    setTitle: (e: string) => void;
+    handleOnChange: (name: string, value: any) => void;
 }) {
-    const [description, setDescription] = useState("");
-
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const { error, data } = useQuery(LIST_PROJECTS, {
@@ -39,14 +30,12 @@ export default function TaskModalBody({
 
     if (error) throw new Error(JSON.stringify(error));
 
-    const handletypeSelected = (project: string) => {};
-
     return (
         data?.listProjects && (
             <div className="task-modal__body basis-1/2 p-[25px]">
                 <input
                     value={task.title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => handleOnChange("title", e.target.value)}
                     id="task-name-input"
                     type="text"
                     className="bg-transparent w-full px-4 py-2 outline-none focus:border-0 rounded-md text-3xl  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-1 ring-0"
@@ -54,7 +43,9 @@ export default function TaskModalBody({
                 />
                 <textarea
                     value={task.description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) =>
+                        handleOnChange("description", e.target.value)
+                    }
                     id="task-description-input"
                     className="mt-8 w-full  bg-transparent outline-none min-h-[200px] focus:border-0 px-4 py-2 rounded-md text-sm border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px]"
                     placeholder="Description e.g. It's always good to take a break. This 15 minute break will  recharge the batteries a little."
@@ -66,10 +57,12 @@ export default function TaskModalBody({
                 <OviooDropDown
                     initialVal={task.project.id}
                     options={data?.listProjects}
-                    onSelected={handletypeSelected}
+                    onSelected={(projectId) =>
+                        handleOnChange("project", { id: projectId })
+                    }
                     className="project-dropdown"
                 />
-                
+
                 <div className="mt-8 flex flex-col space-y-3">
                     {subtasks && (
                         <Subtask
@@ -83,10 +76,7 @@ export default function TaskModalBody({
                     )}
                 </div>
 
-                <Attachement
-                    task={task}
-                    client={client}
-                />
+                <Attachement task={task} client={client} />
             </div>
         )
     );

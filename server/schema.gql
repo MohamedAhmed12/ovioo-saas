@@ -56,8 +56,7 @@ type Team {
   tasks: [Task!]!
 }
 
-"""task-types"""
-type TaskType {
+type task_types {
   id: ID!
   title: String
   info: [String!]
@@ -71,7 +70,7 @@ type Task {
   title: String!
   description: String
   status: String
-  type: TaskType!
+  type: task_types!
   project: Project!
   team: Team!
   designer: User
@@ -100,12 +99,21 @@ type Asset {
   task: Task!
 }
 
+"""task-types"""
+input TaskType {
+  id: ID!
+  title: String
+  info: [String!]
+  extraInfo: String
+  plan: String
+}
+
 type Query {
   getHello: String!
   me: User!
   findProfile: Profile!
   getTeam: Team!
-  listTaskTypes: [TaskType!]!
+  listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
   listProjects: [Project!]!
@@ -192,28 +200,23 @@ input UpdateProfileDto {
 
 input CreateTaskDto {
   title: String!
-  status: TaskStatusEnum!
+  status: String!
   project_id: String!
   type_id: String!
   parent_id: String
-}
-
-enum TaskStatusEnum {
-  IN_QUEUE
-  IN_PROGRESS
-  REVIEW
-  ON_HOLD
-  DONE
 }
 
 input UpdateTaskDto {
   id: String!
   title: String
   description: String
-  status: TaskStatusEnum
-  type_id: String
-  project_id: String
-  designer_id: String
+  status: String
+  type: UpdateTaskRelatedEntityDto
+  project: UpdateTaskRelatedEntityDto
+}
+
+input UpdateTaskRelatedEntityDto {
+  id: String
 }
 
 input CreateAssetDto {

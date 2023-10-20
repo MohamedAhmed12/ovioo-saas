@@ -2,17 +2,18 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { setSelectedTask } from "@/store/features/task";
 import "@/styles/components/dashboard/task/task-modal.scss";
 import { getClient } from "@/utils/getClient";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Chat from "./Chat";
 import TaskModalBody from "./TaskModalBody";
 import TaskModalHeader from "./TaskModalHeader";
 
-const ShowTask = gql`
+const SHOW_TASK = gql`
     query ShowTask($id: String!) {
         showTask(id: $id) {
             id
@@ -44,6 +45,36 @@ const ShowTask = gql`
         }
     }
 `;
+const EDIT_TASK = gql`
+    mutation updateTask($data: UpdateTaskDto!) {
+        updateTask(data: $data) {
+            id
+            designer {
+                id
+                fullname
+                avatar
+            }
+            description
+            title
+            status
+            project {
+                id
+            }
+            type {
+                id
+            }
+            assets {
+                src
+            }
+            children {
+                id
+                title
+                status
+            }
+        }
+    }
+`;
+
 export default function TaskModal({
     open,
     taskId,
@@ -53,20 +84,20 @@ export default function TaskModal({
     taskId: string;
     setIsTaskModalOpen: (val: boolean) => void;
 }) {
-    const [loading, setLoading] = useState(false);
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
     const theme = useTheme();
+    const dispatch = useAppDispatch();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
     const task = useAppSelector((state) => state.taskReducer.selectedTask);
-    const dispatch = useAppDispatch();
     const { data: session, status } = useSession({ required: true });
     const client = getClient(session);
+    const [editTask] = useMutation(EDIT_TASK, { client });
     const {
         loading: graphQLloading,
         error,
         data,
-    } = useQuery(ShowTask, {
+    } = useQuery(SHOW_TASK, {
         client,
         variables: {
             id: taskId,
@@ -78,17 +109,25 @@ export default function TaskModal({
 
     useEffect(() => {
         if (!graphQLloading && data?.showTask) {
-            // settask(data?.showTask);
             dispatch(setSelectedTask(data?.showTask));
             setInitialDataLoaded(true);
         }
     }, [graphQLloading, data, data?.showTask, dispatch]);
 
-    // console.log("task moal mounte");
+    const handleOnChange = (name: string, value: any) =>
+        dispatch(setSelectedTask({ ...task, [name]: value }));
 
-    const onSubmit = () => {
-        // dispatch editTask
-
+    const onSubmit = async () => {
+        try {
+            const { designer, assets, children, ...restTask } = task;
+            const { data } = await editTask({
+                variables: {
+                    data: restTask,
+                },
+            });
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
         setIsTaskModalOpen(false);
     };
 
@@ -112,10 +151,14 @@ export default function TaskModal({
                     <TaskModalHeader
                         task={task}
                         setIsTaskModalOpen={setIsTaskModalOpen}
+                        handleOnChange={handleOnChange}
                     />
 
                     <div className="flex flex-col-reverse lg:flex-row task__body-wrapper">
-                        <TaskModalBody task={task} />
+                        <TaskModalBody
+                            task={task}
+                            handleOnChange={handleOnChange}
+                        />
                         <Chat />
                     </div>
                 </div>

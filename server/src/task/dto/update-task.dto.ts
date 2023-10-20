@@ -1,6 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { TaskStatusEnum } from '../enums/task-status.enum';
+import { UpdateTaskRelatedEntityDto } from './update-task-relations.dto';
 
 @InputType()
 export class UpdateTaskDto {
@@ -21,21 +22,14 @@ export class UpdateTaskDto {
 
   @IsOptional()
   @IsString()
-  @Field(() => TaskStatusEnum, { nullable: true })
+  @Field(() => String, { nullable: true })
   status: TaskStatusEnum;
 
   @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  type_id: number;
+  @Field(() => UpdateTaskRelatedEntityDto, { nullable: true })
+  type: UpdateTaskRelatedEntityDto;
 
   @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  project_id: number;
-
-  @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  designer_id: number;
+  @Field(() => UpdateTaskRelatedEntityDto, { nullable: true })
+  project: UpdateTaskRelatedEntityDto;
 }

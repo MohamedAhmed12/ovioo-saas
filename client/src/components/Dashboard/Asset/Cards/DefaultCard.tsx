@@ -14,7 +14,7 @@ export default function DefaultCard({ asset }: { asset: AssetInterface }) {
             target="_blank"
             rel="noopener noreferrer"
         >
-            <div className="h-full w-full flex justify-center items-center text-ellipsis px-3">
+            <div className="h-full w-full flex justify-center items-center truncate px-3">
                 {asset.type == "link" ? (
                     <LinkIcon className="!text-8xl m-auto rotate-[135deg]" />
                 ) : (

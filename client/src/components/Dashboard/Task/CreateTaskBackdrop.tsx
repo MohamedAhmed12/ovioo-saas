@@ -63,8 +63,9 @@ export default function CreateTaskBackdrop({
         type_id: "",
         project_id: "",
         status:
-            Object.entries(TaskStatus).find(([, v]) => v === status)?.[0] ||
-            "IN_QUEUE",
+            Object.keys(TaskStatus).find(
+                (key) => TaskStatus[key as keyof typeof TaskStatus] === status
+            ) || "IN_QUEUE",
     });
 
     const dispatch = useAppDispatch();
@@ -130,7 +131,10 @@ export default function CreateTaskBackdrop({
                     headerTitle="Add new Task"
                 >
                     <div className="flex flex-col items-center">
-                        <TaskTypeDropDown onSelected={handlSelectType} client={client}/>
+                        <TaskTypeDropDown
+                            onSelected={handlSelectType}
+                            client={client}
+                        />
 
                         <OviooDropDown
                             inputLabel="Project"
