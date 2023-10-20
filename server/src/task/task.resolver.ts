@@ -3,6 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';
@@ -33,6 +34,12 @@ export class TaskResolver {
   @Mutation(() => Task)
   async createTask(@Args('data') data: CreateTaskDto) {
     return await this.taskService.createTask(data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Task)
+  async updateTask(@Args('data') data: UpdateTaskDto) {
+    return await this.taskService.updateTask(data);
   }
 
   @UseGuards(AuthGuard)

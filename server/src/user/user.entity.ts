@@ -83,7 +83,7 @@ export class User extends BaseEntity {
   // as a designer not an owner
   @OneToMany(() => Task, (task) => task.designer)
   @Field(() => [Task])
-  tasks: Task[];
+  assignedTasks: Task[];
 
   @BeforeInsert()
   async hashPass() {

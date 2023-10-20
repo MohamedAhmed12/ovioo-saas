@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Asset } from 'src/asset/asset.entity';
 import { Project } from 'src/project/project.entity';
 import { Team } from 'src/team/team.entity';
 import { User } from 'src/user/user.entity';
@@ -6,13 +7,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
-import { Asset } from 'src/asset/asset.entity';
 
 @Entity('tasks')
 @ObjectType({ description: 'tasks' })
@@ -51,15 +52,19 @@ export class Task extends BaseEntity {
     onDelete: 'CASCADE',
     lazy: true,
   })
+  @JoinColumn({ name: 'team_id' })
   @Field(() => Team)
   team: Team;
 
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (user) => user.assignedTasks, { eager: true })
   @Field(() => User, { nullable: true })
   designer: User;
 
-  @OneToMany(() => Asset, (asset) => asset.task, { eager: true })
-  @Field(() => [Asset], { defaultValue: [] })
+  @OneToMany(() => Asset, (asset) => asset.task, {
+    eager: true,
+    nullable: true,
+  })
+  @Field(() => [Asset], { defaultValue: null })
   assets: Asset[];
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })

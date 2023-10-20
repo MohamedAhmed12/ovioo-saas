@@ -123,6 +123,7 @@ type Mutation {
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
+  updateTask(data: UpdateTaskDto!): Task!
   deleteTask(id: String!): Boolean!
   createAssets(data: CreateAssetDto!): [Asset!]!
   deleteAsset(asset: DeleteAssetDto!): Boolean!
@@ -191,9 +192,10 @@ input UpdateProfileDto {
 
 input CreateTaskDto {
   title: String!
+  status: TaskStatusEnum!
   project_id: String!
   type_id: String!
-  status: TaskStatusEnum!
+  parent_id: String
 }
 
 enum TaskStatusEnum {
@@ -202,6 +204,16 @@ enum TaskStatusEnum {
   REVIEW
   ON_HOLD
   DONE
+}
+
+input UpdateTaskDto {
+  id: String!
+  title: String
+  description: String
+  status: TaskStatusEnum
+  type_id: String
+  project_id: String
+  designer_id: String
 }
 
 input CreateAssetDto {

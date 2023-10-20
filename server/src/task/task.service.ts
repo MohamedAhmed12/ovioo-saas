@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
+import { AssetService } from 'src/asset/asset.service';
 import { Project } from 'src/project/project.entity';
-import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Task } from './task.entity';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskType } from './task-type.entity';
-import { AssetService } from 'src/asset/asset.service';
+import { Task } from './task.entity';
 
 @Injectable()
 export class TaskService {
@@ -88,6 +88,41 @@ export class TaskService {
     task.project = project;
     task.team = project.team;
     task.type = type;
+    return await this.taskRepository.save(task);
+  }
+
+  async updateTask(data: UpdateTaskDto): Promise<Task> {
+    let task = await this.taskRepository.findOne({
+      where: {
+        id: data.id,
+      },
+      relations: ['project'],
+    });
+
+    if (!task) throw new NotFoundException('Couldn’t find task matches id.');
+
+    if (data.type_id && data.type_id != task?.type?.id) {
+      task.type = await this.taskTypeRepository.findOneByOrFail({
+        id: data.type_id,
+      });
+    }
+    if (data.project_id && data.project_id != task?.project?.id) {
+      task.project = await this.projectRepository.findOneByOrFail({
+        id: data.project_id,
+      });
+    }
+    if (data.designer_id && data.designer_id != task?.designer?.id) {
+      task.designer = await this.userRepository.findOneByOrFail({
+        id: data.designer_id,
+      });
+    }
+
+    task = await this.taskRepository.merge(task, {
+      title: data.title,
+      description: data.description,
+      status: data.status,
+    });
+
     return await this.taskRepository.save(task);
   }
 
