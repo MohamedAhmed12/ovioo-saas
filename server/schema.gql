@@ -116,7 +116,7 @@ type Query {
   listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
-  listAssets(id: String): [Asset!]!
+  listAssets: [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
 }

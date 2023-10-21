@@ -6,19 +6,15 @@ import { Asset } from './asset.entity';
 import { AssetService } from './asset.service';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { DeleteAssetDto } from './dto/delete-asset.dto';
-import { ListAssetsDto } from './dto/list-assets.dto';
 
 @Resolver(() => Asset)
 export class AssetResolver {
   constructor(private readonly assetService: AssetService) {}
 
   @UseGuards(AuthGuard)
-  @Query(() => [ListAssetsDto])
-  async listAssets(
-    @Context('user') authUser: User,
-    @Args('id', { nullable: true }) id?: string,
-  ) {
-    return await this.assetService.listAssets(authUser, +id);
+  @Query(() => [Asset])
+  async listAssets(@Context('user') authUser: User) {
+    return await this.assetService.listAssets(authUser);
   }
 
   @UseGuards(AuthGuard)

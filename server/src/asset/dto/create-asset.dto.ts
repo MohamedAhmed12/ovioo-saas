@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
-import { AssetDto } from './asset.dto';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { Asset } from '../asset.entity';
 
 @InputType()
 export class CreateAssetDto {
@@ -11,4 +11,22 @@ export class CreateAssetDto {
   @IsString()
   @Field(() => String)
   task_id: number;
+}
+
+@InputType()
+class AssetDto {
+  @IsNotEmpty()
+  @IsString()
+  @Field(() => String)
+  src: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field(() => String)
+  alt: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field(() => String)
+  type: string;
 }
