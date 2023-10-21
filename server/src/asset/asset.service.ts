@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Asset } from './asset.entity';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { DeleteAssetDto } from './dto/delete-asset.dto';
+import { ListAssetsDto } from './dto/list-assets.dto';
 
 @Injectable()
 export class AssetService {
@@ -22,10 +23,9 @@ export class AssetService {
     private readonly teamRepository: Repository<Team>,
   ) {}
 
-  async listAssets(authUser: User): Promise<any> {
+  async listAssets(authUser: User, id?: number): Promise<ListAssetsDto> {
     const team = await authUser.team;
-
-    return await this.assetRepository.find({
+    const options = {
       where: {
         project: {
           team: {
@@ -33,7 +33,11 @@ export class AssetService {
           },
         },
       },
-    });
+    };
+
+    id && (options.where.project['id'] = id);
+
+    return await this.assetRepository.find(options);
   }
 
   async createAssets({ task_id, assets }: CreateAssetDto): Promise<Asset[]> {

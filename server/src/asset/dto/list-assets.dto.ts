@@ -3,12 +3,13 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { AssetDto } from './asset.dto';
 
 @InputType()
-export class CreateAssetDto {
-  @Field(() => [AssetDto])
-  assets: AssetDto[];
-
+export class ListAssetsDto {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-  task_id: number;
+  title: string;
+
+  @IsNotEmpty()
+  @Field(() => [AssetDto])
+  assets: AssetDto[];
 }
