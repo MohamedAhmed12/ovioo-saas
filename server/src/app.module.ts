@@ -5,16 +5,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
-import { AssetGroup } from './asset/asset-goup.entity';
 import { AssetModule } from './asset/asset.module';
-import { AssetGroupSeeder } from './asset/seeders/asset-group.seed';
 import { ProfileModule } from './profile/profile.module';
 import { ProjectModule } from './project/project.module';
-import { TaskType } from './task/task-type.entity';
-import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
+import { TaskTypeSeeder } from './task/task-type.seed';
+import { TaskType } from './task/task-type.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ormConfig = require('../ormconfig.json');
@@ -35,18 +33,14 @@ const ormConfig = require('../ormconfig.json');
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot(ormConfig[0]),
-    TypeOrmModule.forFeature([TaskType, AssetGroup]),
+    TypeOrmModule.forFeature([TaskType]),
   ],
-  providers: [AppResolver, AppService, TaskTypeSeeder, AssetGroupSeeder],
+  providers: [AppResolver, AppService, TaskTypeSeeder],
 })
 export class AppModule implements OnModuleInit {
-  constructor(
-    private readonly taskTypeSeeder: TaskTypeSeeder,
-    private readonly assetGroupSeeder: AssetGroupSeeder,
-  ) {}
+  constructor(private readonly taskTypeSeeder: TaskTypeSeeder) {}
 
   async onModuleInit() {
     this.taskTypeSeeder.seed();
-    this.assetGroupSeeder.seed();
   }
 }

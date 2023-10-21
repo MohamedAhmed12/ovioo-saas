@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
-import { AssetGroup } from 'src/asset/asset-goup.entity';
 import { Asset } from 'src/asset/asset.entity';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
@@ -41,8 +40,4 @@ export class Project extends BaseEntity {
   @OneToMany(() => Asset, (asset) => asset.project)
   @Field(() => [Asset], { defaultValue: [] })
   assets: Asset[];
-
-  @OneToMany(() => AssetGroup, (assetGroup) => assetGroup.project)
-  @Field(() => [AssetGroup], { defaultValue: [] })
-  assetGroups: AssetGroup[];
 }
