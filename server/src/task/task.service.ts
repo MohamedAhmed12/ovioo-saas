@@ -109,7 +109,7 @@ export class TaskService {
       .execute();
 
     return task;
-  }
+  } 
 
   async deleteTask(id: string): Promise<boolean> {
     const task = await this.taskRepository.findOneBy({ id: +id });

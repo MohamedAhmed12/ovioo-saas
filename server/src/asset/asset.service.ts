@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { S3 } from 'aws-sdk';
 import { Task } from 'src/task/task.entity';
+import { Team } from 'src/team/team.entity';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from './asset.entity';
 import { CreateAssetDto } from './dto/create-asset.dto';
@@ -16,7 +18,23 @@ export class AssetService {
     private readonly assetRepository: Repository<Asset>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
   ) {}
+
+  async listAssets(authUser: User): Promise<any> {
+    const team = await authUser.team;
+
+    return await this.assetRepository.find({
+      where: {
+        project: {
+          team: {
+            id: team.id,
+          },
+        },
+      },
+    });
+  }
 
   async createAssets({ task_id, assets }: CreateAssetDto): Promise<Asset[]> {
     const task = await this.taskRepository.findOne({

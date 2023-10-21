@@ -42,11 +42,13 @@ const DELETE_ASSET = gql`
 
 export default function AssetList({
     task,
+    assets,
     readOnly,
     title,
     handleDelete,
 }: {
-    task: TaskInterface;
+    task?: TaskInterface;
+    assets: AssetInterface[];
     readOnly?: boolean;
     title?: string;
     handleDelete: (asset: AssetInterface) => void;
@@ -60,6 +62,8 @@ export default function AssetList({
     const [deleteAsset] = useMutation(DELETE_ASSET, { client });
 
     const handleAssetsUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (!task) return;
+
         setLoading(true);
 
         let assets = await uploadFiles(e, session);
@@ -123,7 +127,7 @@ export default function AssetList({
                 flexDirection="row"
                 className="flex gap-6 flex-wrap"
             >
-                {task.assets.map((asset) => (
+                {assets.map((asset) => (
                     <AssetWrapper
                         key={asset.id}
                         handleDelete={handleDelete}

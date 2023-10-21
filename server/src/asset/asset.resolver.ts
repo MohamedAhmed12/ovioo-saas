@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
 import { Asset } from './asset.entity';
@@ -10,6 +10,12 @@ import { DeleteAssetDto } from './dto/delete-asset.dto';
 @Resolver(() => Asset)
 export class AssetResolver {
   constructor(private readonly assetService: AssetService) {}
+
+  @UseGuards(AuthGuard)
+  @Query(() => [Asset])
+  async listAssets(@Context('user') authUser: User) {
+    return await this.assetService.listAssets(authUser);
+  }
 
   @UseGuards(AuthGuard)
   @Mutation(() => [Asset])

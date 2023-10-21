@@ -6,9 +6,10 @@ import { AssetService } from './asset.service';
 import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';
 import { Task } from 'src/task/task.entity';
+import { Team } from 'src/team/team.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Asset, Task])],
+  imports: [TypeOrmModule.forFeature([Asset, Task, Team])],
   providers: [AssetResolver, AssetService, UploadService],
   controllers: [UploadController],
 })

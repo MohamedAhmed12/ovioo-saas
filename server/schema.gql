@@ -75,7 +75,7 @@ type Task {
   team: Team!
   designer: User
   assets: [Asset!]!
-  children: [Task!]
+  subtasks: [Task!]
   parent: Task
 }
 
@@ -95,7 +95,7 @@ type Asset {
   src: String!
   alt: String!
   type: String!
-  project: Project!
+  project: Project
   task: Task!
 }
 
@@ -116,6 +116,7 @@ type Query {
   listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
+  listAssets: [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
 }

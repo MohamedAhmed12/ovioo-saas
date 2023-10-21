@@ -30,7 +30,7 @@ export class Asset extends BaseEntity {
   type: string;
 
   @ManyToOne(() => Project, (project) => project.assets, { cascade: true })
-  @Field(() => Project)
+  @Field(() => Project, { nullable: true })
   project: Project;
 
   @ManyToOne(() => Task, (task) => task.assets, { onDelete: 'CASCADE' })

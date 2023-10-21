@@ -69,9 +69,9 @@ export class Task extends BaseEntity {
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })
   @Field(() => [Task], { nullable: true })
-  children: Task[];
+  subtasks: Task[];
 
-  @ManyToOne(() => Task, (task) => task.children)
+  @ManyToOne(() => Task, (task) => task.subtasks)
   @Field(() => Task, { nullable: true })
   parent: Task;
 }
