@@ -79,16 +79,6 @@ type Task {
   parent: Task
 }
 
-"""project"""
-type Project {
-  id: ID!
-  title: String!
-  description: String!
-  team: Team!
-  tasks: [Task!]!
-  assets: [Asset!]!
-}
-
 """asset"""
 type Asset {
   id: ID!
@@ -97,6 +87,25 @@ type Asset {
   type: String!
   project: Project
   task: Task!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
+  assetGroups: [AssetGroup!]!
+}
+
+"""asset group"""
+type AssetGroup {
+  id: ID!
+  title: String!
+  types: [String!]!
+  project: Project
 }
 
 """task-types"""
@@ -116,7 +125,6 @@ type Query {
   listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
-  listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
 }
