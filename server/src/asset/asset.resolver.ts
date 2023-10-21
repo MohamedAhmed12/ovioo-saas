@@ -13,8 +13,11 @@ export class AssetResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Asset])
-  async listAssets(@Context('user') authUser: User) {
-    return await this.assetService.listAssets(authUser);
+  async listAssets(
+    @Context('user') authUser: User,
+    @Args('id', { nullable: true }) id?: string,
+  ) {
+    return await this.assetService.listAssets(authUser, +id);
   }
 
   @UseGuards(AuthGuard)

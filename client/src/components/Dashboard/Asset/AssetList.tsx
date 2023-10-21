@@ -44,13 +44,11 @@ export default function AssetList({
     task,
     assets,
     readOnly,
-    title,
     handleDelete,
 }: {
     task?: TaskInterface;
     assets: AssetInterface[];
     readOnly?: boolean;
-    title?: string;
     handleDelete: (asset: AssetInterface) => void;
 }) {
     const [loading, setLoading] = useState(false);
@@ -121,7 +119,6 @@ export default function AssetList({
             flexDirection="column"
             className="asset-list flex p-0 cursor-pointer"
         >
-            {title && <h4 className="text-xl capitalize mb-4">{title}</h4>}
             <Box
                 component="ul"
                 flexDirection="row"

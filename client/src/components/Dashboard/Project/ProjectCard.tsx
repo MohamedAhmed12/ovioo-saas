@@ -33,13 +33,13 @@ export default function ProjectCard({
     readOnly = false,
     actionURL,
     client,
-    onEditProject
+    onEditProject,
 }: {
     project: ProjectInterface;
     readOnly?: boolean;
     actionURL: string;
-    client: ApolloClient<any> | undefined;
-    onEditProject: (project: ProjectInterface) => void
+    client?: ApolloClient<any> | undefined;
+    onEditProject?: (project: ProjectInterface) => void;
 }) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -69,13 +69,13 @@ export default function ProjectCard({
     };
 
     const handleEditProject = () => {
-        onEditProject(project)
+        onEditProject && onEditProject(project);
         handleToggle(null);
     };
 
     return (
-        <Card className="project-card ovioo-card px-6 my-5 flex flex-col justify-center">
-            {!readOnly && (
+        <Card className="project-card ovioo-card px-6 my-5 flex flex-col justify-center truncate">
+            {
                 <>
                     <CardHeader
                         avatar={
@@ -84,17 +84,21 @@ export default function ProjectCard({
                             </p>
                         }
                         action={
-                            <IconButton
-                                aria-label="more"
-                                id="long-button"
-                                aria-controls={open ? "long-menu" : undefined}
-                                aria-expanded={open ? "true" : undefined}
-                                aria-haspopup="true"
-                                onClick={handleToggle}
-                                sx={{ color: "rgb(148 163 184)" }}
-                            >
-                                <MoreVertIcon />
-                            </IconButton>
+                            !readOnly && (
+                                <IconButton
+                                    aria-label="more"
+                                    id="long-button"
+                                    aria-controls={
+                                        open ? "long-menu" : undefined
+                                    }
+                                    aria-expanded={open ? "true" : undefined}
+                                    aria-haspopup="true"
+                                    onClick={handleToggle}
+                                    sx={{ color: "rgb(148 163 184)" }}
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
+                            )
                         }
                     />
                     <Menu
@@ -116,26 +120,38 @@ export default function ProjectCard({
                             <EditIcon fontSize="small" className="mr-3" />
                             edit project
                         </MenuItem>
-                        <MenuItem onClick={() => handleDeleteProject(project.id)}>
-                            <DeleteOutlineIcon fontSize="small" className="mr-3" />
+                        <MenuItem
+                            onClick={() => handleDeleteProject(project.id)}
+                        >
+                            <DeleteOutlineIcon
+                                fontSize="small"
+                                className="mr-3"
+                            />
                             delete project
                         </MenuItem>
                     </Menu>
                 </>
-            )}
+            }
 
             <CardContent className="flex flex-col items-center">
                 <Link href={actionURL}>
-                    <Avatar src="https://picsum.photos/id/1/1000/1000" className="mb-5" />
+                    <Avatar
+                        src="https://picsum.photos/id/1/1000/1000"
+                        className="mb-5"
+                    />
                 </Link>
-                <Link href={actionURL}>
-                    <h3 className="text-lg">{project.title}</h3>
+                <Link href={actionURL} className="truncate max-w-full">
+                    <h3 className="text-lg truncate mb-5">{project.title}</h3>
                 </Link>
 
                 {!readOnly && (
                     <CardActions>
                         <Button color="primary" variant="outlined">
-                            <AddIcon className="mr-1 font-bold" fontSize="small" /> new task
+                            <AddIcon
+                                className="mr-1 font-bold"
+                                fontSize="small"
+                            />
+                            new task
                         </Button>
                     </CardActions>
                 )}

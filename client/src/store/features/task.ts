@@ -19,7 +19,7 @@ const initialState: { selectedTask: TaskInterface } = {
             id: "",
         },
         assets: [],
-        children: [],
+        subtasks: [],
     },
 };
 

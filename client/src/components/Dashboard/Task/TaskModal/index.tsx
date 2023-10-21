@@ -37,7 +37,7 @@ const SHOW_TASK = gql`
                 alt
                 type
             }
-            children {
+            subtasks {
                 id
                 title
                 status
@@ -66,7 +66,7 @@ const EDIT_TASK = gql`
             assets {
                 src
             }
-            children {
+            subtasks {
                 id
                 title
                 status
@@ -119,8 +119,8 @@ export default function TaskModal({
 
     const onSubmit = async () => {
         try {
-            const { designer, assets, children, ...restTask } = task;
-            const { data } = await editTask({
+            const { designer, assets, subtasks, ...restTask } = task;
+            await editTask({
                 variables: {
                     data: restTask,
                 },

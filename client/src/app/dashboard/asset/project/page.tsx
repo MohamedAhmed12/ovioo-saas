@@ -1,61 +1,59 @@
 "use client";
 
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { setProjects } from "@/store/features/project";
 import "@/styles/app/dashboard/asset.scss";
-import Link from "next/link";
-import { TaskInterface, TaskStatus } from "@/interfaces";
+import { getClient } from "@/utils/getClient";
+import { gql, useQuery } from "@apollo/client";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+
+const LIST_PROJECTS = gql`
+    query {
+        listProjects {
+            id
+            title
+            description
+        }
+    }
+`;
 
 export default function AssetProjects() {
-    const projects: { id: number; name: string; tasks: TaskInterface[] }[] = [
-        {
-            id: 1,
-            name: "first project",
-            tasks: [
-                {
-                    id: 1,
-                    title: "First task",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                },
-                {
-                    id: 2,
-                    title: "Second task",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                },
-            ],
-        },
-        {
-            id: 2,
-            name: "second project",
-            tasks: [
-                {
-                    id: 1,
-                    title: "First task",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                },
-                {
-                    id: 2,
-                    title: "Second task",
-                    description: "",
-                    status: TaskStatus.InQueue,
-                },
-            ],
-        },
-    ];
+    const dispatch = useAppDispatch();
+    const projects = useAppSelector((state) => state.projectReducer.projects);
+    const { data: session, status } = useSession({
+        required: true,
+    });
+    const client = getClient(session);
+    const {
+        loading: graphQLloading,
+        error,
+        data,
+    } = useQuery(LIST_PROJECTS, { client });
+
+    if (error) throw new Error(JSON.stringify(error));
+
+    useEffect(() => {
+        if (!graphQLloading && data?.listProjects && projects.length == 0) {
+            dispatch(setProjects(data.listProjects));
+        }
+    }, [graphQLloading, data, dispatch, projects]);
 
     return (
-        <div className="asset-container flex justify-start flex-wrap">
-            {projects.map((project: any, i) => (
-                <ProjectCard
-                    key={i}
-                    project={project}
-                    readOnly
-                    actionURL={`/dashboard/asset/project/${project.id}`}
-                />
-            ))}
-        </div>
+        session &&
+        projects && (
+            <div className="asset-container flex justify-start flex-wrap">
+                {projects.map((project: any, i) => (
+                    <ProjectCard
+                        key={i}
+                        project={project}
+                        readOnly
+                        client={client}
+                        actionURL={`/dashboard/asset/project/${project.id}`}
+                    />
+                ))}
+            </div>
+        )
     );
 }

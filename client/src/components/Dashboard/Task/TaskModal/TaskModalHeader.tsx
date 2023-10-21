@@ -2,50 +2,75 @@ import TaskTypeDropDown from "@/components/Dashboard/TaskTypeDropDown";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch } from "@/hooks/redux";
 import { TaskInterface, TaskStatus } from "@/interfaces";
-import { setTaskStatus } from "@/store/features/board";
+import { deleteTask as deleteTaskAction } from "@/store/features/board";
+import { getClient } from "@/utils/getClient";
+import { gql, useMutation } from "@apollo/client";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Avatar } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { MouseEvent, useState } from "react";
+import toast from "react-hot-toast";
 import OviooDropDown from "../../OviooDropDown";
+
+const DELETE_TASK = gql`
+    mutation Mutation($id: String!) {
+        deleteTask(id: $id)
+    }
+`;
 
 export default function TaskModalHeader({
     task,
     setIsTaskModalOpen,
+    handleOnChange,
 }: {
     task: TaskInterface;
     setIsTaskModalOpen: (val: boolean) => void;
+    handleOnChange: (name: string, value: any) => void;
 }) {
-    const dispatch = useAppDispatch();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const dispatch = useAppDispatch();
+    const session = useSession();
+    const client = getClient(session);
+    const [deleteTask] = useMutation(DELETE_TASK, { client });
 
     const setOpenDeleteModal = () => {
         setIsDeleteModalOpen(true);
     };
 
-    const onDeleteBtnClick = (e: MouseEvent<HTMLElement>) => {
-        setIsTaskModalOpen(false);
-        setIsDeleteModalOpen(false);
-    };
+    const onDeleteBtnClick = async (e: MouseEvent<HTMLElement>) => {
+        try {
+            const { data } = await deleteTask({
+                variables: {
+                    id: task.id,
+                },
+            });
 
-    const handleStatusChanged = (status: string) => {
-        dispatch(setTaskStatus({ taskId: task.id, status }));
-    };
-
-    const handlSelectType = (type_id: string) => {
+            if (data.deleteTask) {
+                dispatch(deleteTaskAction(task));
+                setIsTaskModalOpen(false);
+            }
+        } catch (error) {
+            toast.error("Something went wrong!");
+            setIsDeleteModalOpen(false);
+        }
     };
 
     return (
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">
-            <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-8 flex-wrap max-w-full">
+            <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-[25px] flex-wrap max-w-full">
                 <OviooDropDown
                     options={Object.values(TaskStatus)}
-                    onSelected={handleStatusChanged}
+                    onSelected={(status) => handleOnChange("status", status)}
                     initialVal={task.status}
+                    className="task-status-dropdown"
                 />
 
                 <TaskTypeDropDown
-                    onSelected={handlSelectType}
+                    onSelected={(typeId) =>
+                        handleOnChange("type", { id: typeId })
+                    }
                     initialVal={task.type.id}
                 />
 
@@ -56,19 +81,17 @@ export default function TaskModalHeader({
                         src={task?.designer?.avatar}
                     />
                 ) : (
-                    <AccountCircleIcon className="!text-[65px] mx-2 lg:mx-4" />
+                    <AccountCircleIcon className="!text-[60px]" />
                 )}
             </div>
-            <div className="basis-1/2 flex justify-end px-8 lg:items-center">
-                <DeleteOutlineIcon
-                    color="error"
-                    fontSize="large"
-                    onClick={setOpenDeleteModal}
-                />
+            <div className="basis-1/2 flex justify-end px-[25px] lg:items-center">
+                <IconButton onClick={setOpenDeleteModal}>
+                    <DeleteOutlineIcon color="error" fontSize="large" />
+                </IconButton>
             </div>
             {isDeleteModalOpen && (
                 <DeleteModal
-                    onDeleteBtnClick={() => onDeleteBtnClick}
+                    onDeleteBtnClick={onDeleteBtnClick}
                     type="task"
                     title={task.title}
                     setIsDeleteModalOpen={setIsDeleteModalOpen}

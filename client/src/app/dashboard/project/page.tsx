@@ -4,12 +4,11 @@ import AddNewProjectCard from "@/components/Dashboard/Project/AddNewProjectCard"
 import AddNewProjectCardModal from "@/components/Dashboard/Project/AddNewProjectCardModal";
 import ProjectCard from "@/components/Dashboard/Project/ProjectCard";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Project, Project as ProjectInterface } from "@/interfaces";
+import { Project as ProjectInterface } from "@/interfaces";
 import { setProjects } from "@/store/features/project";
 import { getClient } from "@/utils/getClient";
 import { gql, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const LIST_PROJECTS = gql`
@@ -25,15 +24,10 @@ const LIST_PROJECTS = gql`
 export default function Projects() {
     const [open, setOpen] = useState(false);
     const [projectToEdit, setProjectToEdit] = useState({});
+
     const projects = useAppSelector((state) => state.projectReducer.projects);
     const dispatch = useAppDispatch();
-    const { data: session, status } = useSession({
-        required: true,
-        onUnauthenticated() {
-            redirect("/auth/login");
-        },
-    });
-
+    const { data: session } = useSession({ required: true });
     const apolloClient = getClient(session);
     const {
         loading: graphQLloading,
@@ -47,12 +41,11 @@ export default function Projects() {
         if (!graphQLloading && data?.listProjects && projects.length == 0) {
             dispatch(setProjects(data.listProjects));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [graphQLloading, data]);
+    }, [graphQLloading, data, dispatch, projects]);
 
     const handleEditProject = (project: ProjectInterface) => {
-        setProjectToEdit(project)
-        handleToggleModal()
+        setProjectToEdit(project);
+        handleToggleModal();
     };
     const handleToggleModal = () => {
         setOpen((prevState) => (prevState = !prevState));

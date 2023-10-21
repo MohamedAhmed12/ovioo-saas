@@ -24,7 +24,7 @@ const LIST_TASKS = gql`
 export default function Task() {
     const tasks = useAppSelector((state) => state.boardReducer.tasks);
     const dispatch = useAppDispatch();
-    const { data: session, status } = useSession({ required: true });
+    const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const {
         loading: graphQLloading,

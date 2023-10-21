@@ -53,7 +53,11 @@ export default function Attachement({
             <p className="text-gray-500 tracking-widest text-sm mt-8 mb-3">
                 Attachments
             </p>
-            <AssetList task={task} handleDelete={handleDeleteAsset} />
+            <AssetList
+                task={task}
+                assets={task.assets}
+                handleDelete={handleDeleteAsset}
+            />
         </>
     );
 }

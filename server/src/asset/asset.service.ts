@@ -22,10 +22,9 @@ export class AssetService {
     private readonly teamRepository: Repository<Team>,
   ) {}
 
-  async listAssets(authUser: User): Promise<any> {
+  async listAssets(authUser: User, id?: number): Promise<Asset[]> {
     const team = await authUser.team;
-
-    return await this.assetRepository.find({
+    const options = {
       where: {
         project: {
           team: {
@@ -33,7 +32,11 @@ export class AssetService {
           },
         },
       },
-    });
+    };
+
+    id && (options.where.project['id'] = id);
+
+    return await this.assetRepository.find(options);
   }
 
   async createAssets({ task_id, assets }: CreateAssetDto): Promise<Asset[]> {

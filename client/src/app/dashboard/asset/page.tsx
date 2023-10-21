@@ -1,144 +1,45 @@
-import AssetListCard from "@/components/Dashboard/Asset/AssetListCard";
-import { AssetList as AssetListInterface } from "@/interfaces";
-import "@/styles/app/dashboard/asset.scss";
+"use client";
 
-const assetsList: AssetListInterface[] = [
-    {
-        title: "logo",
-        assets: [
-            {
-                src: "https://picsum.photos/id/100/400/400",
-                alt: "img logo",
-                type: "png",
-            },
-            {
-                src: "https://picsum.photos/id/200/400/400",
-                alt: "img logo 2",
-                type: "png",
-            },
-            {
-                src: "/videos/sample-video.webm",
-                alt: "video",
-                type: "mp4",
-            },
-        ],
-    },
-    {
-        title: "guideline",
-        assets: [
-            {
-                src: "https://picsum.photos/id/300/800/2500",
-                alt: "img guideline",
-                type: "png",
-            },
-            {
-                src: "https://www.behance.net/gallery/149948837/BRAND-GUIDELINES-BATODA-bakery",
-                alt: "link",
-                type: "link",
-            },
-            {
-                src: "/videos/sample.xlsx",
-                alt: "xlxx",
-                type: "xlxx",
-            },
-        ],
-    },
-    {
-        title: "fonts",
-        assets: [
-            {
-                src: "https://picsum.photos/id/40/400/400",
-                alt: "img fonts",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "colors",
-        assets: [
-            {
-                src: "https://picsum.photos/id/25/400/400",
-                alt: "img colors",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "Illustrations",
-        assets: [
-            {
-                src: "https://picsum.photos/id/16/400/400",
-                alt: "img Illustrations",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "UI{title:/UX",
-        assets: [
-            {
-                src: "https://picsum.photos/id/40/400/400",
-                alt: "img UI/UX 1",
-                type: "png",
-            },
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img UI/UX 2",
-                type: "png",
-            },
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img UI/UX3",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "References (Design you{title: like)",
-        assets: [
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img References",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "presentation",
-        assets: [
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img presentation",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "video",
-        assets: [
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img video",
-                type: "png",
-            },
-        ],
-    },
-    {
-        title: "others",
-        assets: [
-            {
-                src: "https://picsum.photos/id/400/400",
-                alt: "img others",
-                type: "png",
-            },
-        ],
-    },
-];
+import AssetListsContainer from "@/components/Dashboard/Asset/AssetListsContainer";
+import "@/styles/app/dashboard/asset.scss";
+import { getClient } from "@/utils/getClient";
+import { gql, useQuery } from "@apollo/client";
+import { useSession } from "next-auth/react";
+
+const LIST_ASSETS = gql`
+    query Query($id: String) {
+        listAssets(id: $id) {
+            id
+            src
+            alt
+            type
+            project {
+                id
+                title
+            }
+        }
+    }
+`;
 
 export default function Asset() {
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+    const {
+        loading: graphQLloading,
+        error,
+        data,
+    } = useQuery(LIST_ASSETS, { client, fetchPolicy: "no-cache" });
+
+    if (error) throw new Error();
+
     return (
-        <div className="asset-container flex justify-start flex-wrap">
-            <AssetListCard assetsList={assetsList} sortBy="categories" />
-        </div>
+        session &&
+        !graphQLloading &&
+        !error &&
+        data.listAssets && (
+            <div className="asset-container flex justify-start flex-wrap">
+                <AssetListsContainer sortBy="all" assets={data.listAssets} />
+            </div>
+        )
     );
 }
