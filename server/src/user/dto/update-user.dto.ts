@@ -1,7 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
   IsEmail,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -10,17 +9,17 @@ import {
 @InputType()
 export class UpdateUserDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Field(() => String, { nullable: true })
   avatar?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Field(() => String, { nullable: true })
   fullname?: string;
 
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   @Field(() => String, { nullable: true })
   email?: string;
 

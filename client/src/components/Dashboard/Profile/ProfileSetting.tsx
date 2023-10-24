@@ -37,6 +37,7 @@ export default function ProfileSetting({
     session: Session | null;
 }): ReactNode {
     const [loading, setLoading] = useState(false);
+    const [refreshAvatar, setRefreshAvatar] = useState(0);
     const [avatarLoading, setAvatarLoading] = useState(false);
     const [formData, setFormData] = useState({
         avatar: "",
@@ -56,11 +57,11 @@ export default function ProfileSetting({
     const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         setAvatarLoading(true);
 
-        const res = await uploadFiles(e, session);
-        setFormData((prevState: any) => ({
-            ...prevState,
-            avatar: res?.[0] || formData.avatar,
-        }));
+        const res = await uploadFiles(e, session, `avatars/${initialData.id}`);
+        if (res?.[0]?.s3Path?.Location) {
+            setRefreshAvatar((prevState) => prevState + 1);
+            toast.success("Avatar updated successfully");
+        }
 
         setAvatarLoading(false);
     };
@@ -102,15 +103,21 @@ export default function ProfileSetting({
         >
             <>
                 <div className="flex flex-row">
-                    <div className="basis-1/5 flex flex-col mr-16">
-                        {formData.avatar ? (
+                    <div className="basis-1/5 flex flex-col">
+                        {initialData.avatar ? (
                             <Image
-                                src={formData.avatar}
+                                src={`${formData.avatar}?refreshKey=${refreshAvatar}`}
                                 width="500"
                                 height="500"
                                 alt="profile"
                                 className="rounded-full mb-4"
-                                style={{ width: 150, height: 150 }}
+                                style={{
+                                    width: 150,
+                                    height: 150,
+                                    minWidth: 150,
+                                }}
+                                key={refreshAvatar}
+                                unoptimized
                             />
                         ) : (
                             <AccountCircleIcon
@@ -119,7 +126,7 @@ export default function ProfileSetting({
                         )}
 
                         {avatarLoading ? (
-                            <div className="w-full flex justify-center mt-1">
+                            <div className="w-full flex justify-center min-w-[160px]">
                                 <CircularProgress color="inherit" />
                             </div>
                         ) : (
@@ -140,7 +147,7 @@ export default function ProfileSetting({
                             </Button>
                         )}
                     </div>
-                    <div className="basis-4/5 flex flex-col">
+                    <div className="basis-4/5 flex flex-col ml-16">
                         <TextField
                             className="dashboard-input"
                             margin="normal"

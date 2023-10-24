@@ -8,13 +8,14 @@ export class UploadService {
 
   async uploadFiles(
     files: Express.Multer.File[],
+    path: string,
   ): Promise<ManagedUpload.SendData[]> {
     const filesPaths = [];
 
     for (const file of files) {
       const params = {
         Bucket: process.env.S3_BUCKET,
-        Key: String(file.originalname),
+        Key: String(path),
         Body: file.buffer,
         ACL: 'public-read',
         ContentType: file.mimetype,
