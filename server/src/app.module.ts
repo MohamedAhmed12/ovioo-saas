@@ -13,6 +13,7 @@ import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
 import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskType } from './task/task-type.entity';
+import { ChatModule } from './chat/chat.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ormConfig = require('../ormconfig.json');
@@ -25,6 +26,7 @@ const ormConfig = require('../ormconfig.json');
     TaskModule,
     AssetModule,
     ProjectModule,
+    ChatModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',

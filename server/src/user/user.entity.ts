@@ -17,6 +17,7 @@ import {
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { Task } from 'src/task/task.entity';
+import { Message } from 'src/chat/message.entity';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -79,6 +80,10 @@ export class User extends BaseEntity {
   @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
   @Field(() => Team)
   team: Team;
+
+  @OneToMany(() => Message, (message) => message.sender)
+  @Field(() => [Message])
+  messages: Message[];
 
   // as a designer not an owner
   @OneToMany(() => Task, (task) => task.designer)
