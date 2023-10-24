@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -53,6 +54,7 @@ export class Profile extends BaseEntity {
   updated_at: Date;
 
   @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
-  @Field(() => User, { defaultValue: null })
+  @JoinColumn({ name: 'user_id' })
+  @Field(() => User)
   user: User;
 }

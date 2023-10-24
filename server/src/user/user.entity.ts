@@ -1,6 +1,8 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcrypt';
+import { Message } from 'src/chat/message.entity';
 import { Profile } from 'src/profile/profile.entity';
+import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
 import {
   BaseEntity,
@@ -8,7 +10,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -16,8 +17,6 @@ import {
 } from 'typeorm';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
-import { Task } from 'src/task/task.entity';
-import { Message } from 'src/chat/message.entity';
 
 @Entity('users')
 @ObjectType({ description: 'users' })
@@ -62,10 +61,9 @@ export class User extends BaseEntity {
   updated_at: Date;
 
   @OneToOne(() => Profile, (profile) => profile.user, {
-    cascade: true,
     eager: true,
+    cascade: true,
   })
-  @JoinColumn()
   @Field(() => Profile)
   profile: Profile;
 
@@ -77,7 +75,10 @@ export class User extends BaseEntity {
   @Field(() => UserRoleEnum)
   role: UserRoleEnum;
 
-  @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
+  @ManyToOne(() => Team, (team) => team.members, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @Field(() => Team)
   team: Team;
 

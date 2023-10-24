@@ -29,7 +29,7 @@ export class Project extends BaseEntity {
   @Field(() => String)
   description: string;
 
-  @ManyToOne(() => Team, (team) => team.projects)
+  @ManyToOne(() => Team, (team) => team.projects, { onDelete: 'CASCADE' })
   @Field(() => Team)
   team: Team;
 
