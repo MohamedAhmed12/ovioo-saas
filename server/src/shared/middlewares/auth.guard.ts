@@ -23,11 +23,15 @@ export class AuthGuard implements CanActivate {
       return true;
     } else {
       const ctx: any = GqlExecutionContext.create(context).getContext();
-      if (!ctx?.req?.headers?.authorization) {
+      const authorization =
+        ctx?.req?.connectionParams?.Authorization ||
+        ctx?.req?.headers?.authorization;
+
+      if (!authorization) {
         return false;
       }
 
-      ctx.user = await this.validateToken(ctx.req.headers.authorization);
+      ctx.user = await this.validateToken(authorization);
       return true;
     }
   }
