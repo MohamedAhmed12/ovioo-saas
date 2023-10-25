@@ -1,12 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Project } from 'src/project/project.entity';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,22 +16,23 @@ export class Message extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column('text')
-  @Field(() => String)
+  @Column('text', { nullable: true })
+  @Field(() => String, { nullable: true })
   content: string;
 
   @Column('text', { nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   voice_note_src: string;
 
   @Column('text', { nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   asset_src: string;
 
-  @ManyToOne(() => User, (user) => user.messages, {
-    cascade: true,
-    nullable: true,
-  })
+  @ManyToOne(() => User, (user) => user.messages)
   @Field(() => User, { nullable: true })
   sender: User;
+
+  @ManyToOne(() => Task, (task) => task.messages, { onDelete: 'CASCADE' })
+  @Field(() => Task)
+  task: Task;
 }

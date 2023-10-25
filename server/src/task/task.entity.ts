@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Asset } from 'src/asset/asset.entity';
+import { Message } from 'src/chat/message.entity';
 import { Project } from 'src/project/project.entity';
 import { Team } from 'src/team/team.entity';
 import { User } from 'src/user/user.entity';
@@ -66,6 +67,13 @@ export class Task extends BaseEntity {
   })
   @Field(() => [Asset], { defaultValue: null })
   assets: Asset[];
+
+  @OneToMany(() => Message, (message) => message.task, {
+    cascade: true,
+    eager: true,
+  })
+  @Field(() => [Message], { nullable: true })
+  messages: Message[];
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })
   @Field(() => [Task], { nullable: true })

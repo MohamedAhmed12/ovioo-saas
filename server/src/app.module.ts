@@ -31,6 +31,9 @@ const ormConfig = require('../ormconfig.json');
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
       installSubscriptionHandlers: true,
+      subscriptions: {
+        'graphql-ws': true,
+      },
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),

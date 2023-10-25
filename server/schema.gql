@@ -22,13 +22,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""message"""
-type Message {
+"""teams"""
+type Team {
   id: ID!
-  content: String!
-  voice_note_src: String!
-  asset_src: String!
-  sender: User
+  name: String
+  owner_id: Float!
+  members: [User!]!
+  projects: [Project!]!
+  tasks: [Task!]!
 }
 
 """users"""
@@ -56,14 +57,14 @@ enum UserRoleEnum {
   Designer
 }
 
-"""teams"""
-type Team {
+"""message"""
+type Message {
   id: ID!
-  name: String
-  owner_id: Float!
-  members: [User!]!
-  projects: [Project!]!
-  tasks: [Task!]!
+  content: String
+  voice_note_src: String
+  asset_src: String
+  sender: User
+  task: Task!
 }
 
 type task_types {
@@ -85,6 +86,7 @@ type Task {
   team: Team!
   designer: User
   assets: [Asset!]!
+  messages: [Message!]
   subtasks: [Task!]
   parent: Task
 }
@@ -150,6 +152,7 @@ type Mutation {
   createProject(data: CreateProjectDto!): Project!
   updateProject(data: UpdateProjectDto!): Boolean!
   deleteProject(id: String!): Boolean!
+  sendMessage(data: SendMessageDto!): Message!
 }
 
 input LoginDto {
@@ -255,4 +258,20 @@ input UpdateProjectDto {
   title: String!
   description: String!
   id: String!
+}
+
+input SendMessageDto {
+  task_id: String!
+  content: String
+  voice_note_src: String
+  asset_src: String
+  sender_id: String
+}
+
+type Subscription {
+  messageSent(data: MessageSentSubscriptionDto!): Message!
+}
+
+input MessageSentSubscriptionDto {
+  task_id: String!
 }
