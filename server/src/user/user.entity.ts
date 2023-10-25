@@ -75,10 +75,7 @@ export class User extends BaseEntity {
   @Field(() => UserRoleEnum)
   role: UserRoleEnum;
 
-  @ManyToOne(() => Team, (team) => team.members, {
-    onDelete: 'CASCADE',
-    eager: true,
-  })
+  @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
   @Field(() => Team)
   team: Team;
 

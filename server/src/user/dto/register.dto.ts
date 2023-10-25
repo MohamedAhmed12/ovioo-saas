@@ -2,6 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import {
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   IsStrongPassword,
   MaxLength,
@@ -33,10 +34,12 @@ export class RegisterDto extends LoginDto {
   })
   password_confirmation: string;
 
+  @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
   company?: string;
 
+  @IsOptional()
   @IsNumber()
   @Field(() => Number, { nullable: true })
   phone?: number;

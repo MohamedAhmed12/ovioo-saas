@@ -190,7 +190,7 @@ export class UserService {
     data: DeleteMemberDto,
   ): Promise<boolean> {
     const currentUser: User = await this.me({ email, provider });
-    const member = await this.UserRepository.findOneBy({ id: +data.id });
+    const member = await this.UserRepository.findOneBy({ id: data.id });
 
     if (!member) throw new NotFoundException();
 

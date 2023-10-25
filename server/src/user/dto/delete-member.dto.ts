@@ -6,5 +6,5 @@ export class DeleteMemberDto {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-  id: string;
+  id: number;
 }
