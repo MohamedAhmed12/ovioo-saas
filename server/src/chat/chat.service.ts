@@ -18,6 +18,13 @@ export class ChatService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
+  async listMessages(id: number): Promise<Message[]> {
+    const task = await this.taskRepository.findOneBy({ id });
+    console.log(task.messages);
+    
+    return task.messages;
+  }
+
   async sendMessage(data: SendMessageDto): Promise<Message> {
     const msg = await this.messageRepository.create(data);
     msg.task = await this.getMsgTask(data.task_id);

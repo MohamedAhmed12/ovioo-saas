@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { ChatService } from './chat.service';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
@@ -11,6 +11,11 @@ export class ChatResolver {
 
   constructor(private readonly chatService: ChatService) {
     this.pubSub = new PubSub();
+  }
+
+  @Query(() => [Message])
+  async listMessages(@Args('task_id') taskId: string) {
+    return await this.chatService.listMessages(+taskId);
   }
 
   @Mutation(() => Message)

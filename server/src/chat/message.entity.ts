@@ -28,7 +28,7 @@ export class Message extends BaseEntity {
   @Field(() => String, { nullable: true })
   asset_src: string;
 
-  @ManyToOne(() => User, (user) => user.messages)
+  @ManyToOne(() => User, (user) => user.messages, { eager: true })
   @Field(() => User, { nullable: true })
   sender: User;
 

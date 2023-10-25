@@ -131,6 +131,7 @@ type Query {
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
+  listMessages(task_id: String!): [Message!]!
 }
 
 type Mutation {
