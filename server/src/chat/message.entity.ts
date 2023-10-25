@@ -4,7 +4,9 @@ import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,6 +35,15 @@ export class Message extends BaseEntity {
   sender: User;
 
   @ManyToOne(() => Task, (task) => task.messages, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'taskId' })
   @Field(() => Task)
   task: Task;
+
+  @CreateDateColumn()
+  @Field()
+  created_at: Date;
+
+  @CreateDateColumn()
+  @Field()
+  updated_at: Date;
 }

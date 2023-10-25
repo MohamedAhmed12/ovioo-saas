@@ -65,6 +65,8 @@ type Message {
   asset_src: String
   sender: User
   task: Task!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 type task_types {
@@ -131,7 +133,13 @@ type Query {
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
-  listMessages(task_id: String!): [Message!]!
+  listMessages(data: ListMessageDto!): [Message!]!
+}
+
+input ListMessageDto {
+  task_id: String!
+  page: Float!
+  limit: Float
 }
 
 type Mutation {
@@ -266,7 +274,6 @@ input SendMessageDto {
   content: String
   voice_note_src: String
   asset_src: String
-  sender_id: String
 }
 
 type Subscription {

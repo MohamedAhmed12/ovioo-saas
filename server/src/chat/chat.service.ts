@@ -4,6 +4,7 @@ import { GraphQLError } from 'graphql';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
+import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { Message } from './message.entity';
 
@@ -18,17 +19,25 @@ export class ChatService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async listMessages(id: number): Promise<Message[]> {
-    const task = await this.taskRepository.findOneBy({ id });
-    console.log(task.messages);
-    
-    return task.messages;
+  async listMessages({
+    page = 0,
+    limit = 10,
+    task_id,
+  }: ListMessageDto): Promise<Message[]> {
+    return this.messageRepository
+      .createQueryBuilder('messages')
+      .leftJoin('messages.task', 'task')
+      .where('task.id = :task_id', { task_id })
+      .orderBy('messages.created_at', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
   }
 
-  async sendMessage(data: SendMessageDto): Promise<Message> {
+  async sendMessage(authUser: User, data: SendMessageDto): Promise<Message> {
     const msg = await this.messageRepository.create(data);
     msg.task = await this.getMsgTask(data.task_id);
-    msg.sender = await this.getMsgSender(data.sender_id);
+    msg.sender = await this.getMsgSender(authUser.id);
 
     return await this.messageRepository.save(msg);
   }

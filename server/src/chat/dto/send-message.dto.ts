@@ -18,9 +18,4 @@ export class SendMessageDto extends MessageSentSubscriptionDto {
   @IsString()
   @Field(() => String, { nullable: true })
   asset_src?: string;
-
-  @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  sender_id?: number;
 }

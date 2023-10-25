@@ -1,9 +1,20 @@
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { ChatService } from './chat.service';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { Message } from './message.entity';
+import { ListMessageDto } from './dto/list-message.dto';
+import { AuthGuard } from 'src/shared/middlewares/auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { User } from 'src/user/user.entity';
 
 @Resolver(() => Message)
 export class ChatResolver {
@@ -13,19 +24,25 @@ export class ChatResolver {
     this.pubSub = new PubSub();
   }
 
+  @UseGuards(AuthGuard)
   @Query(() => [Message])
-  async listMessages(@Args('task_id') taskId: string) {
-    return await this.chatService.listMessages(+taskId);
+  async listMessages(@Args('data') data: ListMessageDto) {
+    return await this.chatService.listMessages(data);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Message)
-  async sendMessage(@Args('data') data: SendMessageDto) {
-    const message = await this.chatService.sendMessage(data);
+  async sendMessage(
+    @Context('user') authUser: User,
+    @Args('data') data: SendMessageDto,
+  ) {
+    const message = await this.chatService.sendMessage(authUser, data);
     this.pubSub.publish('messageSent', { messageSent: message });
 
     return message;
   }
 
+  @UseGuards(AuthGuard)
   @Subscription((returns) => Message, {
     filter: (payload: any, variables: any) =>
       payload.messageSent.task.id == variables.data.task_id,
