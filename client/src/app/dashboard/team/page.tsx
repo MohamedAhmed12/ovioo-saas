@@ -10,7 +10,7 @@ const GET_TEAM = gql`
         getTeam {
             id
             owner_id
-            users {
+            members {
                 id
                 fullname
                 avatar

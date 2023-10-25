@@ -1,7 +1,7 @@
 import OviooTable from "@/components/Dashboard/Layout/OviooTable";
 import SubscriptionCard from "@/components/Dashboard/Payment/SubscriptionCard";
-import DownloadIcon from "@mui/icons-material/Download";
 import { Button, TableCell } from "@mui/material";
+import { IoMdDownload } from "react-icons/io";
 
 const headers = ["plan", "unit cost", "quantity", "amount"];
 const rows = [
@@ -39,7 +39,7 @@ export default function Payment() {
                             type="submit"
                             className="dashboard__link bg-transparent shadow-none hover:bg-transparent hover:shadow-none font-semibold"
                         >
-                            <DownloadIcon />
+                            <IoMdDownload />
                             Download
                         </Button>
                     </TableCell>

@@ -1,7 +1,7 @@
 "use client";
 
-import EastIcon from "@mui/icons-material/East";
 import { Button } from "@mui/material";
+import { FaArrowLeftLong } from "react-icons/fa6";
 import Carousel from "../Carousel";
 
 export const PortfolioSection = () => (
@@ -20,7 +20,10 @@ export const PortfolioSection = () => (
                 </h3>
             }
         />
-        <a href="/portfolio" className="portfolio-wrap w-inline-block flex justify-center mt-20">
+        <a
+            href="/portfolio"
+            className="portfolio-wrap w-inline-block flex justify-center mt-20"
+        >
             <div className="portfolio-button w-64 h-14">
                 <Button
                     variant="outlined"
@@ -37,7 +40,7 @@ export const PortfolioSection = () => (
                 >
                     view portfolio
                     <div className="ml-2">
-                        <EastIcon />
+                        <FaArrowLeftLong />
                     </div>
                 </Button>
             </div>

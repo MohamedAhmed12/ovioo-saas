@@ -1,13 +1,23 @@
 "use client";
 
 import "@/styles/components/dashboard/layout/ovioo-table.scss";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { IconButton } from "@mui/joy";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import { ReactNode, useState } from "react";
+import {
+    MdArrowDropDown,
+    MdKeyboardArrowLeft,
+    MdKeyboardArrowRight,
+} from "react-icons/md";
 
 export default function OviooTable({
     headers,
@@ -21,7 +31,8 @@ export default function OviooTable({
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    const emptyRows =
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -40,11 +51,17 @@ export default function OviooTable({
     return (
         <Paper className="ovioo-table flex flex-col">
             <TableContainer component={Paper}>
-                <Table aria-label="simple table" className="ovioo-card with-shadow bg-white">
+                <Table
+                    aria-label="simple table"
+                    className="ovioo-card with-shadow bg-white"
+                >
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell key={header} className="uppercase font-semibold">
+                                <TableCell
+                                    key={header}
+                                    className="uppercase font-semibold"
+                                >
                                     {header}
                                 </TableCell>
                             ))}
@@ -54,12 +71,17 @@ export default function OviooTable({
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0
-                            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ? rows.slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage
+                              )
                             : rows
                         ).map((row, rowIndex) => (
                             <TableRow key={rowIndex + "-row"}>
                                 {Object.values(row).map((cell, cellIndex) => (
-                                    <TableCell key={`${cellIndex}-${headers[cellIndex]}-cell`}>
+                                    <TableCell
+                                        key={`${cellIndex}-${headers[cellIndex]}-cell`}
+                                    >
                                         {String(cell)}
                                     </TableCell>
                                 ))}
@@ -85,26 +107,46 @@ export default function OviooTable({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 SelectProps={{
                     IconComponent: () => (
-                        <ArrowDropDownIcon onChange={() => handleChangeRowsPerPage} />
+                        <MdArrowDropDown
+                            onChange={() => handleChangeRowsPerPage}
+                            style={{
+                                width: "100%",
+                                height: 25,
+                                cursor: "pointer",
+                            }}
+                        />
                     ),
                 }}
                 page={page}
                 onPageChange={handleChangePage}
-                ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => (
+                ActionsComponent={({
+                    count,
+                    page,
+                    rowsPerPage,
+                    onPageChange,
+                }) => (
                     <div className="flex">
                         <IconButton
                             onClick={() => onPageChange(null, page - 1)}
                             disabled={page === 0}
                             aria-label="Previous Page"
                         >
-                            <KeyboardArrowLeft className="dark:text-white" />
+                            <MdKeyboardArrowLeft
+                                className="dark:text-white"
+                                size="24"
+                            />
                         </IconButton>
                         <IconButton
                             onClick={() => onPageChange(null, page + 1)}
-                            disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                            disabled={
+                                page >= Math.ceil(count / rowsPerPage) - 1
+                            }
                             aria-label="Next Page"
                         >
-                            <KeyboardArrowRight className="dark:text-white" />
+                            <MdKeyboardArrowRight
+                                className="dark:text-white"
+                                size="24"
+                            />
                         </IconButton>
                     </div>
                 )}

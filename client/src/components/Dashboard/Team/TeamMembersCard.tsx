@@ -5,7 +5,6 @@ import { useAppSelector } from "@/hooks/redux";
 import { Member, Team } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
-import StarIcon from "@mui/icons-material/Star";
 import Dropdown from "@mui/joy/Dropdown";
 import IconButton from "@mui/joy/IconButton";
 import Menu from "@mui/joy/Menu";
@@ -15,9 +14,8 @@ import { Avatar, Stack } from "@mui/material";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import EditIcon from "@mui/icons-material/Edit";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IoMdMore } from "react-icons/io";
+import { MdEdit, MdFileCopy, MdStar } from "react-icons/md";
 
 const DELETE_MEMBER = gql`
     mutation ($member: DeleteMemberDto!) {
@@ -57,7 +55,9 @@ export default function TeamMembersCard({
                 },
             });
             router.refresh();
-            toast.success("The selected member has been nominated by the owner.");
+            toast.success(
+                "The selected member has been nominated by the owner."
+            );
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
@@ -93,8 +93,13 @@ export default function TeamMembersCard({
                             className="mt-4"
                         >
                             <span className="flex items-center">
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                <p className="mx-4 text-xs lg:text-base">{member.fullname}</p>
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    src="/static/images/avatar/1.jpg"
+                                />
+                                <p className="mx-4 text-xs lg:text-base">
+                                    {member.fullname}
+                                </p>
                             </span>
 
                             {member.id == team.owner_id ? (
@@ -106,10 +111,13 @@ export default function TeamMembersCard({
                                     >
                                         owner
                                     </span>
-                                    <StarIcon
+                                    <MdStar
                                         className="!w-7"
-                                        sx={{ fontSize: "1.35rem", lineHeight: "1.75rem" }}
-                                    ></StarIcon>
+                                        style={{
+                                            fontSize: "1.35rem",
+                                            lineHeight: "1.75rem",
+                                        }}
+                                    />
                                 </span>
                             ) : (
                                 <span className="flex items-center">
@@ -126,7 +134,10 @@ export default function TeamMembersCard({
                                             <MenuButton
                                                 slots={{ root: IconButton }}
                                                 slotProps={{
-                                                    root: { variant: "outlined", color: "neutral" },
+                                                    root: {
+                                                        variant: "outlined",
+                                                        color: "neutral",
+                                                    },
                                                 }}
                                                 sx={{
                                                     color: "rgb(148 163 184)",
@@ -134,7 +145,7 @@ export default function TeamMembersCard({
                                                 }}
                                                 className="!border-none hover:!bg-transparent !p-0"
                                             >
-                                                <MoreVertIcon />
+                                                <IoMdMore />
                                             </MenuButton>
                                             <Menu
                                                 slotProps={{
@@ -146,19 +157,28 @@ export default function TeamMembersCard({
                                             >
                                                 <MenuItem
                                                     onClick={() =>
-                                                        handleTransferOwnership(member.id)
+                                                        handleTransferOwnership(
+                                                            member.id
+                                                        )
                                                     }
                                                     className={`!text-blue-500 hover:!brightness-125 hover:!bg-transparent`}
                                                 >
-                                                    <EditIcon fontSize="small" className="mr-3" />
+                                                    <MdEdit
+                                                        size="20"
+                                                        className="mr-3"
+                                                    />
                                                     Transfer Ownership
                                                 </MenuItem>
                                                 <MenuItem
-                                                    onClick={() => handleRemoveMember(member.id)}
+                                                    onClick={() =>
+                                                        handleRemoveMember(
+                                                            member.id
+                                                        )
+                                                    }
                                                     className={`!text-red-500 hover:!brightness-125 hover:!bg-transparent`}
                                                 >
-                                                    <FileCopyIcon
-                                                        fontSize="small"
+                                                    <MdFileCopy
+                                                        size="20"
                                                         className="mr-3"
                                                     />
                                                     Remove member

@@ -4,12 +4,12 @@ import { useForm } from "@/hooks/useForm";
 import { Project as ProjectInterface } from "@/interfaces";
 import { pushNewProject, replaceProject } from "@/store/features/project";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import EastIcon from "@mui/icons-material/East";
 import { Box, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Image from "next/image";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FaArrowRight } from "react-icons/fa6";
 
 const CREATE_PROJECT = gql`
     mutation ($data: CreateProjectDto!) {
@@ -31,12 +31,12 @@ export default function AddNewProjectCardModal({
     open,
     handleToggleModal,
     client,
-    projectToEdit
+    projectToEdit,
 }: {
     open: boolean;
     handleToggleModal: () => void;
     client: ApolloClient<any> | undefined;
-    projectToEdit: ProjectInterface | {}
+    projectToEdit: ProjectInterface | {};
 }) {
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -71,7 +71,7 @@ export default function AddNewProjectCardModal({
 
             dispatch(pushNewProject(data.createProject));
             data && toast.success("Project created successfully");
-            handleClose()
+            handleClose();
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
@@ -85,14 +85,17 @@ export default function AddNewProjectCardModal({
         try {
             const { data } = await updateProject({
                 variables: {
-                    data: { id: (projectToEdit as ProjectInterface).id, ...formData },
+                    data: {
+                        id: (projectToEdit as ProjectInterface).id,
+                        ...formData,
+                    },
                 },
             });
 
             if (data.updateProject) {
-                dispatch(replaceProject({ id: projectToEdit.id, ...formData}));
+                dispatch(replaceProject({ id: projectToEdit.id, ...formData }));
                 data && toast.success("Project edited successfully");
-                handleClose()
+                handleClose();
             }
         } catch (e: any) {
             toast.error("Something went wrong!");
@@ -100,14 +103,13 @@ export default function AddNewProjectCardModal({
         setLoading(false);
     };
 
-
     const handleClose = () => {
-        handleToggleModal()
+        handleToggleModal();
         setFormData({
             title: "",
             description: "",
         });
-    }
+    };
 
     return (
         <Modal
@@ -120,7 +122,12 @@ export default function AddNewProjectCardModal({
             <Box>
                 <DashBoardCard
                     headerTitle="add new project"
-                    style={{ maxWidth: 500, padding: "45px 40px", margin: 0, maxHeight: 480 }}
+                    style={{
+                        maxWidth: 500,
+                        padding: "45px 40px",
+                        margin: 0,
+                        maxHeight: 480,
+                    }}
                     handleSubmit={projectToEdit ? handleEdit : handleCreate}
                 >
                     <>
@@ -170,10 +177,12 @@ export default function AddNewProjectCardModal({
                         <div className="flex w-full justify-end">
                             <button
                                 type="submit"
-                                className="dashboard__btn capitalize px-9 py-3 font-bold tracking-wider rounded-[4px]"
+                                className="dashboard__btn capitalize px-8 py-3 font-bold tracking-wider rounded-[4px]"
                             >
-                                {projectToEdit ? "edit project" : "create project"}
-                                <EastIcon className="dark:text-white ml-2 !text-base lg:!text-2xl" />
+                                {projectToEdit
+                                    ? "edit project"
+                                    : "create project"}
+                                <FaArrowRight className="dark:text-white ml-2 !text-base lg:!text-xl inline-block" />
                             </button>
                         </div>
                     </>

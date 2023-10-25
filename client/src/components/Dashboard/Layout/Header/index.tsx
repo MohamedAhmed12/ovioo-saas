@@ -2,11 +2,10 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { ModeEnum } from "@/interfaces/store/main";
 import { setMode } from "@/store/features/main";
 import "@/styles/components/dashboard/layout/header/index.scss";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import MenuIcon from "@mui/icons-material/Menu";
 import { IconButton } from "@mui/joy";
 import { AppBar, Box, Stack, Toolbar } from "@mui/material";
+import { AiOutlineMenu } from "react-icons/ai";
+import { FaMoon, FaSun } from "react-icons/fa6";
 import AccountPopover from "./AccountPopover";
 import NotificationsPopover from "./Notification/NotificationsPopover";
 
@@ -21,7 +20,10 @@ export default function DashboardHeader({
     const dispatch = useAppDispatch();
 
     return (
-        <AppBar className="dashboard__header dark:dark-mode" position="absolute">
+        <AppBar
+            className="dashboard__header dark:dark-mode"
+            position="absolute"
+        >
             <Toolbar>
                 {!openNav && (
                     <IconButton
@@ -32,7 +34,7 @@ export default function DashboardHeader({
                         }}
                         className="hamburger-btn toolbar-icon"
                     >
-                        <MenuIcon />
+                        <AiOutlineMenu />
                     </IconButton>
                 )}
                 <Box sx={{ flexGrow: 1 }} />
@@ -48,11 +50,19 @@ export default function DashboardHeader({
                         className="mode-toggle-btn toolbar-icon"
                         onClick={() =>
                             dispatch(
-                                setMode(mode === ModeEnum.Dark ? ModeEnum.Light : ModeEnum.Dark)
+                                setMode(
+                                    mode === ModeEnum.Dark
+                                        ? ModeEnum.Light
+                                        : ModeEnum.Dark
+                                )
                             )
                         }
                     >
-                        {mode === ModeEnum.Dark ? <Brightness7Icon /> : <Brightness4Icon />}
+                        {mode === ModeEnum.Dark ? (
+                            <FaSun size="22" />
+                        ) : (
+                            <FaMoon size="22" />
+                        )}
                     </IconButton>
                     <NotificationsPopover />
                     <AccountPopover />

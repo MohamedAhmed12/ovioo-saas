@@ -1,7 +1,5 @@
 "use client";
 
-import Check from "@mui/icons-material/Check";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
@@ -11,6 +9,7 @@ import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import JoyTypography from "@mui/joy/Typography";
+import { FaCheck, FaChevronRight } from "react-icons/fa6";
 
 export default function PlansCard({
     bgColor,
@@ -42,7 +41,6 @@ export default function PlansCard({
                 <div className="w-52 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 transform rotate-[30deg] absolute top-[26px] right-[-38px] z-90 text-center font-semibold">
                     {tag}
                 </div>
-
             )}
 
             <div className="title flex flex-row justify-start">
@@ -84,11 +82,14 @@ export default function PlansCard({
                 </JoyTypography>
             </div>
             <Divider inset="none" />
-            <List size="sm" sx={{ mx: "calc(-1 * var(--ListItem-paddingX))", fontSize: 19 }}>
+            <List
+                size="sm"
+                sx={{ mx: "calc(-1 * var(--ListItem-paddingX))", fontSize: 19 }}
+            >
                 {includes.map((include: string, index: number) => (
                     <ListItem key={index}>
                         <ListItemDecorator>
-                            <Check />
+                            <FaCheck />
                         </ListItemDecorator>
                         {include}
                     </ListItem>
@@ -108,7 +109,7 @@ export default function PlansCard({
                 </JoyTypography>
                 <Button
                     variant="soft"
-                    endDecorator={<KeyboardArrowRight />}
+                    endDecorator={<FaChevronRight />}
                     className={bgColor ? "text-white" : "text-neutral-700"}
                 >
                     Start now

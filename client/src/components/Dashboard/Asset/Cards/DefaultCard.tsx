@@ -2,9 +2,9 @@
 
 import { Asset as AssetInterface } from "@/interfaces";
 import "@/styles/components/dashboard/asset/cards/default-card.scss";
-import LinkIcon from "@mui/icons-material/Link";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import DownloadIcon from "@mui/icons-material/Download";
+import { AiOutlineLink } from "react-icons/ai";
+import { IoMdDownload } from "react-icons/io";
+import { TbExternalLink } from "react-icons/tb";
 
 export default function DefaultCard({ asset }: { asset: AssetInterface }) {
     return (
@@ -16,9 +16,11 @@ export default function DefaultCard({ asset }: { asset: AssetInterface }) {
         >
             <div className="h-full w-full flex justify-center items-center truncate px-3">
                 {asset.type == "link" ? (
-                    <LinkIcon className="!text-8xl m-auto rotate-[135deg]" />
+                    <AiOutlineLink className="mt-8" style={{ fontSize: 38 }} />
                 ) : (
-                    <span className="default-card__text truncate">{asset.alt}</span>
+                    <span className="default-card__text truncate">
+                        {asset.alt}
+                    </span>
                 )}
             </div>
 
@@ -27,12 +29,20 @@ export default function DefaultCard({ asset }: { asset: AssetInterface }) {
             <div className="assets__default-card__content flex flex-col opacity-0">
                 <div className="h-full w-full flex justify-center items-center">
                     {asset.type == "link" ? (
-                        <OpenInNewIcon fontSize="large" className="mt-10" />
+                        <TbExternalLink
+                            className="mt-8"
+                            style={{ fontSize: 36 }}
+                        />
                     ) : (
-                        <DownloadIcon fontSize="large" className="mt-10" />
+                        <IoMdDownload
+                            className="mt-8"
+                            style={{ fontSize: 36 }}
+                        />
                     )}
                 </div>
-                <span className="px-4 pb-4 w-full text-start truncate">{asset.alt}</span>
+                <span className="px-4 pb-4 w-full text-start truncate">
+                    {asset.alt}
+                </span>
             </div>
         </a>
     );

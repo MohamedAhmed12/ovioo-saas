@@ -6,11 +6,11 @@ import {
 import "@/styles/components/dashboard/asset/asset-list.scss";
 import { ObjectHasVal } from "@/utils/helpers";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Card from "@mui/joy/Card";
 import { CardHeader, IconButton, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { IoMdMore } from "react-icons/io";
 import LinkAssetCard from "./Cards/DefaultCard";
 import MediaCard from "./Cards/MediaCard";
 
@@ -75,7 +75,7 @@ export default function AssetWrapper({
             <CardHeader
                 action={
                     <IconButton aria-label="settings" onClick={handleOpenMenu}>
-                        <MoreVertIcon />
+                        <IoMdMore className="font-bold" />
                     </IconButton>
                 }
                 className="absolute z-[100] !p-3 right-[1px] top-[1px] !bg-transparent"

@@ -1,10 +1,18 @@
 import "@/styles/components/dashboard/layout/navbar.scss";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import TaskIcon from "@mui/icons-material/Task";
-import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import {
+    Box,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import {
+    MdAttachMoney,
+    MdProductionQuantityLimits,
+    MdTask,
+} from "react-icons/md";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import NavbarWrapper from "./NavbarWrapper";
@@ -13,22 +21,22 @@ const navConfig = [
     {
         title: "Tasks",
         url: "/dashboard/task",
-        icon: <TaskIcon />,
+        icon: <MdTask size="25" />,
     },
     {
         title: "My assets",
         url: "/dashboard/asset",
-        icon: <ProductionQuantityLimitsIcon />,
+        icon: <MdProductionQuantityLimits size="25" />,
     },
     {
         title: "projects",
         url: "/dashboard/project",
-        icon: <ProductionQuantityLimitsIcon />,
+        icon: <MdProductionQuantityLimits size="25" />,
     },
     {
         title: "Credit",
         url: "/dashboard/payment",
-        icon: <AttachMoneyIcon />,
+        icon: <MdAttachMoney size="25" />,
     },
 ];
 
@@ -54,9 +62,15 @@ export default function Navbar({
                 <List disablePadding className=" dark:text-white">
                     {navConfig.map(({ title, url, icon }) => (
                         <Link href={url} key={title}>
-                            <ListItemButton disableGutters className="navItem text-inherit">
+                            <ListItemButton
+                                disableGutters
+                                className="navItem text-inherit"
+                            >
                                 <ListItemIcon>{icon && icon}</ListItemIcon>
-                                <ListItemText disableTypography primary={title} />
+                                <ListItemText
+                                    disableTypography
+                                    primary={title}
+                                />
                             </ListItemButton>
                         </Link>
                     ))}
@@ -67,5 +81,11 @@ export default function Navbar({
         </SimpleBar>
     );
 
-    return <NavbarWrapper content={renderContent} openNav={openNav} onCloseNav={onCloseNav} />;
+    return (
+        <NavbarWrapper
+            content={renderContent}
+            openNav={openNav}
+            onCloseNav={onCloseNav}
+        />
+    );
 }

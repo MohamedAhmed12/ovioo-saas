@@ -5,8 +5,7 @@ import { useInput } from "@/hooks/useInput";
 import { AuthProviderEnum } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql } from "@apollo/client";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Button as JoyButton } from "@mui/joy";
 import { IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
@@ -128,7 +127,7 @@ export default function RegisterForm() {
                                     onClick={() => setShowPassword(!showPassword)}
                                     edge="end"
                                 >
-                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
                                 </IconButton>
                             </InputAdornment>
                         ),
@@ -152,9 +151,9 @@ export default function RegisterForm() {
                                     edge="end"
                                 >
                                     {showPasswordConfirmation ? (
-                                        <VisibilityIcon />
+                                        <AiFillEye />
                                     ) : (
-                                        <VisibilityOffIcon />
+                                        <AiFillEyeInvisible />
                                     )}
                                 </IconButton>
                             </InputAdornment>

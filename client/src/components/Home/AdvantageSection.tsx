@@ -1,11 +1,11 @@
 "use client";
 
 import "@/styles/components/home/adv-section.scss";
-import CloseIcon from "@mui/icons-material/Close";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import { Box, Paper } from "@mui/material";
 import Image from "next/image";
+import { FaXmark } from "react-icons/fa6";
 
 export const AdvantageSection = () => {
     const disAdvantages: string[] = [
@@ -29,7 +29,9 @@ export const AdvantageSection = () => {
                             <h1 className="text-white text-3xl lg:text-5xl font-bold mb-5">
                                 Your design work should be simple
                             </h1>
-                            <p className="text-lg lg:text-2xl text-white">Say goodbye to...</p>
+                            <p className="text-lg lg:text-2xl text-white">
+                                Say goodbye to...
+                            </p>
                             <Image
                                 src="/svg/astronuat-sleeping.svg"
                                 loading="lazy"
@@ -42,8 +44,12 @@ export const AdvantageSection = () => {
                 </div>
                 <Box className="flex flex-col basis-1/2 paper-box justify-center lg:justify-end content-start">
                     {disAdvantages.map((disAdv, index) => (
-                        <Paper key={index} elevation={5} className="flex items-center rounded-md">
-                            <CloseIcon className="mr-2" color="error" />
+                        <Paper
+                            key={index}
+                            elevation={5}
+                            className="flex items-center rounded-md"
+                        >
+                            <FaXmark className="mr-2 text-red-800" />
                             {disAdv}
                         </Paper>
                     ))}

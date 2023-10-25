@@ -5,12 +5,11 @@ import { TaskInterface, TaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Avatar, IconButton } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { MdAccountCircle, MdDelete } from "react-icons/md";
 import OviooDropDown from "../../OviooDropDown";
 
 const DELETE_TASK = gql`
@@ -81,12 +80,12 @@ export default function TaskModalHeader({
                         src={task?.designer?.avatar}
                     />
                 ) : (
-                    <AccountCircleIcon className="!text-[60px]" />
+                    <MdAccountCircle className="!text-[60px]" />
                 )}
             </div>
             <div className="basis-1/2 flex justify-end px-[25px] lg:items-center">
                 <IconButton onClick={setOpenDeleteModal}>
-                    <DeleteOutlineIcon color="error" fontSize="large" />
+                    <MdDelete className="text-red-600 text-4xl" />
                 </IconButton>
             </div>
             {isDeleteModalOpen && (

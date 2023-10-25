@@ -2,12 +2,12 @@
 
 import { FAQ as FAQInterface } from "@/interfaces";
 import "@/styles/components/faq.scss";
-import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import { SyntheticEvent, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
 
 export default function FAQ({ faq }: { faq: FAQInterface[] }) {
     const [expanded, setExpanded] = useState<number | false>(false);
@@ -31,7 +31,7 @@ export default function FAQ({ faq }: { faq: FAQInterface[] }) {
                             className="cursor-pointer justify-center flex-col p-0"
                         >
                             <AccordionSummary
-                                expandIcon={<AddIcon style={{ color: "white" }} />}
+                                expandIcon={<FaPlus className="text-white hover:text-[#fee4a5]" size="24"/>}
                                 aria-controls="panel1bh-content"
                                 id="panel1bh-header"
                             >

@@ -2,12 +2,12 @@ import { TaskTypeInterface } from "@/interfaces";
 import "@/styles/components/dashboard/task-type-dropdown.scss";
 import { getClient } from "@/utils/getClient";
 import { ApolloClient, gql, useQuery } from "@apollo/client";
-import InfoIcon from "@mui/icons-material/Info";
-import WarningIcon from "@mui/icons-material/Warning";
-import { Tooltip } from "@mui/material";
+import { Icon, Tooltip } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { BsInfoCircleFill } from "react-icons/bs";
+import { MdWarning } from "react-icons/md";
 import OviooDropDownWrapper from "./OviooDropDownWrapper";
 
 const LIST_TASK_TYPES = gql`
@@ -30,7 +30,7 @@ export default function TaskTypeDropDown({
     onSelected: (selectedVal: string) => void;
     client?: ApolloClient<any> | undefined;
     initialVal?: string | number;
-}) {    
+}) {
     const { data: session } = useSession({ required: true });
     client = client || getClient(session);
 
@@ -56,7 +56,7 @@ export default function TaskTypeDropDown({
                 ))}
                 {extraInfo && (
                     <span className="flex mt-4 mb-3 text-[13px]">
-                        <WarningIcon className="mr-2" fontSize="small" />
+                        <MdWarning className="mr-2" size="30" />
                         {extraInfo}
                     </span>
                 )}
@@ -105,7 +105,9 @@ export default function TaskTypeDropDown({
 
                             <span className="task-type__option-text basis-[10%] ml-2">
                                 <Tooltip title={infoComponent(info, extraInfo)}>
-                                    <InfoIcon />
+                                    <Icon>
+                                        <BsInfoCircleFill size="20" />
+                                    </Icon>
                                 </Tooltip>
                             </span>
                         </MenuItem>

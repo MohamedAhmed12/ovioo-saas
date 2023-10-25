@@ -356,13 +356,6 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.14.6.tgz#8cbc3441a630e1810a945e408e5025bdc99ea2f7"
   integrity sha512-QZEU3pyGWLuaHbxvOlShol7U1FVgzWBR0OH9H8D7L8w4/vto5N5jJVvlqFQS3T0zbR6YGHxFaiL6Ky87jQg7aw==
 
-"@mui/icons-material@^5.14.3":
-  version "5.14.3"
-  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.14.3.tgz#26a84d52ab2fceea2856adf7a139527b3a51ae90"
-  integrity sha512-XkxWPhageu1OPUm2LWjo5XqeQ0t2xfGe8EiLkRW9oz2LHMMZmijvCxulhgquUVTF1DnoSh+3KoDLSsoAFtVNVw==
-  dependencies:
-    "@babel/runtime" "^7.22.6"
-
 "@mui/joy@^5.0.0-beta.3":
   version "5.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@mui/joy/-/joy-5.0.0-beta.3.tgz#f256877e4d0a9ab06e8ef75c0de1a46e0a6359ec"
@@ -2829,6 +2822,11 @@ react-html-parser@^2.0.2:
   integrity sha512-XeerLwCVjTs3njZcgCOeDUqLgNIt/t+6Jgi5/qPsO/krUWl76kWKXMeVs2LhY2gwM6X378DkhLjur0zUQdpz0g==
   dependencies:
     htmlparser2 "^3.9.0"
+
+react-icons@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.11.0.tgz#4b0e31c9bfc919608095cc429c4f1846f4d66c65"
+  integrity sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

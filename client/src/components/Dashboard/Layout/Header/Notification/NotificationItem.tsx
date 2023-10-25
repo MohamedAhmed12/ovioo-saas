@@ -1,10 +1,14 @@
 import { Notification as NotificationInterface } from "@/interfaces/notification";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
 import { fToNow } from "@/utils/formatTime";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import { Avatar, ListItemAvatar, ListItemButton, ListItemText, Typography } from "@mui/material";
-
+import {
+    Avatar,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemText,
+    Typography,
+} from "@mui/material";
+import { MdAccessTime, MdProductionQuantityLimits } from "react-icons/md";
 export default function NotificationItem({
     key,
     notification,
@@ -17,7 +21,11 @@ export default function NotificationItem({
     const title = (
         <Typography variant="subtitle2">
             {notification.title}
-            <Typography component="span" variant="body2" sx={{ color: "text.secondary" }}>
+            <Typography
+                component="span"
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+            >
                 &nbsp; {notification.description}
             </Typography>
         </Typography>
@@ -31,14 +39,14 @@ export default function NotificationItem({
                 mt: "1px",
                 ...(notification.isUnRead && {
                     bgcolor: "action.selected",
-                })
+                }),
             }}
             key={key}
             onClick={() => onClick}
         >
             <ListItemAvatar>
                 <Avatar sx={{ bgcolor: "background.neutral" }}>
-                    <ProductionQuantityLimitsIcon />
+                    <MdProductionQuantityLimits />
                 </Avatar>
             </ListItemAvatar>
             <ListItemText
@@ -53,7 +61,7 @@ export default function NotificationItem({
                             color: "text.disabled",
                         }}
                     >
-                        <AccessTimeIcon className="mr-2" />
+                        <MdAccessTime className="mr-2" />
                         {fToNow(notification.createdAt)}
                     </Typography>
                 }

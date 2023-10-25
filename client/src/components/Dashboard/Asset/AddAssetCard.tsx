@@ -1,6 +1,6 @@
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
+import { FaFileMedical } from "react-icons/fa6";
 
 import { ChangeEvent } from "react";
 
@@ -23,7 +23,7 @@ export default function AddAssetCard({
                 <CircularProgress color="inherit" />
             ) : (
                 <>
-                    <NoteAddIcon sx={{ fontSize: 60 }} />
+                    <FaFileMedical size="60" />
                     <h3 className="text-base capitalize font-bold tracking-wider mt-2">
                         new file
                     </h3>

@@ -1,9 +1,9 @@
 "use client";
 
 import "@/styles/components/home/intro-container.scss";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import GetStartedBtns from "../GetStartedBtns";
 import Image from "next/image";
+import { FcLike } from "react-icons/fc";
+import GetStartedBtns from "../GetStartedBtns";
 
 export const IntroContainer = () => (
     <div className="xl:container intro-container text-center">
@@ -13,8 +13,8 @@ export const IntroContainer = () => (
             <strong>for one fixed monthly fee</strong>
         </h1>
         <p className="subtitle mt-5">
-            We match your business with a pro designer. You get design tasks done every business
-            day. <FavoriteIcon color="error" />
+            We match your business with a pro designer. You get design tasks
+            done every business day. <FcLike className="inline-block" />
         </p>
         <div className="btns-wrapper mt-20 ">
             <GetStartedBtns />

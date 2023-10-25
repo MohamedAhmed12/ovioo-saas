@@ -39,6 +39,7 @@ export default function AccountPopover() {
         <>
             <IconButton
                 onClick={handleToggle}
+                style={{ marginLeft: 10 }}
                 sx={{
                     p: 0,
                     ...(open && {
@@ -49,7 +50,8 @@ export default function AccountPopover() {
                             height: "100%",
                             borderRadius: "50%",
                             position: "absolute",
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
+                            bgcolor: (theme) =>
+                                alpha(theme.palette.grey[900], 0.8),
                         },
                     }),
                 }}
@@ -86,7 +88,11 @@ export default function AccountPopover() {
                     <Typography variant="subtitle2" noWrap>
                         My name
                     </Typography>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+                    <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                        noWrap
+                    >
                         My email
                     </Typography>
                 </Box>
@@ -95,7 +101,11 @@ export default function AccountPopover() {
 
                 <Stack sx={{ p: 1 }}>
                     {MENU_OPTIONS.map(({ url, title }) => (
-                        <Link href={url} key={title} onClick={() => handleToggle(null)}>
+                        <Link
+                            href={url}
+                            key={title}
+                            onClick={() => handleToggle(null)}
+                        >
                             <MenuItem>{title}</MenuItem>
                         </Link>
                     ))}
@@ -103,7 +113,9 @@ export default function AccountPopover() {
 
                 <Divider sx={{ borderStyle: "dashed" }} />
 
-                <MenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</MenuItem>
+                <MenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+                    Logout
+                </MenuItem>
             </Popover>
         </>
     );

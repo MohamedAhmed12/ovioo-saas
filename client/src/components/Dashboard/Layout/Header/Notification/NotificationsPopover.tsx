@@ -1,7 +1,5 @@
 import NotificationItem from "@/components/Dashboard/Layout/Header/Notification/NotificationItem";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import IconButton from "@mui/joy/IconButton";
 import {
     Badge,
@@ -16,6 +14,8 @@ import {
 } from "@mui/material";
 import { set, sub } from "date-fns";
 import { MouseEvent, useState } from "react";
+import { IoNotificationsSharp } from "react-icons/io5";
+import { MdDoneAll } from "react-icons/md";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
@@ -70,7 +70,9 @@ const NOTIFICATIONS = [
 export default function NotificationsPopover() {
     const [notifications, setNotifications] = useState(NOTIFICATIONS);
 
-    const totalUnRead = notifications.filter((item: any) => item.isUnRead === true).length;
+    const totalUnRead = notifications.filter(
+        (item: any) => item.isUnRead === true
+    ).length;
 
     const [open, setOpen] = useState<HTMLElement | null>(null);
 
@@ -104,11 +106,13 @@ export default function NotificationsPopover() {
     return (
         <div className="notifications-popover">
             <IconButton
-                className={`notification__icon-button toolbar-icon ${open ? "opened" : "closed"}`}
+                className={`notification__icon-button toolbar-icon ${
+                    open ? "opened" : "closed"
+                }`}
                 onClick={handleToggle}
             >
                 <Badge badgeContent={totalUnRead} color="error">
-                    <NotificationsIcon sx={{ width: 30, height: 30 }} />
+                    <IoNotificationsSharp size="26" />
                 </Badge>
             </IconButton>
 
@@ -129,18 +133,33 @@ export default function NotificationsPopover() {
                 }}
             >
                 <SimpleBar style={{ maxHeight: 300 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", py: 2, px: 2.5 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            py: 2,
+                            px: 2.5,
+                        }}
+                    >
                         <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="subtitle1">Notifications</Typography>
-                            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                            <Typography variant="subtitle1">
+                                Notifications
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ color: "text.secondary" }}
+                            >
                                 You have {totalUnRead} unread messages
                             </Typography>
                         </Box>
 
                         {totalUnRead > 0 && (
                             <Tooltip title=" Mark all as read">
-                                <IconButton color="primary" onClick={handleMarkAllAsRead}>
-                                    <DoneAllIcon />
+                                <IconButton
+                                    color="primary"
+                                    onClick={handleMarkAllAsRead}
+                                >
+                                    <MdDoneAll size="24" />
                                 </IconButton>
                             </Tooltip>
                         )}
@@ -163,7 +182,9 @@ export default function NotificationsPopover() {
                             <NotificationItem
                                 key={notification.id}
                                 notification={notification}
-                                onClick={() => handleMarkAsRead(notification.id)}
+                                onClick={() =>
+                                    handleMarkAsRead(notification.id)
+                                }
                             />
                         ))}
                     </List>
@@ -183,7 +204,9 @@ export default function NotificationsPopover() {
                             <NotificationItem
                                 key={notification.id}
                                 notification={notification}
-                                onClick={() => handleMarkAsRead(notification.id)}
+                                onClick={() =>
+                                    handleMarkAsRead(notification.id)
+                                }
                             />
                         ))}
                     </List>

@@ -2,14 +2,20 @@
 
 import { Asset as AssetInterface } from "@/interfaces";
 import "@/styles/components/dashboard/asset/cards/media-card.scss";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { Backdrop } from "@mui/material";
 import ButtonBase from "@mui/material/ButtonBase";
 import Image from "next/image";
 import { useState } from "react";
+import { BiZoomIn } from "react-icons/bi";
+import { BsFillPlayCircleFill } from "react-icons/bs";
 
-export default function MediaCard({ asset, isVideo }: { asset: AssetInterface; isVideo: boolean }) {
+export default function MediaCard({
+    asset,
+    isVideo,
+}: {
+    asset: AssetInterface;
+    isVideo: boolean;
+}) {
     const [open, setOpen] = useState(false);
     const handleToggle = () => {
         setOpen((prevState) => !prevState);
@@ -40,16 +46,29 @@ export default function MediaCard({ asset, isVideo }: { asset: AssetInterface; i
                 <div className="assets__media-card__content flex flex-col opacity-0">
                     <div className="h-full w-full flex justify-center items-center">
                         {isVideo ? (
-                            <PlayCircleIcon fontSize="large" className="mt-10" />
+                            <BsFillPlayCircleFill
+                                fontSize="large"
+                                className="mt-10"
+                                style={{ fontSize: 36 }}
+                            />
                         ) : (
-                            <ZoomInIcon fontSize="large" className="mt-10" />
+                            <BiZoomIn
+                                fontSize="large"
+                                className="mt-10"
+                                style={{ fontSize: 36 }}
+                            />
                         )}
                     </div>
-                    <span className="px-4 pb-4 w-full text-start truncate">{asset.alt}</span>
+                    <span className="px-4 pb-4 w-full text-start truncate">
+                        {asset.alt}
+                    </span>
                 </div>
             </ButtonBase>
             <Backdrop
-                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
                 open={open}
                 onClick={handleToggle}
                 className="overflow-y-auto"
@@ -57,7 +76,12 @@ export default function MediaCard({ asset, isVideo }: { asset: AssetInterface; i
                 {isVideo ? (
                     <video autoPlay loop muted src={asset.src} />
                 ) : (
-                    <Image src={asset.src} width={500} height={500} alt={asset.alt} />
+                    <Image
+                        src={asset.src}
+                        width={500}
+                        height={500}
+                        alt={asset.alt}
+                    />
                 )}
             </Backdrop>
         </>

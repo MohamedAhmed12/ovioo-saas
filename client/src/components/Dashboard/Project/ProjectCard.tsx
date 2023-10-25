@@ -5,10 +5,6 @@ import { Project as ProjectInterface } from "@/interfaces";
 import { deleteProject as storeDeleteProject } from "@/store/features/project";
 import "@/styles/components/dashboard/project/project-card.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Avatar, CardHeader } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -21,6 +17,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { FaPlus } from "react-icons/fa6";
+import { IoMdMore } from "react-icons/io";
+import { MdDeleteOutline, MdEdit } from "react-icons/md";
 
 const DELETE_PROJECT = gql`
     mutation ($id: String!) {
@@ -96,7 +95,7 @@ export default function ProjectCard({
                                     onClick={handleToggle}
                                     sx={{ color: "rgb(148 163 184)" }}
                                 >
-                                    <MoreVertIcon />
+                                    <IoMdMore />
                                 </IconButton>
                             )
                         }
@@ -117,16 +116,13 @@ export default function ProjectCard({
                         }}
                     >
                         <MenuItem onClick={handleEditProject}>
-                            <EditIcon fontSize="small" className="mr-3" />
+                            <MdEdit size="20" className="mr-3" />
                             edit project
                         </MenuItem>
                         <MenuItem
                             onClick={() => handleDeleteProject(project.id)}
                         >
-                            <DeleteOutlineIcon
-                                fontSize="small"
-                                className="mr-3"
-                            />
+                            <MdDeleteOutline size="20" className="mr-3" />
                             delete project
                         </MenuItem>
                     </Menu>
@@ -147,10 +143,7 @@ export default function ProjectCard({
                 {!readOnly && (
                     <CardActions>
                         <Button color="primary" variant="outlined">
-                            <AddIcon
-                                className="mr-1 font-bold"
-                                fontSize="small"
-                            />
+                            <FaPlus className="mr-1" size="15" />
                             new task
                         </Button>
                     </CardActions>

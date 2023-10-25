@@ -7,14 +7,13 @@ import { useGraphError } from "@/hooks/useGraphError";
 import { AuthProviderEnum } from "@/interfaces";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/joy";
 import { IconButton, InputAdornment } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Session } from "next-auth";
 import { FormEvent, ReactNode, useState } from "react";
 import toast from "react-hot-toast";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const CHANGE_PASSWORD = gql`
     mutation ($data: ChangePasswordDto!) {
@@ -22,9 +21,14 @@ const CHANGE_PASSWORD = gql`
     }
 `;
 
-export default function PasswordSetting({ session }: { session: Session | null }): ReactNode {
+export default function PasswordSetting({
+    session,
+}: {
+    session: Session | null;
+}): ReactNode {
     const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] =
+        useState(false);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         current_password: "",
@@ -45,7 +49,9 @@ export default function PasswordSetting({ session }: { session: Session | null }
         setLoading(true);
 
         try {
-            const { data } = await changePassword({ variables: { data: formData } });
+            const { data } = await changePassword({
+                variables: { data: formData },
+            });
 
             toast.success("Password changed successfully");
             errorHandler({});
@@ -58,7 +64,10 @@ export default function PasswordSetting({ session }: { session: Session | null }
 
     return (
         user?.provider === AuthProviderEnum.Credentials && (
-            <DashBoardCard handleSubmit={handleSubmit} headerTitle="Security Settings">
+            <DashBoardCard
+                handleSubmit={handleSubmit}
+                headerTitle="Security Settings"
+            >
                 <>
                     <div className="flex flex-col px-[35px] py-[24px]">
                         <div className="flex flex-col">
@@ -71,7 +80,9 @@ export default function PasswordSetting({ session }: { session: Session | null }
                                 label="Current Password"
                                 id="password"
                                 type="password"
-                                error={errors.hasOwnProperty("current_password")}
+                                error={errors.hasOwnProperty(
+                                    "current_password"
+                                )}
                                 helperText={errors["current_password"]}
                                 value={formData.current_password}
                                 onChange={handleOnChange}
@@ -86,13 +97,17 @@ export default function PasswordSetting({ session }: { session: Session | null }
                                     endAdornment: (
                                         <InputAdornment position="end">
                                             <IconButton
-                                                onClick={() => setShowPassword(!showPassword)}
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword
+                                                    )
+                                                }
                                                 edge="end"
                                             >
                                                 {showPassword ? (
-                                                    <VisibilityIcon />
+                                                    <AiFillEye />
                                                 ) : (
-                                                    <VisibilityOffIcon />
+                                                    <AiFillEyeInvisible />
                                                 )}
                                             </IconButton>
                                         </InputAdornment>
@@ -108,7 +123,11 @@ export default function PasswordSetting({ session }: { session: Session | null }
                                 name="password_confirmation"
                                 className="!mt-6 dashboard-input"
                                 label="Password Confirmation"
-                                type={showPasswordConfirmation ? "text" : "password"}
+                                type={
+                                    showPasswordConfirmation
+                                        ? "text"
+                                        : "password"
+                                }
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -121,15 +140,17 @@ export default function PasswordSetting({ session }: { session: Session | null }
                                                 edge="end"
                                             >
                                                 {showPasswordConfirmation ? (
-                                                    <VisibilityIcon />
+                                                    <AiFillEye />
                                                 ) : (
-                                                    <VisibilityOffIcon />
+                                                    <AiFillEyeInvisible />
                                                 )}
                                             </IconButton>
                                         </InputAdornment>
                                     ),
                                 }}
-                                error={errors.hasOwnProperty("password_confirmation")}
+                                error={errors.hasOwnProperty(
+                                    "password_confirmation"
+                                )}
                                 helperText={errors["password_confirmation"]}
                                 value={formData.password_confirmation}
                                 onChange={handleOnChange}
@@ -137,7 +158,11 @@ export default function PasswordSetting({ session }: { session: Session | null }
                         </div>
                     </div>
                     <div className="flex w-full justify-end mt-5 px-[35px]">
-                        <Button loading={loading} type="submit" className="dashboard__btn">
+                        <Button
+                            loading={loading}
+                            type="submit"
+                            className="dashboard__btn"
+                        >
                             change password
                         </Button>
                     </div>

@@ -5,8 +5,6 @@ import { useInput } from "@/hooks/useInput";
 import "@/styles/app/auth/login.scss";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/joy";
 import {
     Checkbox,
@@ -21,6 +19,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import SSOWrapper from "./SSOWrapper";
 
 const Login = gql`
@@ -62,7 +61,10 @@ export default function LoginForm() {
                 },
             });
 
-            await signIn("credentials", { callbackUrl, data: JSON.stringify(data.login) });
+            await signIn("credentials", {
+                callbackUrl,
+                data: JSON.stringify(data.login),
+            });
         } catch (e: any) {
             errorHandler(e);
         }
@@ -77,7 +79,10 @@ export default function LoginForm() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
                 Don’t have an account?
-                <Link href="/auth/register" className="text-sm text-blue-600 ml-2">
+                <Link
+                    href="/auth/register"
+                    className="text-sm text-blue-600 ml-2"
+                >
                     Get started
                 </Link>
             </Typography>
@@ -103,10 +108,16 @@ export default function LoginForm() {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
                                     edge="end"
                                 >
-                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    {showPassword ? (
+                                        <AiFillEye />
+                                    ) : (
+                                        <AiFillEyeInvisible />
+                                    )}
                                 </IconButton>
                             </InputAdornment>
                         ),
@@ -124,7 +135,10 @@ export default function LoginForm() {
                 sx={{ my: 2 }}
             >
                 <FormControlLabel control={<Checkbox />} label="Remember me" />
-                <Link href="/auth/forgot-password" className="text-sm text-blue-600 font-normal">
+                <Link
+                    href="/auth/forgot-password"
+                    className="text-sm text-blue-600 font-normal"
+                >
                     Forgot password?
                 </Link>
             </Stack>

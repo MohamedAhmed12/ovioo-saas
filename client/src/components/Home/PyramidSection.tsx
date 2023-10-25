@@ -1,11 +1,16 @@
 "use client";
 
 import "@/styles/components/home/pyramid-section.scss";
-import EastIcon from "@mui/icons-material/East";
-import WestIcon from "@mui/icons-material/West";
-import { Box, Breadcrumbs, Button, MobileStepper, Paper, Typography } from "@mui/material";
+import {
+    Box,
+    Breadcrumbs,
+    Button,
+    MobileStepper,
+    Typography,
+} from "@mui/material";
 import Image from "next/image";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 
 export const PyramidSection = () => {
     const titles = ["Quality", "Speed", "Cost"];
@@ -29,7 +34,9 @@ export const PyramidSection = () => {
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) =>
-            prevActiveStep != maxSteps - 1 ? prevActiveStep + 1 : (prevActiveStep = 0)
+            prevActiveStep != maxSteps - 1
+                ? prevActiveStep + 1
+                : (prevActiveStep = 0)
         );
     };
 
@@ -44,7 +51,12 @@ export const PyramidSection = () => {
         <div className="pyramid-section__stars-bg flex w-full justify-center">
             <div className="container pyramid-section flex flex-col lg:flex-row mt-10 mb-5 lg:mb-10 pr-20 pl-20">
                 <div className="text-3xl basis-2/3 mb-14 lg:mb-0">
-                    <Image src="/images/smile.jpg" alt="smile" width={610} height={700} />
+                    <Image
+                        src="/images/smile.jpg"
+                        alt="smile"
+                        width={610}
+                        height={700}
+                    />
                 </div>
                 <div className="text-4xl basis-1/3 font-bold">
                     <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
@@ -66,10 +78,14 @@ export const PyramidSection = () => {
                             ))}
                         </Breadcrumbs>
                         <Box className="mb-4 text-secondary">
-                            <Typography variant="h5">{steps[activeStep].label}</Typography>
+                            <Typography variant="h5">
+                                {steps[activeStep].label}
+                            </Typography>
                         </Box>
                         <Box className="description-box">
-                            <Typography>{steps[activeStep].description}</Typography>
+                            <Typography>
+                                {steps[activeStep].description}
+                            </Typography>
                         </Box>
                         <MobileStepper
                             variant="text"
@@ -83,7 +99,7 @@ export const PyramidSection = () => {
                                     variant="outlined"
                                     aria-label="EastIcon"
                                 >
-                                    <EastIcon />
+                                    <FaArrowRightLong size="1rem" />
                                 </Button>
                             }
                             backButton={
@@ -93,7 +109,7 @@ export const PyramidSection = () => {
                                     variant="outlined"
                                     aria-label="WestIcon"
                                 >
-                                    <WestIcon fontSize="small" />
+                                    <FaArrowLeftLong size="1rem" />
                                 </Button>
                             }
                         />
