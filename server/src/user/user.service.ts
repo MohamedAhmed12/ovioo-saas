@@ -33,7 +33,7 @@ export class UserService {
 
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>,
-  ) { }
+  ) {}
 
   async login(data: LoginDto): Promise<User> {
     const user = await this.UserRepository.findOne({
@@ -45,7 +45,9 @@ export class UserService {
         'Couldn’t find an Ovioo account associated with this email.',
       );
 
-    if (await !compare(data.password, user?.password))
+    const isCorreectPassword = await compare(data.password, user?.password);
+
+    if (!isCorreectPassword)
       throw new NotFoundException("That's not the right password.");
 
     return user;
@@ -124,7 +126,7 @@ export class UserService {
   ): Promise<User> {
     const user = await this.UserRepository.findOneBy({ email });
     if (!user) throw new NotFoundException();
-    
+
     delete user.profile;
     await this.UserRepository.merge(user, data);
     this.UserRepository.update(user.id, user);
