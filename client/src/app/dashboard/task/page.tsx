@@ -51,16 +51,12 @@ export default function Task() {
                     "bg-[#f4f7fd] h-full flex dark:bg-[#20212c] gap-6 pb-14 overflow-x-scroll"
                 }
             >
-                {Object.entries(TaskStatus).map(([key, value]) => (
+                {Object.keys(TaskStatus).map((key: any) => (
                     <Column
                         key={key}
-                        title={value as TaskStatus}
-                        color={
-                            TaskKanbanColors[
-                                key as keyof typeof TaskKanbanColors
-                            ]
-                        }
-                        tasks={tasks[value]}
+                        title={TaskStatus[key as keyof typeof TaskStatus]}
+                        color={TaskKanbanColors[key as keyof typeof TaskStatus]}
+                        tasks={tasks[key]}
                     />
                 ))}
             </div>
