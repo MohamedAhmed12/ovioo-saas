@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
+import { UploadAssetDto } from './dto/upload-asset.dto';
 
 @Injectable()
 export class UploadService {
@@ -8,14 +9,17 @@ export class UploadService {
 
   async uploadFiles(
     files: Express.Multer.File[],
-    path: string,
+    { path, inDirectory }: UploadAssetDto,
   ): Promise<ManagedUpload.SendData[]> {
     const filesPaths = [];
 
     for (const file of files) {
       const params = {
         Bucket: process.env.S3_BUCKET,
-        Key: String(path),
+        Key:
+          inDirectory.toLowerCase() == 'true'
+            ? `${path}/${String(file.originalname)}`
+            : path,
         Body: file.buffer,
         ACL: 'public-read',
         ContentType: file.mimetype,

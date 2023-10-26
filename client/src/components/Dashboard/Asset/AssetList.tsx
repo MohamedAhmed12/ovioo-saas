@@ -64,7 +64,12 @@ export default function AssetList({
 
         setLoading(true);
 
-        let assets = await uploadFiles(e, session);
+        let assets = await uploadFiles(
+            e,
+            session,
+            `tasks/${task.id}/assets`,
+            true
+        );
         assets = assets.map(
             ({ type, s3Path }: { type: string; s3Path: s3PathInterface }) => ({
                 alt: s3Path.Key,

@@ -1,7 +1,6 @@
 "use client";
 
 import DashBoardCard from "@/components/DashBoardCard";
-import { useAppSelector } from "@/hooks/redux";
 import { useForm } from "@/hooks/useForm";
 import { useGraphError } from "@/hooks/useGraphError";
 import { AuthProviderEnum } from "@/interfaces";
@@ -23,8 +22,10 @@ const CHANGE_PASSWORD = gql`
 
 export default function PasswordSetting({
     session,
+    user,
 }: {
     session: Session | null;
+    user: any;
 }): ReactNode {
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirmation, setShowPasswordConfirmation] =
@@ -37,7 +38,6 @@ export default function PasswordSetting({
     });
 
     const client = getClient(session);
-    const user = useAppSelector((state) => state.userReducer.user);
     const { errors, errorHandler } = useGraphError({});
     const { handleOnChange } = useForm(setFormData);
 

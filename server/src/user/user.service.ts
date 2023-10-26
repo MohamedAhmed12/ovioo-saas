@@ -124,7 +124,8 @@ export class UserService {
   ): Promise<User> {
     const user = await this.UserRepository.findOneBy({ email });
     if (!user) throw new NotFoundException();
-
+    
+    delete user.profile;
     await this.UserRepository.merge(user, data);
     this.UserRepository.update(user.id, user);
 

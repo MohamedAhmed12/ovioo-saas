@@ -29,8 +29,8 @@ export class UploadController {
       }),
     )
     files: Express.Multer.File[],
-    @Body() { path }: UploadAssetDto,
+    @Body() data: UploadAssetDto,
   ) {
-    return this.uploadService.uploadFiles(files, path);
+    return this.uploadService.uploadFiles(files, data);
   }
 }

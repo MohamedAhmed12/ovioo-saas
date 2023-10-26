@@ -10,7 +10,8 @@ export const ObjectHasVal = (object: Object, val: any) =>
 export const uploadFiles = async (
     e: ChangeEvent<HTMLInputElement>,
     session: Session | null,
-    path: string
+    path: string,
+    inDirectory: boolean = false
 ): Promise<any> => {
     try {
         const files = e?.target?.files;
@@ -19,6 +20,8 @@ export const uploadFiles = async (
 
         const form = new FormData();
         form.append("path", path);
+        form.append("inDirectory", inDirectory.toString());
+
         for (let i = 0; i < files.length; i++) {
             form.append("files[]", files[i]);
         }

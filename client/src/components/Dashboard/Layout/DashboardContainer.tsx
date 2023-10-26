@@ -24,6 +24,7 @@ const FETCH_PROFILE_WITH_USER = gql`
             phone
             provider
             avatar
+            role
             profile {
                 id
                 push_notification_enabled
@@ -62,13 +63,14 @@ export default function DashboardContainer({
             userData?.me && dispatch(setUser(userData.me));
 
             if (GQLErr) {
-                if (GQLErr?.graphQLErrors?.[0]?.extensions?.originalError?.statusCode == 401)
+                if (
+                    GQLErr?.graphQLErrors?.[0]?.extensions?.originalError
+                        ?.statusCode == 401
+                )
                     signOut();
             }
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userData, graphQLloading, GQLErr]);
+    }, [userData, graphQLloading, GQLErr, dispatch]);
 
     useEffect(() => {
         const htmlElement: HTMLElement = document.documentElement;
@@ -86,7 +88,10 @@ export default function DashboardContainer({
     return (
         !loading && (
             <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
-                <DashboardHeader openNav={open} onOpenNav={() => setOpen(true)} />
+                <DashboardHeader
+                    openNav={open}
+                    onOpenNav={() => setOpen(true)}
+                />
                 <Navbar openNav={open} onCloseNav={() => setOpen(false)} />
                 {children}
                 <Toaster
