@@ -2,7 +2,6 @@ export * from "./route";
 export * from "./faq";
 export * from "./user";
 export * from "./asset";
-export * from "./extension";
 export * from "./team";
 export * from "./project";
 export * from "./notification";

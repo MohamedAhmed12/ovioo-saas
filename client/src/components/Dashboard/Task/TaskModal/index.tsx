@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Chat from "./Chat";
+import Chat from "../Chat";
 import TaskModalBody from "./TaskModalBody";
 import TaskModalHeader from "./TaskModalHeader";
 
@@ -147,7 +147,7 @@ export default function TaskModal({
                 }}
                 className="task-modal"
             >
-                <div className="flex flex-col my-auto font-bold mx-auto w-full ovioo-card with-shadow py-8 px-0">
+                <div className="flex flex-col my-auto mx-auto w-full ovioo-card with-shadow py-8 px-0">
                     <TaskModalHeader
                         task={task}
                         setIsTaskModalOpen={setIsTaskModalOpen}
@@ -159,7 +159,7 @@ export default function TaskModal({
                             task={task}
                             handleOnChange={handleOnChange}
                         />
-                        <Chat />
+                        <Chat client={client} task_id={task.id} />
                     </div>
                 </div>
             </Dialog>

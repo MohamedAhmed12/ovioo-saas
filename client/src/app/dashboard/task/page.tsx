@@ -32,7 +32,7 @@ export default function Task() {
         data,
     } = useQuery(LIST_TASKS, { client, fetchPolicy: "no-cache" });
 
-    if (error) throw new Error();
+    if (error) throw new Error(JSON.stringify(error));
 
     useEffect(() => {
         if (!graphQLloading && data?.listTasks) {
@@ -45,6 +45,7 @@ export default function Task() {
         session &&
         !graphQLloading &&
         !error &&
+        data?.listTasks &&
         tasks && (
             <div
                 className={
