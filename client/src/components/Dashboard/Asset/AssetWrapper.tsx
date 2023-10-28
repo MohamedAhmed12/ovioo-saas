@@ -1,10 +1,5 @@
-import {
-    Asset as AssetInterface,
-    ImgExtensionEnum,
-    VideoExtensionEnum,
-} from "@/interfaces";
+import { Asset as AssetInterface } from "@/interfaces";
 import "@/styles/components/dashboard/asset/asset-list.scss";
-import { ObjectHasVal } from "@/utils/helpers";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
 import Card from "@mui/joy/Card";
 import { CardHeader, IconButton, Menu, MenuItem } from "@mui/material";
@@ -37,15 +32,10 @@ export default function AssetWrapper({
     };
     const getAssetToRender = (asset: AssetInterface) => {
         if (
-            ObjectHasVal(ImgExtensionEnum, asset.type) ||
-            ObjectHasVal(VideoExtensionEnum, asset.type)
+            asset.type.startsWith("image/") ||
+            asset.type.startsWith("video/")
         ) {
-            return (
-                <MediaCard
-                    asset={asset}
-                    isVideo={ObjectHasVal(VideoExtensionEnum, asset.type)}
-                />
-            );
+            return <MediaCard asset={asset} />;
         }
 
         return <LinkAssetCard asset={asset} />;

@@ -9,13 +9,8 @@ import { useState } from "react";
 import { BiZoomIn } from "react-icons/bi";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 
-export default function MediaCard({
-    asset,
-    isVideo,
-}: {
-    asset: AssetInterface;
-    isVideo: boolean;
-}) {
+export default function MediaCard({ asset }: { asset: AssetInterface }) {
+    const isVideo = asset.type.startsWith("video/");
     const [open, setOpen] = useState(false);
     const handleToggle = () => {
         setOpen((prevState) => !prevState);
