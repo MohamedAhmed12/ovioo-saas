@@ -49,7 +49,7 @@ export class TaskService {
     return task;
   }
 
-  async createTask(data: CreateTaskDto): Promise<Task> {
+  async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {
     const Allprojects = await this.projectRepository.find();
 
     if (Allprojects.length === 0)
@@ -86,7 +86,7 @@ export class TaskService {
 
     const task = await this.taskRepository.create(data);
     task.project = project;
-    task.team = project.team;
+    task.team = authUser.team;
     task.type = type;
     return await this.taskRepository.save(task);
   }
@@ -109,7 +109,7 @@ export class TaskService {
       .execute();
 
     return task;
-  } 
+  }
 
   async deleteTask(id: string): Promise<boolean> {
     const task = await this.taskRepository.findOneBy({ id: +id });
