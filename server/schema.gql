@@ -44,17 +44,10 @@ type User {
   created_at: DateTime!
   updated_at: DateTime!
   profile: Profile!
-  role: UserRoleEnum!
+  role: String
   team: Team!
   messages: [Message!]!
   assignedTasks: [Task!]!
-}
-
-enum UserRoleEnum {
-  User
-  Member
-  Admin
-  Designer
 }
 
 """message"""
@@ -88,9 +81,9 @@ type Task {
   team: Team!
   designer: User
   assets: [Asset!]!
-  messages: [Message!]
-  subtasks: [Task!]
-  parent: Task
+  messages: [Message!]!
+  subtasks: [Task!]!
+  parent: Task!
 }
 
 """project"""

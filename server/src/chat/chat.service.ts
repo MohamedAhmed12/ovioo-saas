@@ -24,9 +24,17 @@ export class ChatService {
     limit = 10,
     task_id,
   }: ListMessageDto): Promise<Message[]> {
-    return this.messageRepository
+    return await this.messageRepository
       .createQueryBuilder('messages')
+      .select('messages')
+      .addSelect([
+        'sender.id',
+        'sender.fullname',
+        'sender.avatar',
+        'sender.role',
+      ])
       .leftJoin('messages.task', 'task')
+      .leftJoin('messages.sender', 'sender')
       .where('task.id = :task_id', { task_id })
       .orderBy('messages.created_at', 'DESC')
       .skip((page - 1) * limit)

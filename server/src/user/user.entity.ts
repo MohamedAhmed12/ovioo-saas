@@ -67,12 +67,8 @@ export class User extends BaseEntity {
   @Field(() => Profile)
   profile: Profile;
 
-  @Column({
-    type: 'enum',
-    enum: UserRoleEnum,
-    default: UserRoleEnum.User,
-  })
-  @Field(() => UserRoleEnum)
+  @Column('text', { default: UserRoleEnum.User })
+  @Field(() => String, { nullable: true })
   role: UserRoleEnum;
 
   @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
