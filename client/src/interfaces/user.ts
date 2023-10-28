@@ -1,19 +1,6 @@
 import { TaskInterface } from "./store/board";
 import { Team } from "./team";
 
-export enum RoleEnum {
-    OWNER = "owner",
-    DESIGNER = "designer",
-    MEMBER = "member",
-}
-
-export enum AuthProviderEnum {
-    GOOGLE = "google",
-    Facebook = "facebook",
-    LinkedIn = "linkedin",
-    Credentials = "credentials",
-}
-
 export interface User {
     id?: string;
     fullname?: string;
@@ -39,9 +26,10 @@ export interface UserRegister {
 }
 
 export enum RoleEnum {
-    OWNER = "owner",
-    DESIGNER = "designer",
-    MEMBER = "member",
+    User = "user",
+    Member = "member",
+    Admin = "admin",
+    Designer = "designer",
 }
 
 export enum AuthProviderEnum {

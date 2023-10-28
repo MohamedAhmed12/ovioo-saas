@@ -11,9 +11,7 @@ export const mainSlice = createSlice({
     name: 'main',
     initialState,
     reducers: {
-        setMode: (state, action) => {
-            console.log(action.payload);
-            
+        setMode: (state, action) => {            
             state.mode = action.payload;
             typeof window !== 'undefined' && localStorage.setItem('mode', action.payload);
         }
