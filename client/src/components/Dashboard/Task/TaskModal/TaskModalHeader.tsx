@@ -1,7 +1,7 @@
 import TaskTypeDropDown from "@/components/Dashboard/TaskTypeDropDown";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch } from "@/hooks/redux";
-import { TaskInterface, TaskStatus } from "@/interfaces";
+import { TaskInterface, TaskStatus, getTaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
@@ -60,7 +60,7 @@ export default function TaskModalHeader({
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">
             <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-[25px] flex-wrap max-w-full">
                 <OviooDropDown
-                    options={Object.values(TaskStatus)}
+                    options={getTaskStatus()}
                     onSelected={(status) => handleOnChange("status", status)}
                     initialVal={task.status}
                     className="task-status-dropdown"

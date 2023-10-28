@@ -36,7 +36,7 @@ export class Task extends BaseEntity {
     default: TaskStatusEnum.IN_QUEUE,
   })
   @Field(() => String, { nullable: true })
-  status: string;
+  status: TaskStatusEnum;
 
   @ManyToOne(() => TaskType, (type) => type.tasks, { eager: true })
   @Field(() => TaskType)

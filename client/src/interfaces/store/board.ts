@@ -1,4 +1,5 @@
 import { Asset } from "../asset";
+import { MessageInterface } from "../message";
 import { Project } from "../project";
 import { UserInterface } from "../user";
 
@@ -9,6 +10,12 @@ export enum TaskStatus {
     ON_HOLD = "On hold",
     DONE = "Done",
 }
+
+export const getTaskStatus = () =>
+    Object.entries(TaskStatus).map(([key, value]) => ({
+        key,
+        title: value,
+    }));
 
 export interface TaskTypeInterface {
     id: number;
@@ -34,6 +41,7 @@ export interface TaskInterface {
     type: TaskType;
     designer?: UserInterface;
     assets: Asset[];
+    messages: MessageInterface[];
 }
 
 export interface ColumnInterface {
