@@ -65,21 +65,25 @@ export class Task extends BaseEntity {
     eager: true,
     nullable: true,
   })
-  @Field(() => [Asset], { defaultValue: null })
+  @Field(() => [Asset], { defaultValue: [] })
   assets: Asset[];
 
   @OneToMany(() => Message, (message) => message.task, {
     cascade: true,
-    eager: true,
+    nullable: true,
   })
-  @Field(() => [Message], { nullable: true })
+  @Field(() => [Message], { defaultValue: [] })
   messages: Message[];
 
-  @OneToMany(() => Task, (task) => task.parent, { cascade: true })
-  @Field(() => [Task], { nullable: true })
+  @OneToMany(() => Task, (task) => task.parent, { nullable: true })
+  @JoinColumn({ name: 'parentId' })
+  @Field(() => [Task], { defaultValue: [] })
   subtasks: Task[];
 
-  @ManyToOne(() => Task, (task) => task.subtasks)
-  @Field(() => Task, { nullable: true })
+  @ManyToOne(() => Task, (task) => task.subtasks, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @Field(() => Task, { defaultValue: null })
   parent: Task;
 }

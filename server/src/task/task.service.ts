@@ -33,7 +33,14 @@ export class TaskService {
   }
 
   async listTasks(authUser: User): Promise<Task[]> {
-    return await authUser.team.tasks;
+    const team = await authUser.team;
+
+    return this.taskRepository.find({
+      where: {
+        team: { id: team.id },
+      },
+      relations: ['subtasks'],
+    });
   }
 
   async showTask(authUser: User, id: string): Promise<Task> {
