@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ["picsum.photos", "ovioo-test-2.s3.eu-west-1.amazonaws.com"],
+        remotePatterns: [
+            {
+              protocol: "https",
+              hostname: "**",
+            },
+        ],
     },
     concurrentFeatures: true,
     productionBrowserSourceMaps: false, // Disable source maps in development
