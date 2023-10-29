@@ -10,6 +10,8 @@
     },
     "dependencies": {
         "@apollo/client": "^3.8.4",
+        "@emoji-mart/data": "^1.1.2",
+        "@emoji-mart/react": "^1.1.1",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "@mui/joy": "^5.0.0-beta.3",
@@ -20,6 +22,7 @@
         "@types/react-dom": "18.2.7",
         "autoprefixer": "10.4.15",
         "date-fns": "^2.30.0",
+        "emoji-mart": "^5.5.2",
         "eslint": "8.47.0",
         "eslint-config-next": "13.4.19",
         "graphql": "^16.8.1",

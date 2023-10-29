@@ -1,8 +1,13 @@
 .chat {
-    .chat__input{
+    .chat__input {
         textarea {
             max-height: 100px;
-            min-height: 45px;
+            min-height: 46px;
         }
+    }
+    em-emoji-picker {
+        position: absolute;
+        left: 0;
+        bottom: 46px;
     }
 }
