@@ -2,14 +2,13 @@
 
 import DashBoardCard from "@/components/DashBoardCard";
 import { Asset, Asset as AssetInterface } from "@/interfaces";
-import { delay } from "@/utils/helpers";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import DownloadIcon from "@mui/icons-material/Download";
 import { Button } from "@mui/joy";
 import { MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
+import { IoMdDownload } from "react-icons/io";
 import OviooDropDownWrapper from "../OviooDropDownWrapper";
 import AssetList from "./AssetList";
 
@@ -45,30 +44,42 @@ export default function AssetListsContainer({
     const [downloadAsset] = useMutation(DOWNLOAD_ASSET, { client });
     const [deleteAsset] = useMutation(DELETE_ASSET, { client });
 
+    const downloadUrlsSequentially = (urls: string[]) => {
+        if (urls.length === 0) {
+            return;
+        }
+
+        const url = urls.shift(); // Take the first URL
+
+        const a = document.createElement("a");
+        a.style.display = "none";
+        url && (a.href = url);
+        a.setAttribute("download", null);
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+            document.body.removeChild(a);
+
+            downloadUrlsSequentially(urls);
+        }, 1000);
+    };
+
     const handleDownload = async () => {
         setLoading(true);
+
+        let URLs = [];
 
         try {
             for (const asset of assets) {
                 const { data } = await downloadAsset({
                     variables: { alt: asset.alt },
                 });
-                console.log(data.downloadAsset);
 
-                // window.open(data.downloadAsset);
-                // return undefined;
-
-                const a = document.createElement("a");
-                a.href = data.downloadAsset;
-                a.download = asset.alt;
-                a.style.display = "none";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                delay(500);
-                // setTimeout(()=>{
-                // },500)
+                URLs.push(data.downloadAsset);
             }
+
+            downloadUrlsSequentially(URLs);
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
@@ -113,7 +124,7 @@ export default function AssetListsContainer({
                     className="dashboard__link !text-base !bg-transparent shadow-none hover:bg-transparent hover:shadow-none font-semibold pt-3 pr-4"
                     onClick={handleDownload}
                 >
-                    <DownloadIcon />
+                    <IoMdDownload size="24" />
                     Download All Media
                 </Button>
             }
