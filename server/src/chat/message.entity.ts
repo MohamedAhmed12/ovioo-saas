@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Asset } from 'src/asset/asset.entity';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,10 +28,6 @@ export class Message extends BaseEntity {
   @Field(() => String, { nullable: true })
   voice_note_src: string;
 
-  @Column('text', { nullable: true })
-  @Field(() => String, { nullable: true })
-  asset_src: string;
-
   @ManyToOne(() => User, (user) => user.messages, {
     eager: true,
     nullable: true,
@@ -41,6 +39,14 @@ export class Message extends BaseEntity {
   @JoinColumn({ name: 'taskId' })
   @Field(() => Task)
   task: Task;
+
+  @OneToOne(() => Asset, (asset) => asset.message, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn({ name: 'assetId' })
+  @Field(() => Asset)
+  asset: Asset;
 
   @CreateDateColumn()
   @Field()

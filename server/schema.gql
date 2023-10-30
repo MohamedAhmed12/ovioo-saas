@@ -22,16 +22,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""teams"""
-type Team {
-  id: ID!
-  name: String
-  owner_id: Float!
-  members: [User!]!
-  projects: [Project!]!
-  tasks: [Task!]!
-}
-
 """users"""
 type User {
   id: ID!
@@ -50,16 +40,24 @@ type User {
   assignedTasks: [Task!]!
 }
 
-"""message"""
-type Message {
+"""teams"""
+type Team {
   id: ID!
-  content: String
-  voice_note_src: String
-  asset_src: String
-  sender: User
-  task: Task!
-  created_at: DateTime!
-  updated_at: DateTime!
+  name: String
+  owner_id: Float!
+  members: [User!]!
+  projects: [Project!]!
+  tasks: [Task!]!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
 }
 
 type task_types {
@@ -86,14 +84,16 @@ type Task {
   parent: Task!
 }
 
-"""project"""
-type Project {
+"""message"""
+type Message {
   id: ID!
-  title: String!
-  description: String!
-  team: Team!
-  tasks: [Task!]!
-  assets: [Asset!]!
+  content: String
+  voice_note_src: String
+  sender: User
+  task: Task!
+  asset: Asset!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 """asset"""
@@ -104,6 +104,7 @@ type Asset {
   type: String!
   project: Project
   task: Task!
+  message: Message!
 }
 
 """task-types"""
@@ -266,7 +267,7 @@ input SendMessageDto {
   task_id: String!
   content: String
   voice_note_src: String
-  asset_src: String
+  asset: AssetDto
 }
 
 type Subscription {

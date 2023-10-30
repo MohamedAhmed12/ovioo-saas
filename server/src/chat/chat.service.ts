@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
+import { AssetService } from 'src/asset/asset.service';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
@@ -17,6 +18,7 @@ export class ChatService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    private readonly assetService: AssetService,
   ) {}
 
   async listMessages({

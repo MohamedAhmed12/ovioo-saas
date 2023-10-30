@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsOptional, IsString } from 'class-validator';
+import { AssetDto } from 'src/asset/dto/create-asset.dto';
 import { MessageSentSubscriptionDto } from './message-sent-subs.dto';
 
 @InputType()
@@ -15,7 +16,6 @@ export class SendMessageDto extends MessageSentSubscriptionDto {
   voice_note_src?: string;
 
   @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  asset_src?: string;
+  @Field(() => AssetDto, { nullable: true })
+  asset?: AssetDto;
 }

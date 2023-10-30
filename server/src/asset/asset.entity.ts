@@ -1,12 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Message } from 'src/chat/message.entity';
 import { Project } from 'src/project/project.entity';
 import { Task } from 'src/task/task.entity';
 import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -36,4 +37,8 @@ export class Asset extends BaseEntity {
   @ManyToOne(() => Task, (task) => task.assets, { onDelete: 'CASCADE' })
   @Field(() => Task)
   task: Task;
+
+  @OneToOne(() => Message, (message) => message.asset)
+  @Field(() => Message)
+  message: Message;
 }

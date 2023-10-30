@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const { email, provider } = await verify(token, process.env.JWT_TOKEN);
-      const authUser = await User.findOne({
+      const authUser = await User.findOneOrFail({
         where: {
           email,
           provider,
@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate {
 
       return authUser;
     } catch (err) {
-      const message = 'Token error:' + err.message;
+      const message = 'Token error: ' + err.message;
       throw new ForbiddenException(message);
     }
   }
