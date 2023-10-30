@@ -1,6 +1,14 @@
+import { SendMessageDto } from "@/interfaces/message";
 import emojiData from "@emoji-mart/data";
 import dynamic from "next/dynamic";
-import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+import {
+    ChangeEvent,
+    Dispatch,
+    KeyboardEvent,
+    SetStateAction,
+    useRef,
+    useState,
+} from "react";
 import { Input } from "react-chat-elements";
 import { BiSolidMicrophone } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
@@ -14,20 +22,28 @@ export default function MessageInput({
     task_id,
     showPicker,
     setShowPicker,
+    onMessageSend,
 }: {
     task_id: string;
     showPicker: boolean;
     setShowPicker: Dispatch<SetStateAction<boolean>>;
+    onMessageSend: (formData: SendMessageDto) => void;
 }) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [page, setPage] = useState(1);
     const [formData, setFormData] = useState({
         task_id,
         content: "",
-        voice_note_src: null,
-        asset_src: null,
+        voice_note_src: "",
+        asset_src: "",
     });
 
+    const clearForm = (name: string) => {
+        setFormData((formData) => ({
+            ...formData,
+            [name]: "",
+        }));
+    };
     const handleEmojiSelect = (e: any) => {
         if (inputRef?.current) {
             inputRef.current.value = `${inputRef.current.value}${e.native}`;
@@ -37,27 +53,43 @@ export default function MessageInput({
             }));
         }
     };
+    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            content: e.target.value,
+        }));
+    };
+    const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handlePressSend("content");
+        }
+    };
+    const handlePressSend = (name: keyof SendMessageDto) => {
+        if (formData[name].trim() !== "") {
+            onMessageSend(formData);
+            clearForm(name);
+            inputRef?.current && (inputRef.current.value = "");
+        }
+    };
 
     return (
         <>
             <Input
-                className="chat__input absolute min-h[62px] max-h-[100px] px-2"
+                className="chat__input rounded-b-md px-2 py-1"
+                placeholder="Type a message"
+                maxHeight={100}
+                minHeight={46}
+                multiline={true}
                 referance={inputRef}
                 value={formData.content}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setFormData((prevState) => ({
-                        ...prevState,
-                        content: e.target.value,
-                    }))
-                }
-                maxHeight={30}
-                placeholder="Type a message"
-                multiline={true}
+                onChange={handleOnChange}
+                onKeyPress={handleKeyPress}
                 leftButtons={
                     <>
                         <MdOutlineEmojiEmotions
                             size={iconSize}
-                            onClick={() => setShowPicker((state) => true)}
+                            onClick={() => setShowPicker((state) => !state)}
                             cursor="pointer"
                         />
                         <label htmlFor="fileInput" className="ml-2 mr-1">
@@ -71,6 +103,7 @@ export default function MessageInput({
                             size={iconSize}
                             title="send"
                             cursor="pointer"
+                            onClick={() => handlePressSend("content")}
                         />
                     ) : (
                         <BiSolidMicrophone
@@ -82,7 +115,7 @@ export default function MessageInput({
                 }
             />
 
-            {!showPicker && (
+            {showPicker && (
                 <Picker data={emojiData} onEmojiSelect={handleEmojiSelect} />
             )}
 

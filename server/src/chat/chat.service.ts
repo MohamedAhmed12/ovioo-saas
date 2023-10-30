@@ -24,7 +24,7 @@ export class ChatService {
     limit = 10,
     task_id,
   }: ListMessageDto): Promise<Message[]> {
-    return await this.messageRepository
+    const messages = await this.messageRepository
       .createQueryBuilder('messages')
       .select('messages')
       .addSelect([
@@ -40,6 +40,8 @@ export class ChatService {
       .skip((page - 1) * limit)
       .take(limit)
       .getMany();
+
+    return messages.reverse();
   }
 
   async sendMessage(authUser: User, data: SendMessageDto): Promise<Message> {

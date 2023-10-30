@@ -24,7 +24,7 @@ const OviooMessage = ({ message }: { message: MessageInterface }) => {
             status="waiting"
             styles={{ color: "black" }}
             statusTitle="received"
-            className="text-red-700 !inline-block"
+            className="text-red-700 !inline-block !overflow-visible"
         />
     );
 };

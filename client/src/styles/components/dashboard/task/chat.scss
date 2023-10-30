@@ -1,13 +1,25 @@
 .chat {
+    height: 600px;
+    max-height: 600px;
+    .messages__wrapper {
+        padding-right: 20px;
+        padding-left: 20px;
+        padding-bottom: 1rem;
+        min-height: 100%;
+        .rce-container-mbox{
+            .rce-mbox{
+                margin: 0;
+            }
+        }
+    }
     .chat__input {
         textarea {
-            max-height: 100px;
             min-height: 46px;
         }
     }
     em-emoji-picker {
         position: absolute;
         left: 0;
-        bottom: 46px;
+        bottom: 0;
     }
 }
