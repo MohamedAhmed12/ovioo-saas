@@ -15,7 +15,11 @@ const LIST_MESSAGES = gql`
             id
             content
             voice_note_src
-            asset_src
+            asset {
+                src
+                alt
+                type
+            }
             sender {
                 id
                 fullname
@@ -32,7 +36,11 @@ const SEND_MESSAGE = gql`
             id
             content
             voice_note_src
-            asset_src
+            asset {
+                src
+                alt
+                type
+            }
             sender {
                 id
                 fullname

@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { IoMdMore } from "react-icons/io";
 import LinkAssetCard from "./Cards/DefaultCard";
 import MediaCard from "./Cards/MediaCard";
+import { isImage, isVideo } from "@/utils/helpers";
 
 const DOWNLOAD_ASSET = gql`
     mutation Mutation($alt: String!) {
@@ -31,10 +32,7 @@ export default function AssetWrapper({
         setAnchorEl(event.currentTarget);
     };
     const getAssetToRender = (asset: AssetInterface) => {
-        if (
-            asset.type.startsWith("image/") ||
-            asset.type.startsWith("video/")
-        ) {
+        if (isImage(asset) || isVideo(asset)) {
             return <MediaCard asset={asset} />;
         }
 

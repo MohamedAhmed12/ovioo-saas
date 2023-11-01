@@ -2,6 +2,7 @@
 
 import { Asset as AssetInterface } from "@/interfaces";
 import "@/styles/components/dashboard/asset/cards/media-card.scss";
+import { isVideo as isVideoHelper} from "@/utils/helpers";
 import { Backdrop } from "@mui/material";
 import ButtonBase from "@mui/material/ButtonBase";
 import Image from "next/image";
@@ -10,7 +11,7 @@ import { BiZoomIn } from "react-icons/bi";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 
 export default function MediaCard({ asset }: { asset: AssetInterface }) {
-    const isVideo = asset.type.startsWith("video/");
+    const isVideo = isVideoHelper(asset);
     const [open, setOpen] = useState(false);
     const handleToggle = () => {
         setOpen((prevState) => !prevState);

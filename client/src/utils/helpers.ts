@@ -1,6 +1,12 @@
+import { Asset } from "@/interfaces";
 import { Session } from "next-auth";
 import { ChangeEvent } from "react";
 import toast from "react-hot-toast";
+
+export const isVideo = (asset: Asset | undefined | null): boolean =>
+    asset ? asset.type.startsWith("video/") : false;
+export const isImage = (asset: Asset | undefined | null): boolean =>
+    asset ? asset.type.startsWith("image/") : false;
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

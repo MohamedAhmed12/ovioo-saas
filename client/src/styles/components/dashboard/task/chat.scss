@@ -6,9 +6,15 @@
         padding-left: 20px;
         padding-bottom: 1rem;
         min-height: 100%;
-        .rce-container-mbox{
-            .rce-mbox{
+        .rce-container-mbox {
+            .rce-mbox {
                 margin: 0;
+                .rce-mbox-body {
+                    .rce-mbox-photo,
+                    .rce-mbox-video {
+                        margin: 0;
+                    }
+                }
             }
         }
     }

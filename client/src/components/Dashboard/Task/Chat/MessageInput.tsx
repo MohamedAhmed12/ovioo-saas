@@ -1,5 +1,8 @@
 import { SendMessageDto } from "@/interfaces/message";
+import { getClient } from "@/utils/getClient";
+import { uploadFiles } from "@/utils/helpers";
 import emojiData from "@emoji-mart/data";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import {
     ChangeEvent,
@@ -10,6 +13,7 @@ import {
     useState,
 } from "react";
 import { Input } from "react-chat-elements";
+import toast from "react-hot-toast";
 import { BiSolidMicrophone } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
 import { IoSendSharp } from "react-icons/io5";
@@ -30,47 +34,89 @@ export default function MessageInput({
     onMessageSend: (formData: SendMessageDto) => void;
 }) {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<SendMessageDto>({
         task_id,
         content: "",
         voice_note_src: "",
-        asset_src: "",
+        asset: null,
     });
 
-    const clearForm = (name: string) => {
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+
+    const updateContent = (value: any) =>
         setFormData((formData) => ({
             ...formData,
-            [name]: "",
+            content: value,
         }));
-    };
+    const resetForm = () =>
+        setFormData({
+            task_id,
+            content: "",
+            voice_note_src: "",
+            asset: null,
+        });
     const handleEmojiSelect = (e: any) => {
         if (inputRef?.current) {
             inputRef.current.value = `${inputRef.current.value}${e.native}`;
-            setFormData((prevState) => ({
-                ...prevState,
-                content: inputRef?.current?.value || formData.content,
-            }));
+            updateContent(inputRef?.current?.value || formData.content);
         }
     };
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            content: e.target.value,
-        }));
+        updateContent(e.target.value);
     };
     const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            handlePressSend("content");
+            handlePressSend("content", formData);
         }
     };
-    const handlePressSend = (name: keyof SendMessageDto) => {
-        if (formData[name].trim() !== "") {
-            onMessageSend(formData);
-            clearForm(name);
+    const handlePressSend = (
+        name: keyof SendMessageDto,
+        data: SendMessageDto
+    ) => {
+        if (data[name]) {
+            if (
+                typeof data[name] === "string" &&
+                (data[name] as string).trim() === ""
+            ) {
+                return;
+            }
+
+            onMessageSend(data);
+            resetForm(); // if voice note will force me to put it raw not using state replace resetForm with updateContent
+
             inputRef?.current && (inputRef.current.value = "");
         }
+    };
+    const handleAssetsUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+        setLoading(true);
+
+        try {
+            let assets = await uploadFiles(
+                e,
+                session,
+                `tasks/${task_id}/assets`,
+                true
+            );
+
+            if (assets) {
+                handlePressSend("asset", {
+                    ...formData,
+                    asset: {
+                        alt: assets[0].s3Path.Key,
+                        src: assets[0].s3Path.Location,
+                        type: assets[0].type,
+                    },
+                });
+            }
+        } catch (e: any) {
+            toast.error("Something went wrong!");
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -103,7 +149,7 @@ export default function MessageInput({
                             size={iconSize}
                             title="send"
                             cursor="pointer"
-                            onClick={() => handlePressSend("content")}
+                            onClick={() => handlePressSend("content", formData)}
                         />
                     ) : (
                         <BiSolidMicrophone
@@ -120,10 +166,11 @@ export default function MessageInput({
             )}
 
             <input
+                className="hidden"
                 type="file"
                 name="fileInput"
                 id="fileInput"
-                className="hidden"
+                onChange={handleAssetsUpload}
             />
         </>
     );
