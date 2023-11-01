@@ -34,9 +34,13 @@ export class ChatService {
         'sender.fullname',
         'sender.avatar',
         'sender.role',
+        'asset.src',
+        'asset.type',
+        'asset.alt',
       ])
       .leftJoin('messages.task', 'task')
       .leftJoin('messages.sender', 'sender')
+      .leftJoin('messages.asset', 'asset')
       .where('task.id = :task_id', { task_id })
       .orderBy('messages.created_at', 'DESC')
       .skip((page - 1) * limit)

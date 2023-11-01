@@ -43,9 +43,10 @@ export class Message extends BaseEntity {
   @OneToOne(() => Asset, (asset) => asset.message, {
     cascade: true,
     eager: true,
+    nullable: true,
   })
   @JoinColumn({ name: 'assetId' })
-  @Field(() => Asset)
+  @Field(() => Asset, { nullable: true })
   asset: Asset;
 
   @CreateDateColumn()

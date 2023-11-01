@@ -91,7 +91,7 @@ type Message {
   voice_note_src: String
   sender: User
   task: Task!
-  asset: Asset!
+  asset: Asset
   created_at: DateTime!
   updated_at: DateTime!
 }
