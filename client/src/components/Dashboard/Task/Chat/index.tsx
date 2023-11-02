@@ -1,9 +1,11 @@
 "use client";
 
-import { MessageInterface, SendMessageDto } from "@/interfaces/message";
+import { useAppDispatch } from "@/hooks/redux";
+import { useCustomQuery } from "@/hooks/useCustomQuery";
+import { SendMessageDto } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
-import { ApolloClient, gql, useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { ApolloClient, gql, useMutation } from "@apollo/client";
+import { useState } from "react";
 import "react-chat-elements/dist/main.css";
 import toast from "react-hot-toast";
 import MessageInput from "./MessageInput";
@@ -59,58 +61,52 @@ export default function Chat({
     client: ApolloClient<any> | undefined;
     task_id: string;
 }) {
-    const [messages, setMessages] = useState<MessageInterface[]>([]);
+    const dispatch = useAppDispatch();
     const [showPicker, setShowPicker] = useState(false);
-    const [page, setPage] = useState(1);
-
-    const {
-        loading: graphQLloading,
-        error,
-        data,
-    } = useQuery(LIST_MESSAGES, {
-        client,
-        fetchPolicy: "no-cache",
-        variables: {
-            data: {
-                task_id,
-                page,
-            },
-        },
-    });
     const [sendMessage] = useMutation(SEND_MESSAGE, { client });
 
-    if (error) throw new Error(JSON.stringify(error));
-
-    useEffect(() => {
-        if (data?.listMessages) {
-            setMessages(data?.listMessages);
-        }
-    }, [graphQLloading, data]);
-
-    const handleSendMessage = async (data: SendMessageDto) => {
+    const handleSendMessage = async (sendMessageData: SendMessageDto) => {
         try {
             const res = await sendMessage({
                 variables: {
-                    data,
+                    data: sendMessageData,
                 },
             });
 
             if (res.data?.sendMessage) {
-                setMessages((oldMsgs) => [...oldMsgs, res.data.sendMessage]);
+                // dispatch(data?.listMessages.push(res.data.sendMessage));
+                data?.listMessages.push(res.data.sendMessage);
             }
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
     };
 
+    const {
+        loading: graphQLloading,
+        error,
+        data,
+        fetchMore,
+    } = useCustomQuery(
+        client,
+        LIST_MESSAGES,
+        { task_id, page: 1 },
+        "network-only",
+        "network-only"
+    );
+
+    if (error) throw new Error(JSON.stringify(error));
+
     return (
         !graphQLloading &&
         data?.listMessages && (
             <div className="chat basis-1/2 relative flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
-                {messages && (
+                {data?.listMessages.length > 0 && (
                     <MessagesWrapper
-                        messages={messages}
+                        task_id={task_id}
                         setShowPicker={setShowPicker}
+                        messages={data?.listMessages}
+                        fetchMore={fetchMore}
                     />
                 )}
                 <MessageInput
