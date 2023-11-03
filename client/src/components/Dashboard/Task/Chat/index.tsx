@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/redux";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { SendMessageDto } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
@@ -61,7 +60,6 @@ export default function Chat({
     client: ApolloClient<any> | undefined;
     task_id: string;
 }) {
-    const dispatch = useAppDispatch();
     const [showPicker, setShowPicker] = useState(false);
     const [sendMessage] = useMutation(SEND_MESSAGE, { client });
 
@@ -73,9 +71,19 @@ export default function Chat({
                 },
             });
 
-            if (res.data?.sendMessage) {
-                // dispatch(data?.listMessages.push(res.data.sendMessage));
-                data?.listMessages.push(res.data.sendMessage);
+            if (client && res?.data?.sendMessage) {
+                client.writeQuery({
+                    query: LIST_MESSAGES,
+                    variables: {
+                        data: { task_id, page: 1 },
+                    },
+                    data: {
+                        ...data,
+                        listMessages: data?.listMessages.concat(
+                            res.data?.sendMessage
+                        ),
+                    },
+                });
             }
         } catch (e: any) {
             toast.error("Something went wrong!");
