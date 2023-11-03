@@ -14,7 +14,7 @@ import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
-const FETCH_PROFILE_WITH_USER = gql`
+const FETCH_USER_WITH_PROFILE = gql`
     query {
         me {
             id
@@ -44,6 +44,7 @@ export default function DashboardContainer({
     const dispatch = useAppDispatch();
     const { errorHandler } = useGraphError({});
     const apolloClient = getClient(session);
+    const currentUser = useAppSelector((state) => state.userReducer.user);
     const mode = useAppSelector((state) => state.mainReducer.mode);
 
     const [open, setOpen] = useState(false);
@@ -53,7 +54,7 @@ export default function DashboardContainer({
         loading: graphQLloading,
         data: userData,
         error: GQLErr,
-    } = useQuery(FETCH_PROFILE_WITH_USER, {
+    } = useQuery(FETCH_USER_WITH_PROFILE, {
         client: apolloClient,
         fetchPolicy: "no-cache",
     });
@@ -62,13 +63,7 @@ export default function DashboardContainer({
         if (!graphQLloading) {
             userData?.me && dispatch(setUser(userData.me));
 
-            if (GQLErr) {
-                if (
-                    GQLErr?.graphQLErrors?.[0]?.extensions?.originalError
-                        ?.statusCode == 401
-                )
-                    signOut();
-            }
+            if (GQLErr) signOut();
         }
     }, [userData, graphQLloading, GQLErr, dispatch]);
 
@@ -86,7 +81,8 @@ export default function DashboardContainer({
     }, [mode]);
 
     return (
-        !loading && (
+        !loading &&
+        currentUser && (
             <main className="flex min-h-screen flex-col dashboard-main-layout pt-32 pb-14 pl-80 pr-8 bg-[#f4f7fd] dark:bg-[#20212c]">
                 <DashboardHeader
                     openNav={open}
