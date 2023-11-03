@@ -3,6 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 let client: ApolloClient<any> | undefined = undefined;
 
@@ -50,6 +51,12 @@ const splitLink = (session: any) =>
     );
 
 export const getClient = (session?: any) => {
+    // log GraphQL error messages only in a dev environment
+    if (process.env.NODE_ENV ==='development') {    
+        loadDevMessages();
+        loadErrorMessages();
+    }
+
     // Create new client if there is no existing one
     // or if we are running on server
     if (!client || typeof window === "undefined") {
