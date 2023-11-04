@@ -38,7 +38,7 @@ export default function TaskModalBody({
                     onChange={(e) => handleOnChange("title", e.target.value)}
                     id="task-name-input"
                     type="text"
-                    className="bg-transparent w-full px-4 py-2 outline-none focus:border-0 rounded-md text-3xl  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-1 ring-0"
+                    className="bg-transparent w-full px-4 py-2 outline-none focus:border-0 rounded-md text-3xl border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-1 ring-0"
                     placeholder=" e.g Take coffee break"
                 />
                 <textarea
@@ -62,19 +62,6 @@ export default function TaskModalBody({
                     }
                     className="project-dropdown"
                 />
-
-                <div className="mt-8 flex flex-col space-y-3">
-                    {subtasks && (
-                        <Subtask
-                            subtasks={subtasks}
-                            setSubtasks={(
-                                newSubtasks: SubTaskInterface[] | undefined
-                            ) => (subtasks = newSubtasks)}
-                            taskId={task.id}
-                            colId={colId}
-                        />
-                    )}
-                </div>
 
                 <Attachement task={task} client={client} />
             </div>
