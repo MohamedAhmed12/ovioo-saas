@@ -17,6 +17,20 @@
                 }
             }
         }
+        .chat-chevron-up {
+            position: absolute;
+            bottom: 18px;
+            right: 30px;
+            button {
+                z-index: 0;
+                background-color: var(--dashboard-dark-icon-color);
+            }
+            .MuiBadge-badge {
+                background: #0ea5e9;
+                top: 4px;
+                right: 4px;
+            }
+        }
     }
     .chat__input {
         textarea {

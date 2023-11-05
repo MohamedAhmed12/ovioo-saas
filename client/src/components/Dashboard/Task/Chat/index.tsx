@@ -4,32 +4,12 @@ import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { SendMessageDto } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "react-chat-elements/dist/main.css";
 import toast from "react-hot-toast";
 import MessageInput from "./MessageInput";
 import MessagesWrapper from "./MessagesWrapper";
 
-const MESSAGE_SENT = gql`
-    subscription Subscription($data: MessageSentSubscriptionDto!) {
-        messageSent(data: $data) {
-            id
-            content
-            voice_note_src
-            asset {
-                src
-                alt
-                type
-            }
-            sender {
-                id
-                fullname
-                avatar
-            }
-            created_at
-        }
-    }
-`;
 const LIST_MESSAGES = gql`
     query ListMessages($data: ListMessageDto!) {
         listMessages(data: $data) {
@@ -109,27 +89,6 @@ export default function Chat({
         }
     };
 
-    useEffect(() => {
-        subscribeToMore({
-            document: MESSAGE_SENT,
-            variables: { data: { task_id } },
-            updateQuery: (
-                prev: any,
-                { subscriptionData }: { subscriptionData: any }
-            ) => {
-                if (!subscriptionData?.data?.messageSent) {
-                    return prev;
-                }
-                return {
-                    ...prev,
-                    listMessages: [
-                        ...prev.listMessages,
-                        subscriptionData.data.messageSent,
-                    ],
-                };
-            },
-        });
-    }, [subscribeToMore]);
 
     return (
         !graphQLloading &&
@@ -140,6 +99,7 @@ export default function Chat({
                     setShowPicker={setShowPicker}
                     messages={data?.listMessages}
                     fetchMore={fetchMore}
+                    subscribeToMore={subscribeToMore}
                 />
                 <MessageInput
                     task_id={task_id}
