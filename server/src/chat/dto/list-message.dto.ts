@@ -12,5 +12,10 @@ export class ListMessageDto extends MessageSentSubscriptionDto {
   @IsOptional()
   @IsNumber()
   @Field(() => Number, { nullable: true })
+  offsetPlus?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Field(() => Number, { nullable: true })
   limit?: number;
 }

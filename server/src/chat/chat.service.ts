@@ -22,10 +22,12 @@ export class ChatService {
   ) {}
 
   async listMessages({
-    page = 0,
+    page,
+    offsetPlus = 0,
     limit = 10,
     task_id,
   }: ListMessageDto): Promise<Message[]> {
+    const offset = (page - 1) * limit + offsetPlus;
     const messages = await this.messageRepository
       .createQueryBuilder('messages')
       .select('messages')
@@ -43,7 +45,7 @@ export class ChatService {
       .leftJoin('messages.asset', 'asset')
       .where('task.id = :task_id', { task_id })
       .orderBy('messages.created_at', 'DESC')
-      .skip((page - 1) * limit)
+      .skip(offset)
       .take(limit)
       .getMany();
 

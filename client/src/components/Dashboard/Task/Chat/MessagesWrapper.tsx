@@ -45,6 +45,7 @@ export default function MessagesWrapper({
     const [chevronUpNumber, setChevronUpNumber] = useState<number>(0);
     const [showChevronUp, setShowChevronUp] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
+    const [offsetPlus, setOffsetPlus] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
 
     const handleOnScroll = ({ currentTarget }: any) => {
@@ -54,6 +55,7 @@ export default function MessagesWrapper({
         setShowChevronUp(showChevron);
 
         if (currentTarget.scrollTop == 0) loadMoreMessagesOnScroll();
+
     };
     const loadMoreMessagesOnScroll = () => {
         setPage((page) => page + 1);
@@ -62,6 +64,7 @@ export default function MessagesWrapper({
                 data: {
                     task_id,
                     page: page + 1,
+                    offsetPlus,
                 },
             },
             updateQuery: (
@@ -104,6 +107,7 @@ export default function MessagesWrapper({
                     return prev;
                 }
 
+                setOffsetPlus((offsetPlus) => offsetPlus + 1);
                 subscriptionData.data.messageSent.sender.id == currentUser.id
                     ? scrollToBottom()
                     : setChevronUpNumber((prev) => prev + 1);
