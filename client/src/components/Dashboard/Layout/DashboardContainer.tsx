@@ -3,17 +3,23 @@
 import DashboardHeader from "@/components/Dashboard/Layout/Header/index";
 import Navbar from "@/components/Dashboard/Layout/Navbar/index";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { useGraphError } from "@/hooks/useGraphError";
 import { ModeEnum } from "@/interfaces/store/main";
 import { setUser } from "@/store/features/user";
 import "@/styles/app/dashboard/layout.scss";
 import { getClient } from "@/utils/getClient";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
+const UPDATE_USER = gql`
+    mutation ($data: UpdateUserDto!) {
+        updateUser(data: $data) {
+            id
+        }
+    }
+`;
 const FETCH_USER_WITH_PROFILE = gql`
     query {
         me {
@@ -42,23 +48,46 @@ export default function DashboardContainer({
     session: Session | null;
 }) {
     const dispatch = useAppDispatch();
-    const { errorHandler } = useGraphError({});
-    const apolloClient = getClient(session);
+    const client = getClient(session);
     const currentUser = useAppSelector((state) => state.userReducer.user);
     const mode = useAppSelector((state) => state.mainReducer.mode);
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const [updateUser] = useMutation(UPDATE_USER, { client });
     const {
         loading: graphQLloading,
         data: userData,
         error: GQLErr,
     } = useQuery(FETCH_USER_WITH_PROFILE, {
-        client: apolloClient,
+        client,
         fetchPolicy: "no-cache",
     });
 
+    const handleBeforeUnload = () =>
+        updateUser({
+            variables: {
+                data: {
+                    isActive: false,
+                },
+            },
+        });
+
+    useEffect(() => {
+        updateUser({
+            variables: {
+                data: {
+                    isActive: true,
+                },
+            },
+        });
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
     useEffect(() => {
         if (!graphQLloading) {
             userData?.me && dispatch(setUser(userData.me));
@@ -66,7 +95,6 @@ export default function DashboardContainer({
             if (GQLErr) signOut();
         }
     }, [userData, graphQLloading, GQLErr, dispatch]);
-
     useEffect(() => {
         const htmlElement: HTMLElement = document.documentElement;
 

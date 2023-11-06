@@ -30,6 +30,7 @@ type User {
   avatar: String
   company: String
   phone: Int
+  isActive: Boolean!
   provider: String!
   created_at: DateTime!
   updated_at: DateTime!
@@ -133,6 +134,7 @@ type Query {
 input ListMessageDto {
   task_id: String!
   page: Float!
+  offsetPlus: Float
   limit: Float
 }
 
@@ -182,8 +184,8 @@ input ChangePasswordDto {
 input UpdateUserDto {
   avatar: String
   fullname: String
-  email: String
   phone: Float
+  isActive: Boolean
 }
 
 input CreateMemberDto {

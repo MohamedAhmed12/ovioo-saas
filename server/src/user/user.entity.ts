@@ -48,6 +48,10 @@ export class User extends BaseEntity {
   @Field(() => Int, { nullable: true })
   phone: number;
 
+  @Column('boolean', { default: false })
+  @Field(() => Boolean, { defaultValue: false })
+  isActive: boolean;
+
   @Column('text')
   @Field(() => String)
   provider: string;
