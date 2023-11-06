@@ -1,7 +1,9 @@
 import { useAppSelector } from "@/hooks/redux";
 import { MessageInterface } from "@/interfaces/message";
-import { gql } from "@apollo/client";
+import { getClient } from "@/utils/getClient";
+import { gql, useMutation } from "@apollo/client";
 import { Badge, Fab } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import OviooMessage from "./OviooMessage";
@@ -27,29 +29,39 @@ const MESSAGE_SENT = gql`
         }
     }
 `;
+const UPDATE_MESSAGE = gql`
+    mutation Mutation($data: UpdateMessageDto!) {
+        updateMessage(data: $data)
+    }
+`;
 
 export default function MessagesWrapper({
     task_id,
-    rawMessages,
     setShowPicker,
+    setMessages,
+    messages,
     fetchMore,
     subscribeToMore,
 }: {
     task_id: string;
-    rawMessages: MessageInterface[];
     setShowPicker: Dispatch<SetStateAction<boolean>>;
+    setMessages: Dispatch<SetStateAction<any[]>>;
+    messages: any[];
     fetchMore: any;
     subscribeToMore: any;
 }) {
-    const currentUser = useAppSelector((state) => state.userReducer.user);
     const [chevronUpNumber, setChevronUpNumber] = useState<number>(0);
     const [showChevronUp, setShowChevronUp] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
     const [offsetPlus, setOffsetPlus] = useState<number>(0);
     const [lastMessage, setLastMessage] = useState<MessageInterface>();
-    const [messages, setMessages] = useState<MessageInterface[]>(rawMessages);
     const [prevScrollHeight, setPrevScrollHeight] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
+    const currentUser = useAppSelector((state) => state.userReducer.user);
+
+    const session = useSession();
+    const client = getClient(session);
+    const [updateMessage] = useMutation(UPDATE_MESSAGE, { client });
 
     const handleOnScroll = ({ currentTarget }: any) => {
         const showChevron =
@@ -109,11 +121,7 @@ export default function MessagesWrapper({
                     return prev;
                 }
 
-                setOffsetPlus((offsetPlus) => offsetPlus + 1);
-                setMessages((messages) => [
-                    ...messages,
-                    subscriptionData.data.messageSent,
-                ]);
+                setOffsetPlus((offsetPlus) => offsetPlus + 1); // to prevent fetching msgs already exist
             },
         });
 
@@ -143,11 +151,11 @@ export default function MessagesWrapper({
             onClick={() => setShowPicker(false)}
             className="messages__wrapper rounded-t-md flex flex-col space-y-3 w-full bg-[#fae8bc] overflow-auto"
         >
-            {messages?.map((message: MessageInterface) =>
+            {messages?.map((message: MessageInterface, index: number) =>
                 !message.sender ? (
-                    <OviooSystemMessage message={message} key={message.id} />
+                    <OviooSystemMessage message={message} key={index} />
                 ) : (
-                    <OviooMessage message={message} key={message.id} />
+                    <OviooMessage message={message} key={index} />
                 )
             )}
 

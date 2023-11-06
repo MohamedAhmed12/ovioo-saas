@@ -1,10 +1,11 @@
 "use client";
 
+import { useAppSelector } from "@/hooks/redux";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
-import { SendMessageDto } from "@/interfaces/message";
+import { MessageStatusEnum, SendMessageDto } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-chat-elements/dist/main.css";
 import toast from "react-hot-toast";
 import MessageInput from "./MessageInput";
@@ -16,6 +17,7 @@ const LIST_MESSAGES = gql`
             id
             content
             voice_note_src
+            status
             asset {
                 src
                 alt
@@ -36,6 +38,7 @@ const SEND_MESSAGE = gql`
             id
             content
             voice_note_src
+            status
             asset {
                 src
                 alt
@@ -58,7 +61,9 @@ export default function Chat({
     client: ApolloClient<any> | undefined;
     task_id: string;
 }) {
-    const [showPicker, setShowPicker] = useState(false);
+    const currentUser = useAppSelector((state) => state.userReducer.user);
+    const [showPicker, setShowPicker] = useState<boolean>(false);
+    const [messages, setMessages] = useState<any[]>([]);
     const [sendMessage] = useMutation(SEND_MESSAGE, { client });
 
     const {
@@ -77,27 +82,49 @@ export default function Chat({
 
     if (error) throw new Error(JSON.stringify(error));
 
+    useEffect(() => {
+        if (data?.listMessages && data?.listMessages?.length > 0)
+            setMessages(data.listMessages);
+    }, [data]);
+
     const handleSendMessage = async (sendMessageData: SendMessageDto) => {
         try {
-            const res = await sendMessage({
+            // add msg to msgs wrapper with waiting status
+            const { id, avatar, fullname } = currentUser;
+            const newMessage = {
+                ...sendMessageData,
+                sender: { id, avatar, fullname },
+                created_at: Date(),
+            };
+            setMessages((messages) => [...messages, newMessage]);
+
+            // send message
+            const { data } = await sendMessage({
                 variables: {
-                    data: sendMessageData,
+                    data: {
+                        ...sendMessageData,
+                        status: MessageStatusEnum.SENT,
+                    },
                 },
             });
+
+            messages[messages.length - 1] = data.sendMessage;
+            setMessages(messages);
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
     };
 
-
     return (
         !graphQLloading &&
-        data?.listMessages && (
+        data?.listMessages?.length > 0 &&
+        messages?.length > 0 && (
             <div className="chat basis-1/2 relative flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
                 <MessagesWrapper
                     task_id={task_id}
                     setShowPicker={setShowPicker}
-                    rawMessages={data?.listMessages}
+                    setMessages={setMessages}
+                    messages={messages}
                     fetchMore={fetchMore}
                     subscribeToMore={subscribeToMore}
                 />

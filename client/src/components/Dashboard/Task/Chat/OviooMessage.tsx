@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/hooks/redux";
-import { MessageInterface, MessageStatus } from "@/interfaces/message";
+import { MessageInterface, MessageStatusEnum } from "@/interfaces/message";
 import { isImage, isVideo } from "@/utils/helpers";
 import { MessageBox } from "react-chat-elements";
 
@@ -42,7 +42,7 @@ const OviooMessage = ({ message }: { message: MessageInterface }) => {
             focus={true}
             notch={false}
             retracted={false}
-            status={"waiting" as MessageStatus}
+            status={message.status || MessageStatusEnum.WAITING}
             type={getType()}
             data={getMediaDate()}
             styles={{ color: "black" }}

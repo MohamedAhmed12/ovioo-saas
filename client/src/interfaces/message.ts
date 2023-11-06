@@ -9,8 +9,8 @@ export interface MessageInterface {
     asset: Asset | null;
     sender: User | null;
     task: TaskInterface;
+    status: MessageStatusEnum;
     created_at: Date;
-    updated_at: Date;
 }
 
 export interface SendMessageDto {
@@ -20,4 +20,9 @@ export interface SendMessageDto {
     asset: Partial<Asset> | null;
 }
 
-export type MessageStatus = "waiting" | "sent" | "received" | "read";
+export enum MessageStatusEnum {
+    WAITING = "waiting",
+    SENT = "sent",
+    RECEIVED = "received",
+    READ = "read",
+}

@@ -90,6 +90,7 @@ type Message {
   id: ID!
   content: String
   voice_note_src: String
+  status: String
   sender: User
   task: Task!
   asset: Asset
@@ -158,6 +159,7 @@ type Mutation {
   updateProject(data: UpdateProjectDto!): Boolean!
   deleteProject(id: String!): Boolean!
   sendMessage(data: SendMessageDto!): Message!
+  updateMessage(data: UpdateMessageDto!): Boolean!
 }
 
 input LoginDto {
@@ -270,6 +272,12 @@ input SendMessageDto {
   content: String
   voice_note_src: String
   asset: AssetDto
+  status: String
+}
+
+input UpdateMessageDto {
+  id: String!
+  status: String
 }
 
 type Subscription {

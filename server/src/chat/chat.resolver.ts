@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -7,14 +8,14 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
+import { AuthGuard } from 'src/shared/middlewares/auth.guard';
+import { User } from 'src/user/user.entity';
 import { ChatService } from './chat.service';
+import { ListMessageDto } from './dto/list-message.dto';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
 import { SendMessageDto } from './dto/send-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './message.entity';
-import { ListMessageDto } from './dto/list-message.dto';
-import { AuthGuard } from 'src/shared/middlewares/auth.guard';
-import { UseGuards } from '@nestjs/common';
-import { User } from 'src/user/user.entity';
 
 @Resolver(() => Message)
 export class ChatResolver {
@@ -49,5 +50,11 @@ export class ChatResolver {
   })
   messageSent(@Args('data') data: MessageSentSubscriptionDto) {
     return this.pubSub.asyncIterator('messageSent');
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  async updateMessage(@Args('data') data: UpdateMessageDto) {
+    return await this.chatService.updateMessage(data);
   }
 }

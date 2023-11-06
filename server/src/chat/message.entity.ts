@@ -12,6 +12,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { MessageStatusEnum } from './enum/message-status.enum';
 
 @Entity('message')
 @ObjectType({ description: 'message' })
@@ -27,6 +28,13 @@ export class Message extends BaseEntity {
   @Column('text', { nullable: true })
   @Field(() => String, { nullable: true })
   voice_note_src: string;
+
+  @Column({
+    type: 'text',
+    default: MessageStatusEnum.WAITING,
+  })
+  @Field(() => String, { nullable: true })
+  status: MessageStatusEnum;
 
   @ManyToOne(() => User, (user) => user.messages, {
     eager: true,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
@@ -7,6 +7,7 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -63,6 +64,7 @@ export class ChatService {
   private async getMsgSender(id: number) {
     return await this.userRepository.findOneBy({ id });
   }
+
   private async getMsgTask(id: number) {
     const task = await this.taskRepository.findOneBy({ id });
 
@@ -76,5 +78,19 @@ export class ChatService {
       });
 
     return task;
+  }
+
+  async updateMessage(data: UpdateMessageDto): Promise<boolean> {
+    const message = await this.messageRepository.findOneBy({ id: data.id });
+    if (!message)
+      throw new NotFoundException('Couldn’t find message matches id');
+
+    await this.messageRepository.merge(message, data);
+    const messageUpdated = await this.messageRepository.update(
+      message.id,
+      message,
+    );
+
+    return !!messageUpdated.affected;
   }
 }
