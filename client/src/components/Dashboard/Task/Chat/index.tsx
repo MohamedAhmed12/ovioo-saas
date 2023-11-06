@@ -97,7 +97,7 @@ export default function Chat({
                 <MessagesWrapper
                     task_id={task_id}
                     setShowPicker={setShowPicker}
-                    messages={data?.listMessages}
+                    rawMessages={data?.listMessages}
                     fetchMore={fetchMore}
                     subscribeToMore={subscribeToMore}
                 />

@@ -30,13 +30,13 @@ const MESSAGE_SENT = gql`
 
 export default function MessagesWrapper({
     task_id,
-    messages,
+    rawMessages,
     setShowPicker,
     fetchMore,
     subscribeToMore,
 }: {
     task_id: string;
-    messages: MessageInterface[];
+    rawMessages: MessageInterface[];
     setShowPicker: Dispatch<SetStateAction<boolean>>;
     fetchMore: any;
     subscribeToMore: any;
@@ -46,6 +46,9 @@ export default function MessagesWrapper({
     const [showChevronUp, setShowChevronUp] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
     const [offsetPlus, setOffsetPlus] = useState<number>(0);
+    const [lastMessage, setLastMessage] = useState<MessageInterface>();
+    const [messages, setMessages] = useState<MessageInterface[]>(rawMessages);
+    const [prevScrollHeight, setPrevScrollHeight] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
 
     const handleOnScroll = ({ currentTarget }: any) => {
@@ -55,7 +58,6 @@ export default function MessagesWrapper({
         setShowChevronUp(showChevron);
 
         if (currentTarget.scrollTop == 0) loadMoreMessagesOnScroll();
-
     };
     const loadMoreMessagesOnScroll = () => {
         setPage((page) => page + 1);
@@ -78,13 +80,13 @@ export default function MessagesWrapper({
                     return prev;
                 }
 
-                return {
-                    ...prev,
-                    listMessages: [
-                        ...fetchMoreResult.listMessages,
-                        ...prev.listMessages,
-                    ],
-                };
+                if (msgsWrapper?.current) {
+                    setPrevScrollHeight(msgsWrapper.current.scrollHeight);
+                }
+                setMessages((messages) => [
+                    ...fetchMoreResult.listMessages,
+                    ...messages,
+                ]);
             },
         });
     };
@@ -108,17 +110,10 @@ export default function MessagesWrapper({
                 }
 
                 setOffsetPlus((offsetPlus) => offsetPlus + 1);
-                subscriptionData.data.messageSent.sender.id == currentUser.id
-                    ? scrollToBottom()
-                    : setChevronUpNumber((prev) => prev + 1);
-
-                return {
-                    ...prev,
-                    listMessages: [
-                        ...prev.listMessages,
-                        subscriptionData.data.messageSent,
-                    ],
-                };
+                setMessages((messages) => [
+                    ...messages,
+                    subscriptionData.data.messageSent,
+                ]);
             },
         });
 
@@ -126,6 +121,20 @@ export default function MessagesWrapper({
             unsubscribe();
         };
     }, []);
+
+    useEffect(() => {
+        if (messages?.length > 0 && msgsWrapper?.current) {
+            if (messages[messages.length] === lastMessage) {
+                msgsWrapper.current.scrollTop =
+                    msgsWrapper.current.scrollHeight - prevScrollHeight;
+            } else {
+                messages[messages.length].sender?.id == currentUser.id
+                    ? scrollToBottom()
+                    : setChevronUpNumber((prev) => prev + 1);
+            }
+        }
+        setLastMessage(messages[messages.length]);
+    }, [messages]);
 
     return (
         <div
@@ -141,6 +150,7 @@ export default function MessagesWrapper({
                     <OviooMessage message={message} key={message.id} />
                 )
             )}
+
             {showChevronUp && (
                 <Badge
                     badgeContent={chevronUpNumber}
