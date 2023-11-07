@@ -10,6 +10,8 @@ export interface MessageInterface {
     sender: User | null;
     task: TaskInterface;
     status: MessageStatusEnum;
+    received_by: string;
+    read_by: string[];
     created_at: Date;
 }
 

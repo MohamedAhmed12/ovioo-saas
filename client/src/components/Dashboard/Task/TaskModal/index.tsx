@@ -49,28 +49,6 @@ const EDIT_TASK = gql`
     mutation updateTask($data: UpdateTaskDto!) {
         updateTask(data: $data) {
             id
-            designer {
-                id
-                fullname
-                avatar
-            }
-            description
-            title
-            status
-            project {
-                id
-            }
-            type {
-                id
-            }
-            assets {
-                src
-            }
-            subtasks {
-                id
-                title
-                status
-            }
         }
     }
 `;

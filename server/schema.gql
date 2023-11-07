@@ -91,6 +91,7 @@ type Message {
   content: String
   voice_note_src: String
   status: String
+  received_by: [String!]!
   sender: User
   task: Task!
   asset: Asset
@@ -160,6 +161,7 @@ type Mutation {
   deleteProject(id: String!): Boolean!
   sendMessage(data: SendMessageDto!): Message!
   updateMessage(data: UpdateMessageDto!): Boolean!
+  receiveAllSentMessages: Boolean!
 }
 
 input LoginDto {

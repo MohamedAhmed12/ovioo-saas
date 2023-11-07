@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { MessageStatusEnum } from './enum/message-status.enum';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -92,5 +93,28 @@ export class ChatService {
     );
 
     return !!messageUpdated.affected;
+  }
+
+  async receiveAllSentMessages(authUser: User): Promise<boolean> {
+    const messages = await this.messageRepository.find({
+      where: {
+        task: {
+          team: {
+            id: authUser.team.id,
+          },
+        },
+      },
+    });
+    messages.map((message) => {
+      message.status = MessageStatusEnum.RECEIVED;
+      if (!message.received_by.includes(authUser.fullname)) {
+        message.received_by.push(` ${authUser.fullname}`);
+      }
+
+      return message;
+    });
+    await this.messageRepository.save(messages);
+
+    return true;
   }
 }

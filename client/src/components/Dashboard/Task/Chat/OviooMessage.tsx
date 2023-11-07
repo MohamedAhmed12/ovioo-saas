@@ -2,6 +2,7 @@ import { useAppSelector } from "@/hooks/redux";
 import { MessageInterface, MessageStatusEnum } from "@/interfaces/message";
 import { isImage, isVideo } from "@/utils/helpers";
 import { MessageBox } from "react-chat-elements";
+import ReactHtmlParser from "react-html-parser";
 
 const OviooMessage = ({ message }: { message: MessageInterface }) => {
     const authUser = useAppSelector((state) => state.userReducer.user);
@@ -26,6 +27,18 @@ const OviooMessage = ({ message }: { message: MessageInterface }) => {
                 },
             };
     };
+    const getStatusTitle = () => {
+        if (
+            message.status == MessageStatusEnum.RECEIVED &&
+            message.received_by
+        ) {
+            return `Received by: ${message.received_by}`;
+        }
+        if (message.status == MessageStatusEnum.READ) {
+            return `Read by: `;
+        }
+        return "";
+    };
 
     return (
         <MessageBox
@@ -43,6 +56,7 @@ const OviooMessage = ({ message }: { message: MessageInterface }) => {
             notch={false}
             retracted={false}
             status={message.status || MessageStatusEnum.WAITING}
+            statusTitle={getStatusTitle()}
             type={getType()}
             data={getMediaDate()}
             styles={{ color: "black" }}

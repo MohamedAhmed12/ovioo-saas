@@ -1,9 +1,7 @@
 import { useAppSelector } from "@/hooks/redux";
 import { MessageInterface } from "@/interfaces/message";
-import { getClient } from "@/utils/getClient";
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Badge, Fab } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import OviooMessage from "./OviooMessage";
@@ -27,11 +25,6 @@ const MESSAGE_SENT = gql`
             }
             created_at
         }
-    }
-`;
-const UPDATE_MESSAGE = gql`
-    mutation Mutation($data: UpdateMessageDto!) {
-        updateMessage(data: $data)
     }
 `;
 
@@ -58,10 +51,6 @@ export default function MessagesWrapper({
     const [prevScrollHeight, setPrevScrollHeight] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
     const currentUser = useAppSelector((state) => state.userReducer.user);
-
-    const session = useSession();
-    const client = getClient(session);
-    const [updateMessage] = useMutation(UPDATE_MESSAGE, { client });
 
     const handleOnScroll = ({ currentTarget }: any) => {
         const showChevron =

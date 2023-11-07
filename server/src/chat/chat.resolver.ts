@@ -15,7 +15,9 @@ import { ListMessageDto } from './dto/list-message.dto';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { UpdateMessagesDto } from './dto/update-messages.dto';
 import { Message } from './message.entity';
+import { MessageStatusEnum } from './enum/message-status.enum';
 
 @Resolver(() => Message)
 export class ChatResolver {
@@ -56,5 +58,11 @@ export class ChatResolver {
   @Mutation(() => Boolean)
   async updateMessage(@Args('data') data: UpdateMessageDto) {
     return await this.chatService.updateMessage(data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  async receiveAllSentMessages(@Context('user') authUser: User) {
+    return await this.chatService.receiveAllSentMessages(authUser);
   }
 }

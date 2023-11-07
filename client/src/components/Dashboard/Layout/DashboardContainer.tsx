@@ -3,6 +3,7 @@
 import DashboardHeader from "@/components/Dashboard/Layout/Header/index";
 import Navbar from "@/components/Dashboard/Layout/Navbar/index";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { MessageStatusEnum } from "@/interfaces/message";
 import { ModeEnum } from "@/interfaces/store/main";
 import { setUser } from "@/store/features/user";
 import "@/styles/app/dashboard/layout.scss";
@@ -18,6 +19,11 @@ const UPDATE_USER = gql`
         updateUser(data: $data) {
             id
         }
+    }
+`;
+const RECRIVE_ALL_SENT_MESSAGES = gql`
+    mutation ReceiveAllSentMessages {
+        receiveAllSentMessages
     }
 `;
 const FETCH_USER_WITH_PROFILE = gql`
@@ -56,6 +62,9 @@ export default function DashboardContainer({
     const [loading, setLoading] = useState(true);
 
     const [updateUser] = useMutation(UPDATE_USER, { client });
+    const [receiveAllSentMessages] = useMutation(RECRIVE_ALL_SENT_MESSAGES, {
+        client,
+    });
     const {
         loading: graphQLloading,
         data: userData,
@@ -82,6 +91,7 @@ export default function DashboardContainer({
                 },
             },
         });
+        receiveAllSentMessages({});
         window.addEventListener("beforeunload", handleBeforeUnload);
 
         return () => {

@@ -18,6 +18,7 @@ const LIST_MESSAGES = gql`
             content
             voice_note_src
             status
+            received_by
             asset {
                 src
                 alt
@@ -39,6 +40,7 @@ const SEND_MESSAGE = gql`
             content
             voice_note_src
             status
+            received_by
             asset {
                 src
                 alt

@@ -36,6 +36,10 @@ export class Message extends BaseEntity {
   @Field(() => String, { nullable: true })
   status: MessageStatusEnum;
 
+  @Column('varchar', { array: true, default: [] })
+  @Field(() => [String], { defaultValue: [] })
+  received_by: string[];
+
   @ManyToOne(() => User, (user) => user.messages, {
     eager: true,
     nullable: true,
