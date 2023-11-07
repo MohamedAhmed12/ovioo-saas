@@ -65,4 +65,13 @@ export class ChatResolver {
   async receiveAllSentMessages(@Context('user') authUser: User) {
     return await this.chatService.receiveAllSentMessages(authUser);
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  async readTaskMessages(
+    @Context('user') authUser: User,
+    @Args('taskId') taskId: string,
+  ) {
+    return await this.chatService.readTaskMessages(authUser, taskId);
+  }
 }

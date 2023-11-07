@@ -92,6 +92,7 @@ type Message {
   voice_note_src: String
   status: String
   received_by: [String!]!
+  read_by: [String!]!
   sender: User
   task: Task!
   asset: Asset
@@ -162,6 +163,7 @@ type Mutation {
   sendMessage(data: SendMessageDto!): Message!
   updateMessage(data: UpdateMessageDto!): Boolean!
   receiveAllSentMessages: Boolean!
+  readTaskMessages(taskId: String!): Boolean!
 }
 
 input LoginDto {

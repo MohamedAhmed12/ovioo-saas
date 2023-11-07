@@ -106,9 +106,35 @@ export class ChatService {
       },
     });
     messages.map((message) => {
+      if (message.sender.id == authUser.id) return message;
+
       message.status = MessageStatusEnum.RECEIVED;
-      if (!message.received_by.includes(authUser.fullname)) {
+      if (!message.received_by.includes(` ${authUser.fullname}`)) {
         message.received_by.push(` ${authUser.fullname}`);
+      }
+
+      return message;
+    });
+    await this.messageRepository.save(messages);
+
+    return true;
+  }
+
+  async readTaskMessages(authUser: User, taskId: string): Promise<boolean> {
+    const messages = await this.messageRepository.find({
+      where: {
+        task: {
+          id: +taskId,
+        },
+      },
+    });
+
+    messages.map((message) => {
+      if (message.sender.id == authUser.id) return message;
+
+      message.status = MessageStatusEnum.READ;
+      if (!message.read_by.includes(authUser.fullname)) {
+        message.read_by.push(` ${authUser.fullname}`);
       }
 
       return message;

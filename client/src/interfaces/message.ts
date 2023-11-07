@@ -11,7 +11,7 @@ export interface MessageInterface {
     task: TaskInterface;
     status: MessageStatusEnum;
     received_by: string;
-    read_by: string[];
+    read_by: string;
     created_at: Date;
 }
 

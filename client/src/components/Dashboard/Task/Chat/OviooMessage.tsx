@@ -35,7 +35,7 @@ const OviooMessage = ({ message }: { message: MessageInterface }) => {
             return `Received by: ${message.received_by}`;
         }
         if (message.status == MessageStatusEnum.READ) {
-            return `Read by: `;
+            return `Read by: ${message.read_by}`;
         }
         return "";
     };

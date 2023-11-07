@@ -40,6 +40,10 @@ export class Message extends BaseEntity {
   @Field(() => [String], { defaultValue: [] })
   received_by: string[];
 
+  @Column('varchar', { array: true, default: [] })
+  @Field(() => [String], { defaultValue: [] })
+  read_by: string[];
+
   @ManyToOne(() => User, (user) => user.messages, {
     eager: true,
     nullable: true,
