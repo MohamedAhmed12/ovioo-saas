@@ -5,14 +5,14 @@ import { TaskInterface, getTaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
-import { Avatar, IconButton, Tooltip, styled } from "@mui/material";
+import { Avatar, IconButton, Tooltip } from "@mui/material";
 import AvatarGroup from "@mui/material/AvatarGroup";
+import Badge from "@mui/material/Badge";
 import { useSession } from "next-auth/react";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { MdAccountCircle, MdDelete } from "react-icons/md";
 import OviooDropDown from "../../OviooDropDown";
-import Badge from "@mui/material/Badge";
 
 const NUM_SHOWN_ACTIVE_USERS = 3;
 const DELETE_TASK = gql`
@@ -121,9 +121,16 @@ export default function TaskModalHeader({
                             ))}
 
                         <Tooltip
-                            title={task?.team?.members.map((member) => (
-                                <span key={member.id} className="flex flex-wrap">{member.fullname}</span>
-                            ))}
+                            title={task?.team?.members
+                                .slice(NUM_SHOWN_ACTIVE_USERS)
+                                .map((member) => (
+                                    <span
+                                        key={member.id}
+                                        className="flex flex-wrap"
+                                    >
+                                        {member.fullname}
+                                    </span>
+                                ))}
                         >
                             <Avatar>
                                 {getNumberOfExtraAvatar(

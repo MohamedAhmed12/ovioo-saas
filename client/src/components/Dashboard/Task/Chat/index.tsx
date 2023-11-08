@@ -18,7 +18,7 @@ const LIST_MESSAGES = gql`
             content
             voice_note_src
             status
-            received_by            
+            received_by
             read_by
             asset {
                 src
@@ -41,7 +41,7 @@ const SEND_MESSAGE = gql`
             content
             voice_note_src
             status
-            received_by            
+            received_by
             read_by
             asset {
                 src
@@ -100,7 +100,9 @@ export default function Chat({
                 sender: { id, avatar, fullname },
                 created_at: Date(),
             };
-            setMessages((messages) => [...messages, newMessage]);
+
+            const newMessages = [...messages, newMessage];
+            setMessages(() => newMessages);
 
             // send message
             const { data } = await sendMessage({
@@ -112,8 +114,9 @@ export default function Chat({
                 },
             });
 
-            messages[messages.length - 1] = data.sendMessage;
-            setMessages(messages);
+            newMessages.pop();
+            newMessages.push(data.sendMessage);
+            setMessages(newMessages);
         } catch (e: any) {
             toast.error("Something went wrong!");
         }

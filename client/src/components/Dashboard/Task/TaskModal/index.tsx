@@ -45,6 +45,7 @@ const SHOW_TASK = gql`
             }
             team {
                 members {
+                    id
                     avatar
                     fullname
                 }
