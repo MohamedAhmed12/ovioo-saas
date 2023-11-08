@@ -15,6 +15,38 @@
                 width: 100%;
             }
         }
+        .MuiAvatarGroup-root {
+            .MuiAvatar-root {
+                border: none;
+            }
+            .MuiBadge-badge {
+                background-color: #44b700;
+                color: #44b700;
+                box-shadow: rgb(18, 18, 18) 0px 0px 0px 2px;
+                &::after {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    animation: 1.2s ease-in-out 0s infinite normal none running
+                        ripple;
+                    border: 1px solid currentColor;
+                    content: "";
+                }
+            }
+            @keyframes ripple {
+                0% {
+                    transform: scale(0.8);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2.4);
+                    opacity: 0;
+                }
+            }
+        }
     }
     .task-modal__body {
         .assets__default-card {
@@ -33,7 +65,7 @@
                 width: 250px;
             }
         }
-        &.task-status-dropdown{
+        &.task-status-dropdown {
             width: 147px;
             .MuiInputBase-formControl {
                 width: 147px;

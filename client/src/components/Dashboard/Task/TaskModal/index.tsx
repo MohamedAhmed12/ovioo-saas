@@ -3,7 +3,7 @@ import { setSelectedTask } from "@/store/features/task";
 import "@/styles/components/dashboard/task/task-modal.scss";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useMediaQuery } from "@mui/material";
+import { Badge, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
 import { useSession } from "next-auth/react";
@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import Chat from "../Chat";
 import TaskModalBody from "./TaskModalBody";
 import TaskModalHeader from "./TaskModalHeader";
+import styled from "@emotion/styled";
 
 const SHOW_TASK = gql`
     query ShowTask($id: String!) {
@@ -41,6 +42,12 @@ const SHOW_TASK = gql`
                 id
                 title
                 status
+            }
+            team {
+                members {
+                    avatar
+                    fullname
+                }
             }
         }
     }
@@ -104,7 +111,7 @@ export default function TaskModal({
 
     const onSubmit = async () => {
         try {
-            const { designer, assets, subtasks, ...restTask } = task;
+            const { designer, assets, subtasks, team, ...restTask } = task;
             await editTask({
                 variables: {
                     data: restTask,

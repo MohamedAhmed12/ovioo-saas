@@ -1,6 +1,7 @@
 import { Asset } from "../asset";
 import { MessageInterface } from "../message";
 import { Project } from "../project";
+import { Team } from "../team";
 import { UserInterface } from "../user";
 
 export enum TaskStatus {
@@ -40,6 +41,7 @@ export interface TaskInterface {
     project: Project;
     type: TaskType;
     designer?: UserInterface;
+    team?:Team;
     assets: Asset[];
     messages: MessageInterface[];
 }

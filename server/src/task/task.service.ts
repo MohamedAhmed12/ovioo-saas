@@ -44,7 +44,13 @@ export class TaskService {
   }
 
   async showTask(authUser: User, id: string): Promise<Task> {
-    const task = await this.taskRepository.findOneBy({ id: +id });
+    const task = await this.taskRepository
+      .createQueryBuilder('task')
+      .leftJoinAndSelect('task.type', 'type')
+      .leftJoinAndSelect('task.team', 'team')
+      .leftJoinAndSelect('team.members', 'member', 'member.isActive = TRUE')
+      .where('task.id = :id', { id: +id })
+      .getOne();
     const taskTeam = await task.team;
 
     if (!task)
