@@ -52,14 +52,18 @@ export default function Task() {
                     "bg-[#f4f7fd] h-full flex dark:bg-[#20212c] gap-6 pb-14 overflow-x-scroll"
                 }
             >
-                {Object.keys(TaskStatus).map((key: any) => (
-                    <Column
-                        key={key}
-                        title={TaskStatus[key as keyof typeof TaskStatus]}
-                        color={TaskKanbanColors[key as keyof typeof TaskStatus]}
-                        tasks={tasks[key]}
-                    />
-                ))}
+                {Object.keys(TaskStatus).map((key: any) => {
+                    const taskStatusKey = key as keyof typeof TaskStatus;
+
+                    return (
+                        <Column
+                            key={key}
+                            title={TaskStatus[taskStatusKey]}
+                            color={TaskKanbanColors[taskStatusKey]}
+                            tasks={tasks[TaskStatus[taskStatusKey]]}
+                        />
+                    );
+                })}
             </div>
         )
     );

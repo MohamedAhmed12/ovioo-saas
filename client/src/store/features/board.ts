@@ -1,8 +1,14 @@
 import { ColumnInterface, TaskInterface, TaskStatus } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: { tasks: any[] } = {
-    tasks: [],
+const initialState: { tasks: Record<TaskStatus, TaskInterface[]> } = {
+    tasks: {
+        "In queue": [],
+        "In progress": [],
+        Review: [],
+        "On hold": [],
+        Done: [],
+    },
 };
 
 export const boardSlice = createSlice({
@@ -28,15 +34,18 @@ export const boardSlice = createSlice({
             const { status } = action.payload;
             state.tasks = {
                 ...state.tasks,
-                [status]: [...(state.tasks[status] || []), action.payload],
+                [status]: [
+                    ...(state.tasks[status as TaskStatus] || []),
+                    action.payload,
+                ],
             };
         },
         deleteTask: (state, action) => {
             const { status, id } = action.payload;
 
-            state.tasks[status] = state.tasks[status].filter(
-                (task: TaskInterface) => task.id != id
-            );
+            state.tasks[status as TaskStatus] = state.tasks[
+                status as TaskStatus
+            ].filter((task: TaskInterface) => task.id != id);
         },
         editBoard: (state, action) => {
             state.columns = action.payload.newColumns;
