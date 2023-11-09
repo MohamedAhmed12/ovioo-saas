@@ -24,7 +24,7 @@ const OviooSystemMessage = ({ message }: { message: MessageInterface }) => {
             title=""
             titleColor=""
             date={message.created_at}
-            removeButton={true}
+            removeButton={false}
             replyButton={false}
             forwarded={false}
             focus={false}

@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/hooks/redux";
-import { MessageInterface } from "@/interfaces/message";
+import { MessageInterface, SendMessageDto } from "@/interfaces/message";
 import { gql } from "@apollo/client";
 import { Badge, Fab } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -27,12 +27,22 @@ const MESSAGE_SENT = gql`
         }
     }
 `;
+const READ_MESSAGES = gql`
+    subscription ReadMessages($data: ReadMessageArgsDto!) {
+        readMessages(data: $data) {
+            user {
+                fullname
+            }
+        }
+    }
+`;
 
 export default function MessagesWrapper({
     task_id,
     setShowPicker,
     setMessages,
     messages,
+    handleSendMessage,
     fetchMore,
     subscribeToMore,
 }: {
@@ -40,6 +50,7 @@ export default function MessagesWrapper({
     setShowPicker: Dispatch<SetStateAction<boolean>>;
     setMessages: Dispatch<SetStateAction<any[]>>;
     messages: any[];
+    handleSendMessage: (sendMessageData: SendMessageDto) => void;
     fetchMore: any;
     subscribeToMore: any;
 }) {
@@ -95,11 +106,17 @@ export default function MessagesWrapper({
         if (!msgsWrapper?.current) return;
         msgsWrapper.current.scrollTop = msgsWrapper.current.scrollHeight;
     };
+    const handleResend = (message: MessageInterface, index: number) => {
+        const { content, voice_note_src, asset } = message;
+        messages.splice(index, 1);
+
+        handleSendMessage({ task_id, content, voice_note_src, asset });
+    };
 
     useEffect(() => {
         scrollToBottom();
 
-        const unsubscribe = subscribeToMore({
+        const unsubscribeMsgSent = subscribeToMore({
             document: MESSAGE_SENT,
             variables: { data: { task_id } },
             updateQuery: (
@@ -111,26 +128,31 @@ export default function MessagesWrapper({
                 }
 
                 setOffsetPlus((offsetPlus) => offsetPlus + 1); // to prevent fetching msgs already exist
+                setMessages((messages) => [
+                    ...messages,
+                    subscriptionData?.data?.messageSent,
+                ]);
             },
         });
 
         return () => {
-            unsubscribe();
+            unsubscribeMsgSent();
         };
     }, []);
 
     useEffect(() => {
         if (messages?.length > 0 && msgsWrapper?.current) {
-            if (messages[messages.length] === lastMessage) {
+            if (messages[messages.length - 1] === lastMessage) {
                 msgsWrapper.current.scrollTop =
                     msgsWrapper.current.scrollHeight - prevScrollHeight;
             } else {
-                messages[messages.length].sender?.id == currentUser.id
+                messages[messages.length - 1]?.sender?.id == currentUser.id
                     ? scrollToBottom()
                     : setChevronUpNumber((prev) => prev + 1);
             }
         }
-        setLastMessage(messages[messages.length]);
+
+        setLastMessage(messages[messages.length - 1]);
     }, [messages]);
 
     return (
@@ -141,10 +163,14 @@ export default function MessagesWrapper({
             className="messages__wrapper rounded-t-md flex flex-col space-y-3 w-full bg-[#fae8bc] overflow-auto"
         >
             {messages?.map((message: MessageInterface, index: number) =>
-                !message.sender ? (
-                    <OviooSystemMessage message={message} key={index} />
+                message?.sender ? (
+                    <OviooMessage
+                        message={message}
+                        key={index}
+                        onResend={() => handleResend(message, index)}
+                    />
                 ) : (
-                    <OviooMessage message={message} key={index} />
+                    <OviooSystemMessage message={message} key={index} />
                 )
             )}
 

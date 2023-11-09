@@ -91,20 +91,22 @@ export default function Chat({
             setMessages(data.listMessages);
     }, [data]);
 
-    const handleSendMessage = async (sendMessageData: SendMessageDto) => {
+    const handleSendMessage = async (sendMessageData: SendMessageDto) => {        
+        // add msg to msgs wrapper with waiting status
+        const { id, avatar, fullname } = currentUser;
+        const newMessage = {
+            ...sendMessageData,
+            sender: { id, avatar, fullname },
+            created_at: Date(),
+        };
+        if (newMessage.isFailed) {
+            delete newMessage.isFailed;
+        }
+        const newMessages = [...messages, newMessage];
+        setMessages(newMessages);
+
         try {
-            // add msg to msgs wrapper with waiting status
-            const { id, avatar, fullname } = currentUser;
-            const newMessage = {
-                ...sendMessageData,
-                sender: { id, avatar, fullname },
-                created_at: Date(),
-            };
-
-            const newMessages = [...messages, newMessage];
-            setMessages(() => newMessages);
-
-            // send message
+            // // send message
             const { data } = await sendMessage({
                 variables: {
                     data: {
@@ -114,24 +116,27 @@ export default function Chat({
                 },
             });
 
+            // add msg to msgs wrapper with sent status
             newMessages.pop();
             newMessages.push(data.sendMessage);
             setMessages(newMessages);
         } catch (e: any) {
-            toast.error("Something went wrong!");
+            newMessages[newMessages.length - 1].isFailed = true;
+            setMessages(newMessages);
         }
     };
 
     return (
         !graphQLloading &&
-        data?.listMessages?.length > 0 &&
-        messages?.length > 0 && (
+        data?.listMessages &&
+        messages && (
             <div className="chat basis-1/2 relative flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
                 <MessagesWrapper
                     task_id={task_id}
                     setShowPicker={setShowPicker}
                     setMessages={setMessages}
                     messages={messages}
+                    handleSendMessage={handleSendMessage}
                     fetchMore={fetchMore}
                     subscribeToMore={subscribeToMore}
                 />
