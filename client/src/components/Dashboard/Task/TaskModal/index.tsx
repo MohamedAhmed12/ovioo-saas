@@ -47,6 +47,7 @@ const SHOW_TASK = gql`
                     id
                     avatar
                     fullname
+                    isActive
                 }
             }
         }
@@ -72,7 +73,7 @@ export default function TaskModal({
 }: {
     open: boolean;
     taskId: string;
-    onClose: (val: boolean) => void;
+    onClose: () => void;
 }) {
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 

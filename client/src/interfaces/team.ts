@@ -9,4 +9,5 @@ export interface Member {
     fullname: string;
     email: string;
     avatar: string;
+    isActive: boolean;
 }

@@ -48,7 +48,7 @@ export class TaskService {
       .createQueryBuilder('task')
       .leftJoinAndSelect('task.type', 'type')
       .leftJoinAndSelect('task.team', 'team')
-      .leftJoinAndSelect('team.members', 'member', 'member.isActive = TRUE')
+      .leftJoinAndSelect('team.members', 'member')
       .where('task.id = :id', { id: +id })
       .getOne();
     const taskTeam = await task.team;

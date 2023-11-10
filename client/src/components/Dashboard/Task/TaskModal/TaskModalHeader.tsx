@@ -1,7 +1,7 @@
 import TaskTypeDropDown from "@/components/Dashboard/TaskTypeDropDown";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch } from "@/hooks/redux";
-import { TaskInterface, getTaskStatus } from "@/interfaces";
+import { Member, TaskInterface, TaskStatus, getTaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation } from "@apollo/client";
@@ -30,6 +30,9 @@ export default function TaskModalHeader({
     onClose: (val: boolean) => void;
     handleOnChange: (name: string, value: any) => void;
 }) {
+    const [activeUsers, setActiveUsers] = useState<Member[] | undefined>(
+        task?.team?.members.filter((member) => member.isActive)
+    );
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
@@ -37,10 +40,13 @@ export default function TaskModalHeader({
     const client = getClient(session);
     const [deleteTask] = useMutation(DELETE_TASK, { client });
 
-    const getNumberOfExtraAvatar = (usersCount: any) =>
-        usersCount - NUM_SHOWN_ACTIVE_USERS <= 99
+    const getNumberOfExtraAvatar = (usersCount: any) => {
+        if (activeUsers?.length == 0) return 0;
+
+        return usersCount - NUM_SHOWN_ACTIVE_USERS <= 99
             ? `+${usersCount - NUM_SHOWN_ACTIVE_USERS}`
             : +99;
+    };
     const setOpenDeleteModal = () => {
         setIsDeleteModalOpen(true);
     };
@@ -61,12 +67,13 @@ export default function TaskModalHeader({
             setIsDeleteModalOpen(false);
         }
     };
+    console.log(activeUsers);
 
     return (
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">
             <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-[25px] flex-wrap max-w-full">
                 <OviooDropDown
-                    options={getTaskStatus()}
+                    options={Object.values(TaskStatus)}
                     onSelected={(status) => handleOnChange("status", status)}
                     initialVal={task.status}
                     className="task-status-dropdown"
@@ -76,7 +83,7 @@ export default function TaskModalHeader({
                     onSelected={(typeId) =>
                         handleOnChange("type", { id: typeId })
                     }
-                    initialVal={task.type.id}
+                    initialVal={task.type?.id}
                 />
 
                 {task?.designer?.avatar ? (
@@ -90,7 +97,7 @@ export default function TaskModalHeader({
                 )}
             </div>
             <div className="basis-1/2 flex justify-end px-[25px] lg:items-center">
-                {task?.team?.members && (
+                {activeUsers && activeUsers?.length > 0 && (
                     <AvatarGroup
                         slotProps={{
                             additionalAvatar: {
@@ -99,7 +106,7 @@ export default function TaskModalHeader({
                             },
                         }}
                     >
-                        {task?.team?.members
+                        {activeUsers
                             .slice(0, NUM_SHOWN_ACTIVE_USERS)
                             .map((member) => (
                                 <Badge
@@ -120,24 +127,24 @@ export default function TaskModalHeader({
                                 </Badge>
                             ))}
 
-                        <Tooltip
-                            title={task?.team?.members
-                                .slice(NUM_SHOWN_ACTIVE_USERS)
-                                .map((member) => (
-                                    <span
-                                        key={member.id}
-                                        className="flex flex-wrap"
-                                    >
-                                        {member.fullname}
-                                    </span>
-                                ))}
-                        >
-                            <Avatar>
-                                {getNumberOfExtraAvatar(
-                                    task?.team?.members.length
-                                )}
-                            </Avatar>
-                        </Tooltip>
+                        {activeUsers.length > NUM_SHOWN_ACTIVE_USERS && (
+                            <Tooltip
+                                title={activeUsers
+                                    .slice(NUM_SHOWN_ACTIVE_USERS)
+                                    .map((member) => (
+                                        <span
+                                            key={member.id}
+                                            className="flex flex-wrap"
+                                        >
+                                            {member.fullname}
+                                        </span>
+                                    ))}
+                            >
+                                <Avatar>
+                                    {getNumberOfExtraAvatar(activeUsers.length)}
+                                </Avatar>
+                            </Tooltip>
+                        )}
                     </AvatarGroup>
                 )}
                 <IconButton onClick={setOpenDeleteModal}>
