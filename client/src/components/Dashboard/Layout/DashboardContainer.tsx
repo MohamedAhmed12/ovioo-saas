@@ -21,11 +21,11 @@ const UPDATE_USER = gql`
         }
     }
 `;
-// const RECRIVE_ALL_SENT_MESSAGES = gql`
-//     mutation ReceiveAllSentMessages {
-//         receiveAllSentMessages
-//     }
-// `;
+const RECRIVE_ALL_SENT_MESSAGES = gql`
+    mutation ReceiveAllSentMessages {
+        receiveAllSentMessages
+    }
+`;
 const FETCH_USER_WITH_PROFILE = gql`
     query {
         me {
@@ -62,9 +62,9 @@ export default function DashboardContainer({
     const [loading, setLoading] = useState(true);
 
     const [updateUser] = useMutation(UPDATE_USER, { client });
-    // const [receiveAllSentMessages] = useMutation(RECRIVE_ALL_SENT_MESSAGES, {
-    //     client,
-    // });
+    const [receiveAllSentMessages] = useMutation(RECRIVE_ALL_SENT_MESSAGES, {
+        client,
+    });
     const {
         loading: graphQLloading,
         data: userData,
@@ -91,7 +91,7 @@ export default function DashboardContainer({
                 },
             },
         });
-        // receiveAllSentMessages({});
+        receiveAllSentMessages({});
         window.addEventListener("beforeunload", handleBeforeUnload);
 
         return () => {
