@@ -24,7 +24,6 @@ const UPDATE_USER = gql`
     mutation ($data: UpdateUserDto!) {
         updateUser(data: $data) {
             fullname
-            email
             avatar
         }
     }
@@ -43,7 +42,6 @@ export default function ProfileSetting({
     const [formData, setFormData] = useState({
         avatar: "",
         fullname: "",
-        email: "",
     });
 
     const { errors, errorHandler } = useGraphError({});
@@ -109,7 +107,6 @@ export default function ProfileSetting({
             setFormData({
                 avatar: user.avatar,
                 fullname: user.fullname,
-                email: user.email,
             });
         }
     }, [user]);
@@ -189,7 +186,7 @@ export default function ProfileSetting({
                             type="email"
                             id="email"
                             disabled
-                            value={formData.email}
+                            value={user.email}
                             onChange={handleOnChange}
                             inputProps={{
                                 style: {
