@@ -3,7 +3,7 @@ import { setSelectedTask } from "@/store/features/task";
 import "@/styles/components/dashboard/task/task-modal.scss";
 import { getClient } from "@/utils/getClient";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Badge, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useTheme } from "@mui/material/styles";
 import { useSession } from "next-auth/react";
@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import Chat from "../Chat";
 import TaskModalBody from "./TaskModalBody";
 import TaskModalHeader from "./TaskModalHeader";
-import styled from "@emotion/styled";
 
 const SHOW_TASK = gql`
     query ShowTask($id: String!) {
@@ -69,11 +68,11 @@ const READ_MESSAGES = gql`
 export default function TaskModal({
     open,
     taskId,
-    setIsTaskModalOpen,
+    onClose,
 }: {
     open: boolean;
     taskId: string;
-    setIsTaskModalOpen: (val: boolean) => void;
+    onClose: (val: boolean) => void;
 }) {
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
@@ -121,7 +120,7 @@ export default function TaskModal({
         } catch (e: any) {
             toast.error("Something went wrong!");
         }
-        setIsTaskModalOpen(false);
+        onClose();
     };
 
     return (
@@ -143,7 +142,7 @@ export default function TaskModal({
                 <div className="flex flex-col my-auto mx-auto w-full ovioo-card with-shadow py-8 px-0">
                     <TaskModalHeader
                         task={task}
-                        setIsTaskModalOpen={setIsTaskModalOpen}
+                        onClose={onClose}
                         handleOnChange={handleOnChange}
                     />
 

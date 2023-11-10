@@ -23,11 +23,11 @@ const DELETE_TASK = gql`
 
 export default function TaskModalHeader({
     task,
-    setIsTaskModalOpen,
+    onClose,
     handleOnChange,
 }: {
     task: TaskInterface;
-    setIsTaskModalOpen: (val: boolean) => void;
+    onClose: (val: boolean) => void;
     handleOnChange: (name: string, value: any) => void;
 }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function TaskModalHeader({
 
             if (data.deleteTask) {
                 dispatch(deleteTaskAction(task));
-                setIsTaskModalOpen(false);
+                onClose(false);
             }
         } catch (error) {
             toast.error("Something went wrong!");

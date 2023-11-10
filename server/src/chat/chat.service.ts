@@ -8,7 +8,10 @@ import { Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { MessageStatusEnum } from './enum/message-status.enum';
+import {
+  MessageStatusEnum,
+  unreadMessageStatuses,
+} from './enum/message-status.enum';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -52,6 +55,41 @@ export class ChatService {
       .getMany();
 
     return messages.reverse();
+  }
+
+  async listTaskUnreadMessages(authUser: User): Promise<Task[]> {
+    const tasks = await this.taskRepository
+      .createQueryBuilder('task')
+      .select('task')
+      .addSelect(['sender.fullname', 'sender.avatar'])
+      .leftJoinAndSelect(
+        'task.messages',
+        'message',
+        'message.senderId != :senderId AND message.status IN (:...status)',
+        {
+          senderId: authUser.id,
+          status: unreadMessageStatuses(),
+        },
+      )
+      .leftJoin('message.sender', 'sender')
+      .loadRelationCountAndMap(
+        'task.unreadMessagesCount',
+        'task.messages',
+        'unreadMessagesCount',
+        (subQuery) =>
+          subQuery.where('status IN (:...status)', {
+            status: unreadMessageStatuses(),
+          }),
+      )
+      .where('task.teamId = :teamId', { teamId: authUser.team.id })
+      .getMany();
+
+    return tasks.filter((task) => {
+      if (task?.messages && task?.messages?.length == 0) return;
+
+      task.messages = [task.messages[task.messages.length - 1]];
+      return task;
+    });
   }
 
   async sendMessage(authUser: User, data: SendMessageDto): Promise<Message> {

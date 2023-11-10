@@ -9,15 +9,14 @@ import {
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
+import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import { ChatService } from './chat.service';
 import { ListMessageDto } from './dto/list-message.dto';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { UpdateMessagesDto } from './dto/update-messages.dto';
 import { Message } from './message.entity';
-import { MessageStatusEnum } from './enum/message-status.enum';
 
 @Resolver(() => Message)
 export class ChatResolver {
@@ -31,6 +30,12 @@ export class ChatResolver {
   @Query(() => [Message])
   async listMessages(@Args('data') data: ListMessageDto) {
     return await this.chatService.listMessages(data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => [Task])
+  async listTaskUnreadMessages(@Context('user') authUser: User) {
+    return await this.chatService.listTaskUnreadMessages(authUser);
   }
 
   @UseGuards(AuthGuard)

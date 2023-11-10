@@ -31,7 +31,7 @@ export class Message extends BaseEntity {
 
   @Column({
     type: 'text',
-    default: MessageStatusEnum.WAITING,
+    default: MessageStatusEnum.SENT,
   })
   @Field(() => String, { nullable: true })
   status: MessageStatusEnum;

@@ -53,7 +53,7 @@ export class Task extends BaseEntity {
     onDelete: 'CASCADE',
     lazy: true,
   })
-  @JoinColumn({ name: 'team_id' })
+  @JoinColumn({ name: 'teamId' })
   @Field(() => Team)
   team: Team;
 
@@ -74,6 +74,9 @@ export class Task extends BaseEntity {
   })
   @Field(() => [Message], { defaultValue: [] })
   messages: Message[];
+
+  @Field(() => Number, { nullable: true })
+  unreadMessagesCount?: number;
 
   @OneToMany(() => Task, (task) => task.parent, { nullable: true })
   @JoinColumn({ name: 'parentId' })

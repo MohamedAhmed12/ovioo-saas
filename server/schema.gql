@@ -81,6 +81,7 @@ type Task {
   designer: User
   assets: [Asset!]!
   messages: [Message!]!
+  unreadMessagesCount: Float
   subtasks: [Task!]!
   parent: Task!
 }
@@ -132,6 +133,7 @@ type Query {
   listProjects: [Project!]!
   showProject(id: String!): Project!
   listMessages(data: ListMessageDto!): [Message!]!
+  listTaskUnreadMessages: [Task!]!
 }
 
 input ListMessageDto {

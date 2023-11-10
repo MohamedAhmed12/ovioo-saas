@@ -37,12 +37,13 @@ export interface TaskInterface {
     title?: string;
     description?: string;
     status: string;
+    unreadMessagesCount?: number;
     subtasks?: SubTaskInterface[] | undefined;
-    project: Project;
-    type: TaskType;
+    project?: Project;
+    type?: TaskType;
     designer?: UserInterface;
-    team?:Team;
-    assets: Asset[];
+    team?: Team;
+    assets?: Asset[];
     messages: MessageInterface[];
 }
 

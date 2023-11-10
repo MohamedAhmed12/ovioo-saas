@@ -1,9 +1,13 @@
 import { SubTaskInterface, TaskInterface } from "@/interfaces";
 import { DragEvent, useState } from "react";
 import TaskModal from "./TaskModal";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Task({ task }: { task: TaskInterface }) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const existInParams = searchParams.get("task");
 
     let completed = 0;
     let subtasks: SubTaskInterface[] | undefined = task.subtasks;
@@ -18,6 +22,10 @@ export default function Task({ task }: { task: TaskInterface }) {
 
     const handleOnDrag = (e: DragEvent<HTMLDivElement>) => {
         e.dataTransfer.setData("text", JSON.stringify({ task: task }));
+    };
+    const handleModalClose = () => {
+        setIsTaskModalOpen(false);
+        router.push("/dashboard/task");
     };
 
     return (
@@ -40,11 +48,11 @@ export default function Task({ task }: { task: TaskInterface }) {
                 )}
             </div>
 
-            {isTaskModalOpen && (
+            {(isTaskModalOpen || existInParams) && (
                 <TaskModal
                     open={true}
                     taskId={task.id}
-                    setIsTaskModalOpen={setIsTaskModalOpen}
+                    onClose={handleModalClose}
                 />
             )}
         </div>

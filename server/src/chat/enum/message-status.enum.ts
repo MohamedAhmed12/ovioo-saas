@@ -7,4 +7,10 @@ export enum MessageStatusEnum {
   READ = 'read',
 }
 
+export const unreadMessageStatuses = () => [
+  MessageStatusEnum.WAITING,
+  MessageStatusEnum.SENT,
+  MessageStatusEnum.RECEIVED,
+];
+
 registerEnumType(MessageStatusEnum, { name: 'MessageStatusEnum' });
