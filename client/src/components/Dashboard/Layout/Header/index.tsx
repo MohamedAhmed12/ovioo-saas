@@ -7,7 +7,8 @@ import { AppBar, Box, Stack, Toolbar } from "@mui/material";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa6";
 import AccountPopover from "./AccountPopover";
-import NotificationsPopover from "./Notification/NotificationsPopover";
+import MessagePopover from "./Message/MessagePopover";
+import NotificationPopover from "./Notification/NotificationPopover";
 
 export default function DashboardHeader({
     openNav,
@@ -64,7 +65,8 @@ export default function DashboardHeader({
                             <FaMoon size="22" />
                         )}
                     </IconButton>
-                    <NotificationsPopover />
+                    <MessagePopover />
+                    <NotificationPopover />
                     <AccountPopover />
                 </Stack>
             </Toolbar>

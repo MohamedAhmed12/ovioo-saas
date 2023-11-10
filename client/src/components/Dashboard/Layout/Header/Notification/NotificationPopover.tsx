@@ -67,7 +67,7 @@ const NOTIFICATIONS = [
     },
 ];
 
-export default function NotificationsPopover() {
+export default function NotificationPopover() {
     const [notifications, setNotifications] = useState(NOTIFICATIONS);
 
     const totalUnRead = notifications.filter(
