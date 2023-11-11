@@ -44,10 +44,14 @@ export class Message extends BaseEntity {
   @Field(() => [String], { defaultValue: [] })
   read_by: string[];
 
+  @Column({ name: 'sender_id' })
+  sender_id: number;
+
   @ManyToOne(() => User, (user) => user.messages, {
     eager: true,
     nullable: true,
   })
+  @JoinColumn({ name: 'sender_id' })
   @Field(() => User, { nullable: true })
   sender: User;
 

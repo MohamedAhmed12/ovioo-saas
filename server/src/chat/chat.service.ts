@@ -65,11 +65,7 @@ export class ChatService {
       .leftJoinAndSelect(
         'task.messages',
         'message',
-        'message.senderId != :senderId AND message.status IN (:...status)',
-        {
-          senderId: authUser.id,
-          status: unreadMessageStatuses(),
-        },
+        `message.sender_id != '${authUser.id}' AND (message.status != '${MessageStatusEnum.READ}' OR (message.status = '${MessageStatusEnum.READ}' AND ' ${authUser.fullname}' != ANY(message.read_by)))`,
       )
       .leftJoin('message.sender', 'sender')
       .loadRelationCountAndMap(
@@ -77,17 +73,18 @@ export class ChatService {
         'task.messages',
         'unreadMessagesCount',
         (subQuery) =>
-          subQuery.where('status IN (:...status)', {
-            status: unreadMessageStatuses(),
-          }),
+          subQuery.where(
+            `sender_id != '${authUser.id}' AND (status != '${MessageStatusEnum.READ}' OR (status = '${MessageStatusEnum.READ}' AND ' ${authUser.fullname}' != ANY(read_by)))`,
+          ),
       )
       .where('task.teamId = :teamId', { teamId: authUser.team.id })
+      .orderBy('message.created_at', 'DESC')
       .getMany();
 
     return tasks.filter((task) => {
       if (task?.messages && task?.messages?.length == 0) return;
 
-      task.messages = [task.messages[task.messages.length - 1]];
+      task.messages = [task.messages[0]];
       return task;
     });
   }
