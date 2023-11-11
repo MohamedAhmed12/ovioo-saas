@@ -1,9 +1,18 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
 import { AuthGuardUserDto } from './dto/auth-guard-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ChangeUserStatusResponseDto } from './dto/change-user-status-response.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { DeleteMemberDto } from './dto/delete-member.dto';
@@ -14,7 +23,11 @@ import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  private pubSub: PubSub;
+
+  constructor(private readonly userService: UserService) {
+    this.pubSub = new PubSub();
+  }
 
   @UseGuards(new AuthGuard())
   @Query(() => User)
@@ -45,7 +58,7 @@ export class UserResolver {
   @Mutation(() => User)
   async updateUser(
     @Args('data') data: UpdateUserDto,
-    @Context('user') authGuardUser: AuthGuardUserDto,
+    @Context('user') authGuardUser: User,
   ) {
     return await this.userService.update(authGuardUser, data);
   }
@@ -71,5 +84,32 @@ export class UserResolver {
   @Mutation(() => User)
   async findOrCreateSsoUser(@Args('user') createSsoUserDto: CreateSsoUserDto) {
     return this.userService.findOrCreateSsoUser(createSsoUserDto);
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => Boolean)
+  async toggleUserStatus(
+    @Args('isActive') isActive: boolean,
+    @Context('user') authUser: User,
+  ) {
+    const user = await this.userService.update(authUser, { isActive });
+
+    const { id, avatar, fullname } = authUser;
+    this.pubSub.publish('userStatusChanged', {
+      id,
+      avatar,
+      fullname,
+      isActive,
+    });
+
+    return !!user;
+  }
+
+  @UseGuards(AuthGuard)
+  @Subscription(() => ChangeUserStatusResponseDto, {
+    resolve: (payload) => payload,
+  })
+  userStatusChanged() {
+    return this.pubSub.asyncIterator('userStatusChanged');
   }
 }

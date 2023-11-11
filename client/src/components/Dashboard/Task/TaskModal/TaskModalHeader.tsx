@@ -1,15 +1,15 @@
 import TaskTypeDropDown from "@/components/Dashboard/TaskTypeDropDown";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useAppDispatch } from "@/hooks/redux";
-import { Member, TaskInterface, TaskStatus, getTaskStatus } from "@/interfaces";
+import { Member, TaskInterface, TaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useSubscription } from "@apollo/client";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Badge from "@mui/material/Badge";
 import { useSession } from "next-auth/react";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdAccountCircle, MdDelete } from "react-icons/md";
 import OviooDropDown from "../../OviooDropDown";
@@ -18,6 +18,16 @@ const NUM_SHOWN_ACTIVE_USERS = 3;
 const DELETE_TASK = gql`
     mutation Mutation($id: String!) {
         deleteTask(id: $id)
+    }
+`;
+const USER_STATUS_CHANGED = gql`
+    subscription UserStatusChanged {
+        userStatusChanged {
+            id
+            isActive
+            avatar
+            fullname
+        }
     }
 `;
 
@@ -30,8 +40,8 @@ export default function TaskModalHeader({
     onClose: (val: boolean) => void;
     handleOnChange: (name: string, value: any) => void;
 }) {
-    const [activeUsers, setActiveUsers] = useState<Member[] | undefined>(
-        task?.team?.members.filter((member) => member.isActive)
+    const [activeUsers, setActiveUsers] = useState<Member[]>(
+        task?.team?.members.filter((member) => member.isActive) || []
     );
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -39,6 +49,8 @@ export default function TaskModalHeader({
     const session = useSession();
     const client = getClient(session);
     const [deleteTask] = useMutation(DELETE_TASK, { client });
+    const { loading: userStatusChangedLoading, data: userStatusChangedData } =
+        useSubscription(USER_STATUS_CHANGED, { client });
 
     const getNumberOfExtraAvatar = (usersCount: any) => {
         if (activeUsers?.length == 0) return 0;
@@ -67,7 +79,21 @@ export default function TaskModalHeader({
             setIsDeleteModalOpen(false);
         }
     };
-    console.log(activeUsers);
+
+    useEffect(() => {
+        if (
+            !userStatusChangedLoading &&
+            userStatusChangedData &&
+            task?.team?.members
+        ) {
+            const userIndex: number = activeUsers.findIndex(
+                (user) => user.id == userStatusChangedData.userStatusChanged.id
+            );
+            userIndex == -1
+                ? activeUsers.push(userStatusChangedData.userStatusChanged)
+                : activeUsers.splice(userIndex, 1);
+        }
+    }, [activeUsers, task?.team?.members, userStatusChangedData, userStatusChangedLoading]);
 
     return (
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">

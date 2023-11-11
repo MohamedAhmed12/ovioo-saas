@@ -112,6 +112,13 @@ type Asset {
   message: Message!
 }
 
+type ChangeUserStatusResponseDto {
+  id: String!
+  avatar: String!
+  fullname: String!
+  isActive: Boolean!
+}
+
 """task-types"""
 input TaskType {
   id: ID!
@@ -151,6 +158,7 @@ type Mutation {
   createMember(member: CreateMemberDto!): User!
   deleteMember(member: DeleteMemberDto!): Boolean!
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
+  toggleUserStatus(isActive: Boolean!): Boolean!
   updateProfile(profile: UpdateProfileDto!): Profile!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
@@ -287,6 +295,7 @@ input UpdateMessageDto {
 }
 
 type Subscription {
+  userStatusChanged: ChangeUserStatusResponseDto!
   messageSent(data: MessageSentSubscriptionDto!): Message!
 }
 

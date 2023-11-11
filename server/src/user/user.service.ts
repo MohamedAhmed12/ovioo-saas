@@ -122,7 +122,7 @@ export class UserService {
 
   async update(
     { email }: { email: string },
-    { created_at, updated_at, ...data }: any,
+    { created_at, updated_at, ...data }: User | Partial<User>,
   ): Promise<User> {
     const user = await this.UserRepository.findOneBy({ email });
     if (!user) throw new NotFoundException();
