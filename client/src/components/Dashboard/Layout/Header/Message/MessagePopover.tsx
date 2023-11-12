@@ -1,8 +1,8 @@
-
+import { useAppSelector } from "@/hooks/redux";
 import { TaskInterface } from "@/interfaces";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
 import { getClient } from "@/utils/getClient";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useSubscription } from "@apollo/client";
 import IconButton from "@mui/joy/IconButton";
 import { Badge, Box, Divider, List, Popover, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
@@ -30,12 +30,36 @@ const LIST_TASK_UNREAD_MESSAGES = gql`
         }
     }
 `;
+const MESSAGE_SENT = gql`
+    subscription Subscription($data: MessageSentSubscriptionDto!) {
+        messageSent(data: $data) {
+            id
+            content
+            voice_note_src
+            asset {
+                src
+                alt
+                type
+            }
+            sender {
+                id
+                fullname
+                avatar
+            }
+            task {
+                id
+            }
+            created_at
+        }
+    }
+`;
 
 export default function MessagePopover() {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const [allUnreadMsgsCount, setAllUnreadMsgsCount] = useState<number>(0);
 
+    const authUser = useAppSelector((state) => state.userReducer.user);
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const {
@@ -49,10 +73,65 @@ export default function MessagePopover() {
 
     if (error) throw new Error(JSON.stringify(error));
 
+    const { data: messageSentSubsData, loading: messageSentSubsLoading } =
+        useSubscription(MESSAGE_SENT, {
+            variables: {
+                data: {
+                    team_id: authUser.team.id,
+                },
+            },
+            client,
+        });
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
+    useEffect(() => {
+        if (
+            !messageSentSubsLoading &&
+            messageSentSubsData?.messageSent &&
+            data?.listTaskUnreadMessages
+        ) {
+            // if task exist in allUnreadMsgsCount
+            const taskIndex = data.listTaskUnreadMessages.findIndex(
+                (task: Partial<TaskInterface>) =>
+                    task.id == messageSentSubsData.messageSent.task.id
+            );
+
+            if (taskIndex !== -1) {
+                data.listTaskUnreadMessages[taskIndex].messages = [
+                    messageSentSubsData.messageSent,
+                ];
+                data.listTaskUnreadMessages[taskIndex].unreadMessagesCount =
+                    data.listTaskUnreadMessages[taskIndex].unreadMessagesCount +
+                    1;
+                setAllUnreadMsgsCount((prevCount) => prevCount + 1);
+            } else {
+                data.listTaskUnreadMessages.push({
+                    id: messageSentSubsData.messageSent.task.id,
+                    messages: [
+                        {
+                            id: messageSentSubsData.messageSent.id,
+                            content: messageSentSubsData.messageSent.content,
+                            status: messageSentSubsData.messageSent.status,
+                            created_at:
+                                messageSentSubsData.messageSent.created_at,
+                            sender: {
+                                fullname:
+                                    messageSentSubsData.messageSent.sender
+                                        .fullname,
+                                avatar: messageSentSubsData.messageSent.sender
+                                    .avatar,
+                            },
+                        },
+                    ],
+                    unreadMessagesCount: 1,
+                });
+                setAllUnreadMsgsCount((prevCount) => prevCount + 1);
+            }
+        }
+    }, [messageSentSubsData, messageSentSubsLoading]);
     useEffect(() => {
         if (data?.listTaskUnreadMessages) {
             const allUnreadMsgsCount = data?.listTaskUnreadMessages.reduce(

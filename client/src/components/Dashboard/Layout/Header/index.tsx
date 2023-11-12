@@ -9,6 +9,9 @@ import { FaMoon, FaSun } from "react-icons/fa6";
 import AccountPopover from "./AccountPopover";
 import MessagePopover from "./Message/MessagePopover";
 import NotificationPopover from "./Notification/NotificationPopover";
+import { gql, useSubscription } from "@apollo/client";
+import { getClient } from "@/utils/getClient";
+import { useSession } from "next-auth/react";
 
 export default function DashboardHeader({
     openNav,
