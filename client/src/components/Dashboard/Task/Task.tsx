@@ -1,10 +1,13 @@
+import { useAppDispatch } from "@/hooks/redux";
 import { SubTaskInterface, TaskInterface } from "@/interfaces";
+import { setSelectedTask } from "@/store/features/task";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DragEvent, useState } from "react";
 import TaskModal from "./TaskModal";
-import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Task({ task }: { task: TaskInterface }) {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const searchParams = useSearchParams();
     const existInParams = searchParams.get("task");
@@ -26,6 +29,7 @@ export default function Task({ task }: { task: TaskInterface }) {
     const handleModalClose = () => {
         setIsTaskModalOpen(false);
         router.push("/dashboard/task");
+        dispatch(setSelectedTask(null));
     };
 
     return (

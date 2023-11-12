@@ -155,6 +155,24 @@ export default function MessagePopover() {
             setAllUnreadMsgsCount(allUnreadMsgsCount);
         }
     }, [data]);
+    useEffect(() => {
+        if (openedModalTask && data?.listTaskUnreadMessages) {
+            data.listTaskUnreadMessages = data.listTaskUnreadMessages.filter(
+                (task: Partial<TaskInterface>) => {
+                    if (task.id != openedModalTask.id) return task;
+
+                    if (!task?.unreadMessagesCount) return;
+
+                    setAllUnreadMsgsCount((prevCount) =>
+                        prevCount == 0
+                            ? 0
+                            : prevCount - (task?.unreadMessagesCount as number)
+                    );
+                }
+            );
+        }
+    }, [openedModalTask, data]);
+    console.log("openedModalTask", openedModalTask);
 
     return (
         !graphQLloading &&
