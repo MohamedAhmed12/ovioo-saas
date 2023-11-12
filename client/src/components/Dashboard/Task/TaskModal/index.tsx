@@ -81,7 +81,7 @@ export default function TaskModal({
     const dispatch = useAppDispatch();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
     const task = useAppSelector((state) => state.taskReducer.selectedTask);
-    const { data: session, status } = useSession({ required: true });
+    const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [editTask] = useMutation(EDIT_TASK, { client });
     const [readTaskMessages] = useMutation(READ_MESSAGES, { client });
@@ -111,6 +111,7 @@ export default function TaskModal({
         dispatch(setSelectedTask({ ...task, [name]: value }));
 
     const onSubmit = async () => {
+        if (!task) return;
         try {
             const { designer, assets, subtasks, team, ...restTask } = task;
             await editTask({
@@ -125,7 +126,8 @@ export default function TaskModal({
     };
 
     return (
-        initialDataLoaded && (
+        initialDataLoaded &&
+        task && (
             <Dialog
                 fullScreen={fullScreen}
                 open={open}

@@ -1,27 +1,8 @@
 import { TaskInterface } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: { selectedTask: TaskInterface } = {
-    selectedTask: {
-        id: "",
-        designer: {
-            id: "",
-            fullname: "",
-            avatar: "",
-        },
-        description: "",
-        title: "",
-        status: "",
-        project: {
-            id: "",
-        },
-        type: {
-            id: "",
-        },
-        assets: [],
-        subtasks: [],
-        messages: [],
-    },
+const initialState: { selectedTask: TaskInterface | null } = {
+    selectedTask: null,
 };
 
 export const taskSlice = createSlice({
@@ -32,6 +13,7 @@ export const taskSlice = createSlice({
             state.selectedTask = action.payload;
         },
         setTaskAssets: (state, action) => {
+            if (!state?.selectedTask) return;
             state.selectedTask.assets = action.payload;
         },
     },

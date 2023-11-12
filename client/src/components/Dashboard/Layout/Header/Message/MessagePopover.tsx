@@ -60,6 +60,9 @@ export default function MessagePopover() {
     const [allUnreadMsgsCount, setAllUnreadMsgsCount] = useState<number>(0);
 
     const authUser = useAppSelector((state) => state.userReducer.user);
+    const openedModalTask = useAppSelector(
+        (state) => state.taskReducer.selectedTask
+    );
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const {
@@ -93,7 +96,14 @@ export default function MessagePopover() {
             messageSentSubsData?.messageSent &&
             data?.listTaskUnreadMessages
         ) {
-            // if task exist in allUnreadMsgsCount
+            // if task modal/chat alreay opened then no need to proceed
+            if (
+                openedModalTask &&
+                openedModalTask.id == messageSentSubsData.messageSent.task.id
+            )
+                return;
+
+            // if task exist in listTaskUnreadMessages
             const taskIndex = data.listTaskUnreadMessages.findIndex(
                 (task: Partial<TaskInterface>) =>
                     task.id == messageSentSubsData.messageSent.task.id
