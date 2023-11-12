@@ -48,7 +48,7 @@ export default function Task({ task }: { task: TaskInterface }) {
                 )}
             </div>
 
-            {(isTaskModalOpen || existInParams) && (
+            {(isTaskModalOpen || existInParams == task.id) && (
                 <TaskModal
                     open={true}
                     taskId={task.id}
