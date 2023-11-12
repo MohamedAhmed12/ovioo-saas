@@ -8,10 +8,7 @@ import { Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import {
-  MessageStatusEnum,
-  unreadMessageStatuses,
-} from './enum/message-status.enum';
+import { MessageStatusEnum } from './enum/message-status.enum';
 import { Message } from './message.entity';
 
 @Injectable()

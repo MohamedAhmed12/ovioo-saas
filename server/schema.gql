@@ -144,7 +144,8 @@ type Query {
 }
 
 input ListMessageDto {
-  task_id: String!
+  task_id: String
+  team_id: String
   page: Float!
   offsetPlus: Float
   limit: Float
@@ -282,7 +283,8 @@ input UpdateProjectDto {
 }
 
 input SendMessageDto {
-  task_id: String!
+  task_id: String
+  team_id: String
   content: String
   voice_note_src: String
   asset: AssetDto
@@ -300,5 +302,6 @@ type Subscription {
 }
 
 input MessageSentSubscriptionDto {
-  task_id: String!
+  task_id: String
+  team_id: String
 }

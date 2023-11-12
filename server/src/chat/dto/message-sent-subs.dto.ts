@@ -1,10 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class MessageSentSubscriptionDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @Field(() => String)
-  task_id: number;
+  @Field(() => String, { nullable: true })
+  task_id?: number;
+
+  @IsOptional()
+  @IsString()
+  @Field(() => String, { nullable: true })
+  team_id?: number;
 }
