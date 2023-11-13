@@ -81,19 +81,16 @@ export default function TaskModalHeader({
     };
 
     useEffect(() => {
-        if (
-            !userStatusChangedLoading &&
-            userStatusChangedData &&
-            task?.team?.members
-        ) {
+        if (!userStatusChangedLoading && userStatusChangedData) {
             const userIndex: number = activeUsers.findIndex(
                 (user) => user.id == userStatusChangedData.userStatusChanged.id
             );
+            
             userIndex == -1
                 ? activeUsers.push(userStatusChangedData.userStatusChanged)
                 : activeUsers.splice(userIndex, 1);
         }
-    }, [activeUsers, task?.team?.members, userStatusChangedData, userStatusChangedLoading]);
+    }, [activeUsers, userStatusChangedData, userStatusChangedLoading]);
 
     return (
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">
