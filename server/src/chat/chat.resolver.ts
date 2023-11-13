@@ -77,12 +77,14 @@ export class ChatResolver {
   @UseGuards(AuthGuard)
   @Subscription((returns) => Message, {
     filter: async (payload: any, variables: any) => {
+      const task = await payload.messageSent.task;
+
       if (variables.data?.task_id) {
-        return payload.messageSent.task.id == variables.data.task_id;
+        return task.id == variables.data.task_id;
       }
 
       if (variables.data?.team_id) {
-        const msgTeam = await payload.messageSent.task.team;
+        const msgTeam = await task.team;
         return msgTeam.id == variables.data.team_id;
       }
     },
