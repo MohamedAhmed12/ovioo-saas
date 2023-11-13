@@ -10,6 +10,7 @@ import {
 import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { Task } from 'src/task/task.entity';
+import { TaskMessagesReadSubsResponseDto } from 'src/user/dto/messages-read-subs-response.dto';
 import { User } from 'src/user/user.entity';
 import { ChatService } from './chat.service';
 import { ListMessageDto } from './dto/list-message.dto';
@@ -28,8 +29,31 @@ export class ChatResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Message])
-  async listMessages(@Args('data') data: ListMessageDto) {
-    return await this.chatService.listMessages(data);
+  async listMessages(
+    @Context('user') authUser: User,
+    @Args('data') data: ListMessageDto,
+  ) {
+    const messages = await this.chatService.listMessages(data);
+    if (messages.length > 0) {
+      this.pubSub.publish('taskMessagesRead', {
+        task: await messages[0].task,
+        fullname: authUser.fullname,
+      });
+    }
+
+    return messages;
+  }
+
+  @UseGuards(AuthGuard)
+  @Subscription(() => TaskMessagesReadSubsResponseDto, {
+    filter: async (payload: any, variables: any) => {
+      const team = await payload.task.team;
+      return team.id == variables.teamId;
+    },
+    resolve: (payload) => payload,
+  })
+  taskMessagesRead(@Args('teamId') teamId: string) {
+    return this.pubSub.asyncIterator('taskMessagesRead');
   }
 
   @UseGuards(AuthGuard)

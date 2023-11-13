@@ -55,7 +55,10 @@ export class Message extends BaseEntity {
   @Field(() => User, { nullable: true })
   sender: User;
 
-  @ManyToOne(() => Task, (task) => task.messages, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Task, (task) => task.messages, {
+    onDelete: 'CASCADE',
+    lazy: true,
+  })
   @JoinColumn({ name: 'taskId' })
   @Field(() => Task)
   task: Task;
