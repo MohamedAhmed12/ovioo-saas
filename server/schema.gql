@@ -180,6 +180,7 @@ type Mutation {
   updateMessage(data: UpdateMessageDto!): Boolean!
   receiveAllSentMessages: Boolean!
   readTaskMessages(taskId: String!): Boolean!
+  receiveTaskMessages(taskId: String!): Boolean!
 }
 
 input LoginDto {

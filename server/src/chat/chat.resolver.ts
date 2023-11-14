@@ -107,14 +107,43 @@ export class ChatResolver {
     @Context('user') authUser: User,
     @Args('taskId') taskId: string,
   ) {
-    const messages = await this.chatService.readTaskMessages(authUser, taskId);
+    return this.changeTaskMessagesStatus(
+      authUser,
+      taskId,
+      MessageStatusEnum.READ,
+      [MessageStatusEnum.READ],
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  async receiveTaskMessages(
+    @Context('user') authUser: User,
+    @Args('taskId') taskId: string,
+  ) {
+    return this.changeTaskMessagesStatus(
+      authUser,
+      taskId,
+      MessageStatusEnum.RECEIVED,
+      [MessageStatusEnum.RECEIVED, MessageStatusEnum.READ],
+    );
+  }
+
+  private async changeTaskMessagesStatus(
+    authUser: User,
+    taskId: string,
+    status: MessageStatusEnum,
+    excludeStatuses: MessageStatusEnum[],
+  ) {
+    const messages = await this.chatService.changeTaskMessagesStatus(
+      authUser,
+      taskId,
+      status,
+      excludeStatuses,
+    );
 
     if (messages.length > 0) {
-      this.publishMessageStatusChange(
-        messages[0],
-        authUser,
-        MessageStatusEnum.READ,
-      );
+      this.publishMessageStatusChange(messages[0], authUser, status);
     }
 
     return true;

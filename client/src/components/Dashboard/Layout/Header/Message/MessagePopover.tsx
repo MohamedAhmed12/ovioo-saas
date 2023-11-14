@@ -2,7 +2,7 @@ import { useAppSelector } from "@/hooks/redux";
 import { TaskInterface } from "@/interfaces";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
 import { getClient } from "@/utils/getClient";
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import IconButton from "@mui/joy/IconButton";
 import { Badge, Box, Divider, List, Popover, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
@@ -53,6 +53,11 @@ const MESSAGE_SENT = gql`
         }
     }
 `;
+const RECEIVE_MESSAGES = gql`
+    mutation ReceiveTaskMessages($taskId: String!) {
+        receiveTaskMessages(taskId: $taskId)
+    }
+`;
 
 export default function MessagePopover() {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -65,6 +70,7 @@ export default function MessagePopover() {
     );
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
+    const [receiveTaskMessages] = useMutation(RECEIVE_MESSAGES, { client });
     const {
         loading: graphQLloading,
         error,
@@ -140,14 +146,23 @@ export default function MessagePopover() {
                 });
                 setAllUnreadMsgsCount((prevCount) => prevCount + 1);
             }
+
+            receiveTaskMessages({
+                variables: {
+                    taskId: messageSentSubsData.messageSent.task.id,
+                },
+            });
         }
     }, [messageSentSubsData, messageSentSubsLoading]);
     useEffect(() => {
         if (data?.listTaskUnreadMessages) {
             const allUnreadMsgsCount = data?.listTaskUnreadMessages.reduce(
                 (acc: number, task: TaskInterface) => {
-                    if (task.unreadMessagesCount)
+                    receiveTaskMessages({ variables: { taskId: task.id } });
+
+                    if (task.unreadMessagesCount) {
                         return acc + task.unreadMessagesCount;
+                    }
                 },
                 0
             );

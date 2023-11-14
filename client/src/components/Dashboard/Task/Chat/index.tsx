@@ -92,12 +92,11 @@ export default function Chat({
 
     if (error) throw new Error(JSON.stringify(error));
 
-    useEffect(()=>{
-        readTaskMessages({ variables: { taskId: task.id } });
-    },[])
     useEffect(() => {
-        if (data?.listMessages && data?.listMessages?.length > 0)
+        if (data?.listMessages && data?.listMessages?.length > 0){
             setMessages(data.listMessages);
+            readTaskMessages({ variables: { taskId: task.id } });
+        }
     }, [data]);
 
     const handleSendMessage = async (sendMessageData: SendMessageDto) => {
