@@ -1,7 +1,14 @@
 import { useAppSelector } from "@/hooks/redux";
-import { MessageInterface, SendMessageDto } from "@/interfaces/message";
-import { gql } from "@apollo/client";
+import { TaskInterface } from "@/interfaces";
+import {
+    MessageInterface,
+    MessageStatusEnum,
+    SendMessageDto,
+} from "@/interfaces/message";
+import { getClient } from "@/utils/getClient";
+import { gql, useSubscription } from "@apollo/client";
 import { Badge, Fab } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import OviooMessage from "./OviooMessage";
@@ -27,18 +34,17 @@ const MESSAGE_SENT = gql`
         }
     }
 `;
-const READ_MESSAGES = gql`
-    subscription ReadMessages($data: ReadMessageArgsDto!) {
-        readMessages(data: $data) {
-            user {
-                fullname
-            }
+const TASK_MSGS_STATUS_CHANGED = gql`
+    subscription taskMsgsStatusChanged($teamId: String!) {
+        taskMsgsStatusChanged(teamId: $teamId) {
+            fullname
+            status
         }
     }
 `;
 
 export default function MessagesWrapper({
-    task_id,
+    task,
     setShowPicker,
     setMessages,
     messages,
@@ -46,7 +52,7 @@ export default function MessagesWrapper({
     fetchMore,
     subscribeToMore,
 }: {
-    task_id: string;
+    task: TaskInterface;
     setShowPicker: Dispatch<SetStateAction<boolean>>;
     setMessages: Dispatch<SetStateAction<any[]>>;
     messages: any[];
@@ -63,6 +69,18 @@ export default function MessagesWrapper({
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
     const currentUser = useAppSelector((state) => state.userReducer.user);
 
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+    const {
+        data: msgsStatusChangedSubsData,
+        loading: msgsStatusChangedSubsLoading,
+    } = useSubscription(TASK_MSGS_STATUS_CHANGED, {
+        variables: {
+            teamId: task.team?.id,
+        },
+        client,
+    });
+
     const handleOnScroll = ({ currentTarget }: any) => {
         const showChevron =
             currentTarget.scrollHeight - currentTarget.scrollTop > 800;
@@ -76,7 +94,7 @@ export default function MessagesWrapper({
         fetchMore({
             variables: {
                 data: {
-                    task_id,
+                    task_id: task.id,
                     page: page + 1,
                     offsetPlus,
                 },
@@ -110,7 +128,27 @@ export default function MessagesWrapper({
         const { content, voice_note_src, asset } = message;
         messages.splice(index, 1);
 
-        handleSendMessage({ task_id, content, voice_note_src, asset });
+        handleSendMessage({ task_id: task.id, content, voice_note_src, asset });
+    };
+    const changeAllMsgsStatus = ({
+        fullname,
+        status,
+    }: {
+        fullname: string;
+        status: MessageStatusEnum;
+    }) => {
+        setMessages((messages) =>
+            messages.map((msg) => {
+                if (msg.status == status) return msg;
+
+                msg.status = status;
+                if (!msg.read_by.includes(fullname)) {
+                    msg.read_by.push(fullname);
+                }
+
+                return msg;
+            })
+        );
     };
 
     useEffect(() => {
@@ -118,7 +156,7 @@ export default function MessagesWrapper({
 
         const unsubscribeMsgSent = subscribeToMore({
             document: MESSAGE_SENT,
-            variables: { data: { task_id } },
+            variables: { data: { task_id: task.id } },
             updateQuery: (
                 prev: any,
                 { subscriptionData }: { subscriptionData: any }
@@ -139,7 +177,6 @@ export default function MessagesWrapper({
             unsubscribeMsgSent();
         };
     }, []);
-
     useEffect(() => {
         if (messages?.length > 0 && msgsWrapper?.current) {
             if (messages[messages.length - 1] === lastMessage) {
@@ -154,6 +191,13 @@ export default function MessagesWrapper({
 
         setLastMessage(messages[messages.length - 1]);
     }, [messages]);
+    useEffect(() => {
+        if (msgsStatusChangedSubsData?.taskMsgsStatusChanged) {
+            changeAllMsgsStatus(
+                msgsStatusChangedSubsData.taskMsgsStatusChanged
+            );
+        }
+    }, [msgsStatusChangedSubsData]);
 
     return (
         <div

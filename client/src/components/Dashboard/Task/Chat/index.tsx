@@ -2,12 +2,12 @@
 
 import { useAppSelector } from "@/hooks/redux";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
+import { TaskInterface } from "@/interfaces";
 import { MessageStatusEnum, SendMessageDto } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import "react-chat-elements/dist/main.css";
-import toast from "react-hot-toast";
 import MessageInput from "./MessageInput";
 import MessagesWrapper from "./MessagesWrapper";
 
@@ -60,10 +60,10 @@ const SEND_MESSAGE = gql`
 
 export default function Chat({
     client,
-    task_id,
+    task,
 }: {
     client: ApolloClient<any> | undefined;
-    task_id: string;
+    task: TaskInterface;
 }) {
     const currentUser = useAppSelector((state) => state.userReducer.user);
     const [showPicker, setShowPicker] = useState<boolean>(false);
@@ -79,7 +79,7 @@ export default function Chat({
     } = useCustomQuery(
         client,
         LIST_MESSAGES,
-        { task_id, page: 1 },
+        { task_id: task.id, page: 1 },
         "network-only",
         "network-only"
     );
@@ -91,7 +91,7 @@ export default function Chat({
             setMessages(data.listMessages);
     }, [data]);
 
-    const handleSendMessage = async (sendMessageData: SendMessageDto) => {        
+    const handleSendMessage = async (sendMessageData: SendMessageDto) => {
         // add msg to msgs wrapper with waiting status
         const { id, avatar, fullname } = currentUser;
         const newMessage = {
@@ -132,7 +132,7 @@ export default function Chat({
         messages && (
             <div className="chat basis-1/2 relative flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
                 <MessagesWrapper
-                    task_id={task_id}
+                    task={task}
                     setShowPicker={setShowPicker}
                     setMessages={setMessages}
                     messages={messages}
@@ -141,7 +141,7 @@ export default function Chat({
                     subscribeToMore={subscribeToMore}
                 />
                 <MessageInput
-                    task_id={task_id}
+                    task_id={task.id}
                     showPicker={showPicker}
                     setShowPicker={setShowPicker}
                     onMessageSend={handleSendMessage}

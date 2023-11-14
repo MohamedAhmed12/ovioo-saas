@@ -119,8 +119,8 @@ type ChangeUserStatusResponseDto {
   isActive: Boolean!
 }
 
-type TaskMessagesReadSubsResponseDto {
-  task: Task!
+type TaskMsgsStatusChangedSubsResponseDto {
+  status: String!
   fullname: String!
 }
 
@@ -303,7 +303,7 @@ input UpdateMessageDto {
 
 type Subscription {
   userStatusChanged: ChangeUserStatusResponseDto!
-  taskMessagesRead(teamId: String!): TaskMessagesReadSubsResponseDto!
+  taskMsgsStatusChanged(teamId: String!): TaskMsgsStatusChangedSubsResponseDto!
   messageSent(data: MessageSentSubscriptionDto!): Message!
 }
 

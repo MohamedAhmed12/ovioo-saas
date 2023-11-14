@@ -10,13 +10,14 @@ import {
 import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { Task } from 'src/task/task.entity';
-import { TaskMessagesReadSubsResponseDto } from 'src/user/dto/messages-read-subs-response.dto';
+import { TaskMsgsStatusChangedSubsResponseDto } from 'src/user/dto/task-msgs-status-changed-subs-response.dto';
 import { User } from 'src/user/user.entity';
 import { ChatService } from './chat.service';
 import { ListMessageDto } from './dto/list-message.dto';
 import { MessageSentSubscriptionDto } from './dto/message-sent-subs.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { MessageStatusEnum } from './enum/message-status.enum';
 import { Message } from './message.entity';
 
 @Resolver(() => Message)
@@ -33,27 +34,22 @@ export class ChatResolver {
     @Context('user') authUser: User,
     @Args('data') data: ListMessageDto,
   ) {
-    const messages = await this.chatService.listMessages(data);
-    if (messages.length > 0) {
-      this.pubSub.publish('taskMessagesRead', {
-        task: await messages[0].task,
-        fullname: authUser.fullname,
-      });
-    }
-
-    return messages;
+    return await this.chatService.listMessages(data);
   }
 
   @UseGuards(AuthGuard)
-  @Subscription(() => TaskMessagesReadSubsResponseDto, {
-    filter: async (payload: any, variables: any) => {
+  @Subscription(() => TaskMsgsStatusChangedSubsResponseDto, {
+    filter: async (payload: any, variables: any, context: any) => {
       const team = await payload.task.team;
-      return team.id == variables.teamId;
+      return team.id == variables.teamId && payload.userId != context.user.id;
     },
     resolve: (payload) => payload,
   })
-  taskMessagesRead(@Args('teamId') teamId: string) {
-    return this.pubSub.asyncIterator('taskMessagesRead');
+  taskMsgsStatusChanged(
+    @Context('user') authUser: User,
+    @Args('teamId') teamId: string,
+  ) {
+    return this.pubSub.asyncIterator('taskMsgsStatusChanged');
   }
 
   @UseGuards(AuthGuard)
@@ -111,6 +107,29 @@ export class ChatResolver {
     @Context('user') authUser: User,
     @Args('taskId') taskId: string,
   ) {
-    return await this.chatService.readTaskMessages(authUser, taskId);
+    const messages = await this.chatService.readTaskMessages(authUser, taskId);
+
+    if (messages.length > 0) {
+      this.publishMessageStatusChange(
+        messages[0],
+        authUser,
+        MessageStatusEnum.READ,
+      );
+    }
+
+    return true;
+  }
+
+  private async publishMessageStatusChange(
+    message: Message,
+    { id, fullname }: User,
+    status: string,
+  ) {
+    this.pubSub.publish('taskMsgsStatusChanged', {
+      task: await message.task,
+      userId: id,
+      fullname,
+      status,
+    });
   }
 }

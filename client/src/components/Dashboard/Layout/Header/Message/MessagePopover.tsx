@@ -172,7 +172,6 @@ export default function MessagePopover() {
             );
         }
     }, [openedModalTask, data]);
-    console.log("openedModalTask", openedModalTask);
 
     return (
         !graphQLloading &&

@@ -43,6 +43,7 @@ const SHOW_TASK = gql`
                 status
             }
             team {
+                id
                 members {
                     id
                     avatar
@@ -154,7 +155,7 @@ export default function TaskModal({
                             task={task}
                             handleOnChange={handleOnChange}
                         />
-                        <Chat client={client} task_id={task.id} />
+                        <Chat client={client} task={task} />
                     </div>
                 </div>
             </Dialog>

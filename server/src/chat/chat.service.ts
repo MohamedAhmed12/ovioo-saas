@@ -152,7 +152,7 @@ export class ChatService {
     return true;
   }
 
-  async readTaskMessages(authUser: User, taskId: string): Promise<boolean> {
+  async readTaskMessages(authUser: User, taskId: string): Promise<Message[]> {
     const messages = await this.messageRepository.find({
       where: {
         task: {
@@ -162,17 +162,29 @@ export class ChatService {
     });
 
     messages.map((message) => {
-      if (message.sender.id == authUser.id) return message;
-
-      message.status = MessageStatusEnum.READ;
-      if (!message.read_by.includes(authUser.fullname)) {
-        message.read_by.push(` ${authUser.fullname}`);
-      }
-
-      return message;
+      return this.changeMessageStatus(
+        message,
+        authUser,
+        MessageStatusEnum.READ,
+      );
     });
-    await this.messageRepository.save(messages);
 
-    return true;
+    return await this.messageRepository.save(messages);
+  }
+
+  private changeMessageStatus(
+    message: Message,
+    authUser: User,
+    status: MessageStatusEnum,
+  ): Message {
+    if (message.sender.id == authUser.id) return message;
+    if (message.status == status) return message;
+
+    message.status = status;
+    if (!message.read_by.includes(` ${authUser.fullname}`)) {
+      message.read_by.push(` ${authUser.fullname}`);
+    }
+
+    return message;
   }
 }
