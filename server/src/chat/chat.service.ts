@@ -4,7 +4,7 @@ import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
-import { ArrayContains, Not, Repository } from 'typeorm';
+import { ArrayContains, In, Not, Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -152,11 +152,16 @@ export class ChatService {
     return true;
   }
 
-  async readTaskMessages(authUser: User, taskId: string): Promise<Message[]> {
+  async changeTaskMessagesStatus(
+    authUser: User,
+    taskId: string,
+    status: MessageStatusEnum,
+    excludeStatuses: MessageStatusEnum[],
+  ): Promise<Message[]> {
     const messages = await this.messageRepository.find({
       where: [
         {
-          status: Not(MessageStatusEnum.READ),
+          status: Not(In(excludeStatuses)),
           task: {
             id: +taskId,
           },
@@ -165,8 +170,8 @@ export class ChatService {
           },
         },
         {
-          status: MessageStatusEnum.READ,
-          read_by: Not(ArrayContains([` ${authUser.fullname}`])),
+          status: status,
+          [`${status}_by`]: Not(ArrayContains([` ${authUser.fullname}`])),
           task: {
             id: +taskId,
           },
@@ -178,11 +183,7 @@ export class ChatService {
     });
 
     messages.map((message) => {
-      return this.changeMessageStatus(
-        message,
-        authUser,
-        MessageStatusEnum.READ,
-      );
+      return this.changeMessageStatus(message, authUser, status);
     });
 
     return await this.messageRepository.save(messages);
@@ -194,8 +195,8 @@ export class ChatService {
     status: MessageStatusEnum,
   ): Message {
     message.status = status;
-    if (!message.read_by.includes(` ${authUser.fullname}`)) {
-      message.read_by.push(` ${authUser.fullname}`);
+    if (!message[`${status}_by`].includes(` ${authUser.fullname}`)) {
+      message[`${status}_by`].push(` ${authUser.fullname}`);
     }
 
     return message;
