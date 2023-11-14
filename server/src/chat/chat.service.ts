@@ -4,7 +4,7 @@ import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
-import { Not, Repository } from 'typeorm';
+import { ArrayContains, Not, Repository } from 'typeorm';
 import { ListMessageDto } from './dto/list-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -154,15 +154,27 @@ export class ChatService {
 
   async readTaskMessages(authUser: User, taskId: string): Promise<Message[]> {
     const messages = await this.messageRepository.find({
-      where: {
-        status: Not(MessageStatusEnum.READ),
-        task: {
-          id: +taskId,
+      where: [
+        {
+          status: Not(MessageStatusEnum.READ),
+          task: {
+            id: +taskId,
+          },
+          sender: {
+            id: Not(authUser.id),
+          },
         },
-        sender: {
-          id: Not(authUser.id),
+        {
+          status: MessageStatusEnum.READ,
+          read_by: Not(ArrayContains([` ${authUser.fullname}`])),
+          task: {
+            id: +taskId,
+          },
+          sender: {
+            id: Not(authUser.id),
+          },
         },
-      },
+      ],
     });
 
     messages.map((message) => {
