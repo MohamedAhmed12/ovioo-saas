@@ -51,6 +51,7 @@ export default function MessagesWrapper({
     handleSendMessage,
     fetchMore,
     subscribeToMore,
+    readTaskMessages,
 }: {
     task: TaskInterface;
     setShowPicker: Dispatch<SetStateAction<boolean>>;
@@ -59,6 +60,7 @@ export default function MessagesWrapper({
     handleSendMessage: (sendMessageData: SendMessageDto) => void;
     fetchMore: any;
     subscribeToMore: any;
+    readTaskMessages: any;
 }) {
     const [chevronUpNumber, setChevronUpNumber] = useState<number>(0);
     const [showChevronUp, setShowChevronUp] = useState<boolean>(false);
@@ -142,7 +144,7 @@ export default function MessagesWrapper({
                 if (msg.status == status) return msg;
 
                 msg.status = status;
-                if (!msg.read_by.includes(fullname)) {
+                if (!msg.read_by?.includes(fullname)) {
                     msg.read_by.push(fullname);
                 }
 
@@ -170,6 +172,7 @@ export default function MessagesWrapper({
                     ...messages,
                     subscriptionData?.data?.messageSent,
                 ]);
+                readTaskMessages({ variables: { taskId: task.id } });
             },
         });
 

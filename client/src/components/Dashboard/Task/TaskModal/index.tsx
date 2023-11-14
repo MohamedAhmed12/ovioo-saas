@@ -61,11 +61,6 @@ const EDIT_TASK = gql`
         }
     }
 `;
-const READ_MESSAGES = gql`
-    mutation ReceiveAllSentMessages($taskId: String!) {
-        readTaskMessages(taskId: $taskId)
-    }
-`;
 
 export default function TaskModal({
     open,
@@ -85,7 +80,6 @@ export default function TaskModal({
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [editTask] = useMutation(EDIT_TASK, { client });
-    const [readTaskMessages] = useMutation(READ_MESSAGES, { client });
     const {
         loading: graphQLloading,
         error,
@@ -104,7 +98,6 @@ export default function TaskModal({
         if (!graphQLloading && data?.showTask) {
             dispatch(setSelectedTask(data?.showTask));
             setInitialDataLoaded(true);
-            readTaskMessages({ variables: { taskId: data?.showTask.id } });
         }
     }, [graphQLloading, data, data?.showTask, dispatch]);
 

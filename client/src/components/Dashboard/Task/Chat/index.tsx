@@ -57,6 +57,11 @@ const SEND_MESSAGE = gql`
         }
     }
 `;
+const READ_MESSAGES = gql`
+    mutation ReceiveAllSentMessages($taskId: String!) {
+        readTaskMessages(taskId: $taskId)
+    }
+`;
 
 export default function Chat({
     client,
@@ -68,8 +73,9 @@ export default function Chat({
     const currentUser = useAppSelector((state) => state.userReducer.user);
     const [showPicker, setShowPicker] = useState<boolean>(false);
     const [messages, setMessages] = useState<any[]>([]);
-    const [sendMessage] = useMutation(SEND_MESSAGE, { client });
 
+    const [sendMessage] = useMutation(SEND_MESSAGE, { client });
+    const [readTaskMessages] = useMutation(READ_MESSAGES, { client });
     const {
         loading: graphQLloading,
         error,
@@ -86,6 +92,9 @@ export default function Chat({
 
     if (error) throw new Error(JSON.stringify(error));
 
+    useEffect(()=>{
+        readTaskMessages({ variables: { taskId: task.id } });
+    },[])
     useEffect(() => {
         if (data?.listMessages && data?.listMessages?.length > 0)
             setMessages(data.listMessages);
@@ -139,6 +148,7 @@ export default function Chat({
                     handleSendMessage={handleSendMessage}
                     fetchMore={fetchMore}
                     subscribeToMore={subscribeToMore}
+                    readTaskMessages={readTaskMessages}
                 />
                 <MessageInput
                     task_id={task.id}
