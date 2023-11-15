@@ -34,7 +34,7 @@ export class ChatResolver {
     @Context('user') authUser: User,
     @Args('data') data: ListMessageDto,
   ) {
-    return await this.chatService.listMessages(data);
+    return await this.chatService.listMessages(authUser, data);
   }
 
   @UseGuards(AuthGuard)

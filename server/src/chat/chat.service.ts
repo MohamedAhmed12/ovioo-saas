@@ -23,14 +23,21 @@ export class ChatService {
     private readonly assetService: AssetService,
   ) {}
 
-  async listMessages({
-    page,
-    offsetPlus = 0,
-    limit = 10,
-    task_id,
-  }: ListMessageDto): Promise<Message[]> {
+  async listMessages(
+    authUser: User,
+    { page, offsetPlus = 0, limit = 10, task_id }: ListMessageDto,
+  ): Promise<Message[]> {
+    let messages: Message[];
+
+    if (page == 1) {
+      messages = await this.listUnreadMessages(authUser, task_id);
+      if (messages.length >= 10) {
+        return messages.reverse();
+      }
+    }
+
     const offset = (page - 1) * limit + offsetPlus;
-    const messages = await this.messageRepository
+    messages = await this.messageRepository
       .createQueryBuilder('messages')
       .select('messages')
       .addSelect([
@@ -45,13 +52,39 @@ export class ChatService {
       .leftJoin('messages.task', 'task')
       .leftJoin('messages.sender', 'sender')
       .leftJoin('messages.asset', 'asset')
-      .where('task.id = :task_id', { task_id })
+      .where(`task.id = ${task_id}`)
       .orderBy('messages.created_at', 'DESC')
       .skip(offset)
       .take(limit)
       .getMany();
 
     return messages.reverse();
+  }
+
+  private async listUnreadMessages(
+    authUser: User,
+    task_id: number,
+  ): Promise<Message[]> {
+    return await this.messageRepository
+      .createQueryBuilder('messages')
+      .select('messages')
+      .addSelect([
+        'sender.id',
+        'sender.fullname',
+        'sender.avatar',
+        'sender.role',
+        'asset.src',
+        'asset.type',
+        'asset.alt',
+      ])
+      .leftJoin('messages.task', 'task')
+      .leftJoin('messages.sender', 'sender')
+      .leftJoin('messages.asset', 'asset')
+      .where(
+        `task.id = ${task_id} AND sender_id != '${authUser.id}' AND (messages.status != '${MessageStatusEnum.READ}' OR (messages.status = '${MessageStatusEnum.READ}' AND ' ${authUser.fullname}' != ANY(messages.read_by)))`,
+      )
+      .orderBy('messages.created_at', 'DESC')
+      .getMany();
   }
 
   async listTaskUnreadMessages(authUser: User): Promise<Task[]> {
