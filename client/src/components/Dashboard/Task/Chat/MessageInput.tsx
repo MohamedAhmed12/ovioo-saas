@@ -1,4 +1,4 @@
-import { SendMessageDto } from "@/interfaces/message";
+import { MessageInterface, SendMessageDto } from "@/interfaces/message";
 import { getClient } from "@/utils/getClient";
 import { uploadFiles } from "@/utils/helpers";
 import emojiData from "@emoji-mart/data";
@@ -31,12 +31,12 @@ export default function MessageInput({
     task_id: string;
     showPicker: boolean;
     setShowPicker: Dispatch<SetStateAction<boolean>>;
-    onMessageSend: (formData: SendMessageDto) => void;
+    onMessageSend: (formData: Partial<MessageInterface>) => void;
 }) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [formData, setFormData] = useState<SendMessageDto>({
+    const [formData, setFormData] = useState<Partial<MessageInterface>>({
         task_id,
         content: "",
         voice_note_src: "",
@@ -74,8 +74,8 @@ export default function MessageInput({
         }
     };
     const handlePressSend = (
-        name: keyof SendMessageDto,
-        data: SendMessageDto
+        name: keyof Partial<MessageInterface>,
+        data: Partial<MessageInterface>
     ) => {
         if (data[name]) {
             if (
@@ -128,7 +128,7 @@ export default function MessageInput({
                 minHeight={46}
                 multiline={true}
                 referance={inputRef}
-                value={formData.content}
+                value={formData.content || undefined}
                 onChange={handleOnChange}
                 onKeyPress={handleKeyPress}
                 leftButtons={

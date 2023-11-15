@@ -20,6 +20,9 @@ const MESSAGE_SENT = gql`
             id
             content
             voice_note_src
+            status
+            received_by
+            read_by
             asset {
                 src
                 alt
@@ -57,7 +60,7 @@ export default function MessagesWrapper({
     setShowPicker: Dispatch<SetStateAction<boolean>>;
     setMessages: Dispatch<SetStateAction<any[]>>;
     messages: any[];
-    handleSendMessage: (sendMessageData: SendMessageDto) => void;
+    handleSendMessage: (sendMessageData: Partial<MessageInterface>) => void;
     fetchMore: any;
     subscribeToMore: any;
     readTaskMessages: any;
@@ -69,7 +72,7 @@ export default function MessagesWrapper({
     const [lastMessage, setLastMessage] = useState<MessageInterface>();
     const [prevScrollHeight, setPrevScrollHeight] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
-    const currentUser = useAppSelector((state) => state.userReducer.user);
+    const authUser = useAppSelector((state) => state.userReducer.user);
 
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
@@ -126,10 +129,11 @@ export default function MessagesWrapper({
         if (!msgsWrapper?.current) return;
         msgsWrapper.current.scrollTop = msgsWrapper.current.scrollHeight;
     };
-    const handleResend = (message: MessageInterface, index: number) => {
+    const handleResend = (message: MessageInterface, indexToRemove: number) => {
         const { content, voice_note_src, asset } = message;
-        messages.splice(index, 1);
-
+        const newMessages = messages;
+        newMessages.splice(indexToRemove, 1);
+        setMessages((messages) => newMessages);
         handleSendMessage({ task_id: task.id, content, voice_note_src, asset });
     };
     const changeAllMsgsStatus = ({
@@ -141,14 +145,50 @@ export default function MessagesWrapper({
     }) => {
         setMessages((messages) =>
             messages.map((msg) => {
-                if (msg.status == status) return msg;
-
-                msg.status = status;
-                if (!msg.read_by?.includes(fullname)) {
-                    msg.read_by.push(fullname);
+                // return in received messages status
+                if (msg.sender.id != authUser.id) {
+                    return msg;
                 }
+                if (
+                    status == MessageStatusEnum.RECEIVED &&
+                    msg.status == MessageStatusEnum.READ
+                ) {
+                    return msg;
+                }
+                if (status == MessageStatusEnum.READ) {
+                    if (
+                        msg.status == MessageStatusEnum.READ &&
+                        msg.read_by.includes(` ${fullname}`)
+                    ) {
+                        return msg;
+                    }
 
-                return msg;
+                    return {
+                        ...msg,
+                        status,
+                        read_by:
+                            msg?.read_by.length > 0
+                                ? msg.read_by?.push(` ${fullname}`)
+                                : [` ${fullname}`],
+                    };
+                }
+                if (status == MessageStatusEnum.RECEIVED) {
+                    if (
+                        msg.status == MessageStatusEnum.RECEIVED &&
+                        msg.received_by.includes(` ${fullname}`)
+                    ) {
+                        return msg;
+                    }
+
+                    return {
+                        ...msg,
+                        status,
+                        received_by:
+                            msg?.received_by.length > 0
+                                ? msg.received_by?.push(` ${fullname}`)
+                                : [` ${fullname}`],
+                    };
+                }
             })
         );
     };
@@ -186,13 +226,14 @@ export default function MessagesWrapper({
                 msgsWrapper.current.scrollTop =
                     msgsWrapper.current.scrollHeight - prevScrollHeight;
             } else {
-                messages[messages.length - 1]?.sender?.id == currentUser.id
+                messages[messages.length - 1]?.sender?.id == authUser.id
                     ? scrollToBottom()
                     : setChevronUpNumber((prev) => prev + 1);
             }
         }
 
         setLastMessage(messages[messages.length - 1]);
+        console.log("message changed", messages[messages.length - 1]);
     }, [messages]);
     useEffect(() => {
         if (msgsStatusChangedSubsData?.taskMsgsStatusChanged) {

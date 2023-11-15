@@ -3,7 +3,11 @@
 import { useAppSelector } from "@/hooks/redux";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { TaskInterface } from "@/interfaces";
-import { MessageStatusEnum, SendMessageDto } from "@/interfaces/message";
+import {
+    MessageInterface,
+    MessageStatusEnum,
+    SendMessageDto,
+} from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
@@ -93,44 +97,34 @@ export default function Chat({
     if (error) throw new Error(JSON.stringify(error));
 
     useEffect(() => {
-        if (data?.listMessages && data?.listMessages?.length > 0){
+        if (data?.listMessages && data?.listMessages?.length > 0) {
             setMessages(data.listMessages);
             readTaskMessages({ variables: { taskId: task.id } });
         }
     }, [data]);
 
-    const handleSendMessage = async (sendMessageData: SendMessageDto) => {
-        // add msg to msgs wrapper with waiting status
-        const { id, avatar, fullname } = currentUser;
-        const newMessage = {
-            ...sendMessageData,
-            sender: { id, avatar, fullname },
-            created_at: Date(),
-        };
-        if (newMessage.isFailed) {
-            delete newMessage.isFailed;
-        }
-        const newMessages = [...messages, newMessage];
-        setMessages(newMessages);
+    const handleSendMessage = async (
+        sendMessageData: Partial<MessageInterface>
+    ) => {
+        const { sender, created_at, isFailed, ...msg } = sendMessageData;
 
         try {
             // // send message
             const { data } = await sendMessage({
                 variables: {
-                    data: {
-                        ...sendMessageData,
-                        status: MessageStatusEnum.SENT,
-                    },
+                    data: msg,
                 },
             });
-
-            // add msg to msgs wrapper with sent status
-            newMessages.pop();
-            newMessages.push(data.sendMessage);
-            setMessages(newMessages);
         } catch (e: any) {
-            newMessages[newMessages.length - 1].isFailed = true;
-            setMessages(newMessages);
+            const { id, avatar, fullname } = currentUser;
+            const newMessage = {
+                ...sendMessageData,
+                sender: { id, avatar, fullname },
+                created_at: Date(),
+            };
+            newMessage.isFailed = true;
+
+            setMessages((message) => [...message, newMessage]);
         }
     };
 

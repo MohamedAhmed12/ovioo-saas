@@ -6,7 +6,7 @@ export interface MessageInterface {
     id: number;
     content: string | null;
     voice_note_src: string | null;
-    asset: Asset | null;
+    asset: Partial<Asset> | null;
     sender: User | null;
     task: TaskInterface;
     status: MessageStatusEnum;
