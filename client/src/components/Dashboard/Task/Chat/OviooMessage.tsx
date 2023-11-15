@@ -51,7 +51,7 @@ const OviooMessage = ({
         <div
             className={`message-box ${
                 authUser.id == message?.sender?.id &&
-                " w-full flex justify-end items-center"
+                "w-full flex justify-end items-center"
             }`}
         >
             <MessageBox

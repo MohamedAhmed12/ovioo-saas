@@ -47,6 +47,8 @@ export default function MessagesWrapper({
     setShowPicker,
     setMessages,
     messages,
+    setUnreadMessages,
+    unreadMessages,
     handleSendMessage,
     fetchMore,
     subscribeToMore,
@@ -56,6 +58,8 @@ export default function MessagesWrapper({
     setShowPicker: Dispatch<SetStateAction<boolean>>;
     setMessages: Dispatch<SetStateAction<any[]>>;
     messages: any[];
+    setUnreadMessages: Dispatch<SetStateAction<any[]>>;
+    unreadMessages: any[];
     handleSendMessage: (sendMessageData: Partial<MessageInterface>) => void;
     fetchMore: any;
     subscribeToMore: any;
@@ -69,6 +73,7 @@ export default function MessagesWrapper({
     const [prevScrollTop, setPrevScrollTop] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
     const unreadMsgsWrapper = useRef<HTMLDivElement | null>(null);
+    const unreadMsgsBar = useRef<HTMLDivElement | null>(null);
     const authUser = useAppSelector((state) => state.userReducer.user);
 
     const { data: session } = useSession({ required: true });
@@ -83,6 +88,17 @@ export default function MessagesWrapper({
         client,
     });
 
+    const compileMsg = (message: MessageInterface, index: number) => {
+        return message?.sender ? (
+            <OviooMessage
+                message={message}
+                key={index}
+                onResend={() => handleResend(message, index)}
+            />
+        ) : (
+            <OviooSystemMessage message={message} key={index} />
+        );
+    };
     const handleOnScroll = ({ currentTarget }: any) => {
         const showChevron = currentTarget.scrollTop < -100;
         if (!showChevron) setChevronUpNumber(0);
@@ -222,6 +238,20 @@ export default function MessagesWrapper({
         };
     }, []);
     useEffect(() => {
+        let hideUnreadBar: NodeJS.Timeout | null = null;
+
+        if (unreadMessages.length > 0) {
+            hideUnreadBar = setTimeout(() => {
+                setMessages((msgs) => [...unreadMessages, ...msgs]);
+                setUnreadMessages([]);
+            }, 5000);
+        }
+
+        return () => {
+            if (hideUnreadBar) clearTimeout(hideUnreadBar);
+        };
+    }, [unreadMessages]);
+    useEffect(() => {
         if (messages?.length > 0 && msgsWrapper?.current) {
             // behavior upon loading more msgs or send a message (mostly scrolling behavior)
             if (messages[0] === lastMessage) {
@@ -250,17 +280,23 @@ export default function MessagesWrapper({
             onClick={() => setShowPicker(false)}
             className="messages__wrapper rounded-t-md flex flex-col-reverse space-y-3 w-full bg-[#fae8bc] overflow-auto"
         >
-            {messages &&
-                messages?.map((message: MessageInterface, index: number) =>
-                    message?.sender ? (
-                        <OviooMessage
-                            message={message}
-                            key={index}
-                            onResend={() => handleResend(message, index)}
-                        />
-                    ) : (
-                        <OviooSystemMessage message={message} key={index} />
-                    )
+            {unreadMessages?.length > 0 && (
+                <>
+                    {unreadMessages?.map(
+                        (msg: MessageInterface, index: number) =>
+                            compileMsg(msg, index)
+                    )}
+
+                    <div className="unread-msgs-bar">
+                        <p className="capitalize font-medium">
+                            {unreadMessages.length} unread messages
+                        </p>
+                    </div>
+                </>
+            )}
+            {messages?.length > 0 &&
+                messages?.map((msg: MessageInterface, index: number) =>
+                    compileMsg(msg, index)
                 )}
 
             {showChevronUp && (

@@ -3,11 +3,7 @@
 import { useAppSelector } from "@/hooks/redux";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { TaskInterface } from "@/interfaces";
-import {
-    MessageInterface,
-    MessageStatusEnum,
-    SendMessageDto,
-} from "@/interfaces/message";
+import { MessageInterface, MessageStatusEnum } from "@/interfaces/message";
 import "@/styles/components/dashboard/task/chat.scss";
 import { ApolloClient, gql, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
@@ -74,9 +70,10 @@ export default function Chat({
     client: ApolloClient<any> | undefined;
     task: TaskInterface;
 }) {
-    const currentUser = useAppSelector((state) => state.userReducer.user);
+    const authUser = useAppSelector((state) => state.userReducer.user);
     const [showPicker, setShowPicker] = useState<boolean>(false);
     const [messages, setMessages] = useState<any[]>([]);
+    const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
 
     const [sendMessage] = useMutation(SEND_MESSAGE, { client });
     const [readTaskMessages] = useMutation(READ_MESSAGES, { client });
@@ -98,7 +95,20 @@ export default function Chat({
 
     useEffect(() => {
         if (data?.listMessages && data?.listMessages?.length > 0) {
-            setMessages(data.listMessages);
+            const msgs = data.listMessages;
+            const read: MessageInterface[] = [];
+            const unread: MessageInterface[] = [];
+
+            msgs.forEach((msg: MessageInterface) => {
+                msg.sender?.id == authUser.id ||
+                (msg.status == MessageStatusEnum.READ &&
+                    msg.read_by.includes(` ${authUser.fullname}`))
+                    ? read.push(msg)
+                    : unread.push(msg);
+            });
+
+            setMessages(read);
+            setUnreadMessages(unread);
             readTaskMessages({ variables: { taskId: task.id } });
         }
     }, [data]);
@@ -116,7 +126,7 @@ export default function Chat({
                 },
             });
         } catch (e: any) {
-            const { id, avatar, fullname } = currentUser;
+            const { id, avatar, fullname } = authUser;
             const newMessage = {
                 ...sendMessageData,
                 sender: { id, avatar, fullname },
@@ -138,6 +148,8 @@ export default function Chat({
                     setShowPicker={setShowPicker}
                     setMessages={setMessages}
                     messages={messages}
+                    setUnreadMessages={setUnreadMessages}
+                    unreadMessages={unreadMessages}
                     handleSendMessage={handleSendMessage}
                     fetchMore={fetchMore}
                     subscribeToMore={subscribeToMore}
