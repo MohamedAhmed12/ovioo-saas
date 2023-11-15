@@ -32,12 +32,12 @@ export class ChatService {
     if (page == 1) {
       messages = await this.listUnreadMessages(authUser, task_id);
       if (messages.length >= 10) {
-        return messages.reverse();
+        return messages;
       }
     }
 
     const offset = (page - 1) * limit + offsetPlus;
-    messages = await this.messageRepository
+    return await this.messageRepository
       .createQueryBuilder('messages')
       .select('messages')
       .addSelect([
@@ -57,8 +57,6 @@ export class ChatService {
       .skip(offset)
       .take(limit)
       .getMany();
-
-    return messages.reverse();
   }
 
   private async listUnreadMessages(

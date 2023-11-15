@@ -1,10 +1,6 @@
 import { useAppSelector } from "@/hooks/redux";
 import { TaskInterface } from "@/interfaces";
-import {
-    MessageInterface,
-    MessageStatusEnum,
-    SendMessageDto,
-} from "@/interfaces/message";
+import { MessageInterface, MessageStatusEnum } from "@/interfaces/message";
 import { getClient } from "@/utils/getClient";
 import { gql, useSubscription } from "@apollo/client";
 import { Badge, Fab } from "@mui/material";
@@ -70,8 +66,9 @@ export default function MessagesWrapper({
     const [page, setPage] = useState<number>(1);
     const [offsetPlus, setOffsetPlus] = useState<number>(0);
     const [lastMessage, setLastMessage] = useState<MessageInterface>();
-    const [prevScrollHeight, setPrevScrollHeight] = useState<number>(0);
+    const [prevScrollTop, setPrevScrollTop] = useState<number>(0);
     const msgsWrapper = useRef<HTMLDivElement | null>(null);
+    const unreadMsgsWrapper = useRef<HTMLDivElement | null>(null);
     const authUser = useAppSelector((state) => state.userReducer.user);
 
     const { data: session } = useSession({ required: true });
@@ -87,12 +84,18 @@ export default function MessagesWrapper({
     });
 
     const handleOnScroll = ({ currentTarget }: any) => {
-        const showChevron =
-            currentTarget.scrollHeight - currentTarget.scrollTop > 800;
+        const showChevron = currentTarget.scrollTop < -100;
         if (!showChevron) setChevronUpNumber(0);
         setShowChevronUp(showChevron);
 
-        if (currentTarget.scrollTop == 0) loadMoreMessagesOnScroll();
+        if (
+            Math.floor(
+                currentTarget.scrollHeight -
+                    currentTarget.clientHeight +
+                    currentTarget.scrollTop
+            ) == 0
+        )
+            loadMoreMessagesOnScroll();
     };
     const loadMoreMessagesOnScroll = () => {
         setPage((page) => page + 1);
@@ -116,18 +119,18 @@ export default function MessagesWrapper({
                 }
 
                 if (msgsWrapper?.current) {
-                    setPrevScrollHeight(msgsWrapper.current.scrollHeight);
+                    setPrevScrollTop(msgsWrapper.current.scrollTop);
                 }
                 setMessages((messages) => [
-                    ...fetchMoreResult.listMessages,
                     ...messages,
+                    ...fetchMoreResult.listMessages,
                 ]);
             },
         });
     };
     const scrollToBottom = () => {
         if (!msgsWrapper?.current) return;
-        msgsWrapper.current.scrollTop = msgsWrapper.current.scrollHeight;
+        msgsWrapper.current.scrollTop = 0;
     };
     const handleResend = (message: MessageInterface, indexToRemove: number) => {
         const { content, voice_note_src, asset } = message;
@@ -194,8 +197,6 @@ export default function MessagesWrapper({
     };
 
     useEffect(() => {
-        scrollToBottom();
-
         const unsubscribeMsgSent = subscribeToMore({
             document: MESSAGE_SENT,
             variables: { data: { task_id: task.id } },
@@ -209,8 +210,8 @@ export default function MessagesWrapper({
 
                 setOffsetPlus((offsetPlus) => offsetPlus + 1); // to prevent fetching msgs already exist
                 setMessages((messages) => [
-                    ...messages,
                     subscriptionData?.data?.messageSent,
+                    ...messages,
                 ]);
                 readTaskMessages({ variables: { taskId: task.id } });
             },
@@ -222,18 +223,17 @@ export default function MessagesWrapper({
     }, []);
     useEffect(() => {
         if (messages?.length > 0 && msgsWrapper?.current) {
-            if (messages[messages.length - 1] === lastMessage) {
-                msgsWrapper.current.scrollTop =
-                    msgsWrapper.current.scrollHeight - prevScrollHeight;
+            // behavior upon loading more msgs or send a message (mostly scrolling behavior)
+            if (messages[0] === lastMessage) {
+                msgsWrapper.current.scrollTo({ top: prevScrollTop });
             } else {
-                messages[messages.length - 1]?.sender?.id == authUser.id
+                messages[0]?.sender?.id == authUser.id
                     ? scrollToBottom()
                     : setChevronUpNumber((prev) => prev + 1);
             }
         }
 
-        setLastMessage(messages[messages.length - 1]);
-        console.log("message changed", messages[messages.length - 1]);
+        setLastMessage(messages[0]);
     }, [messages]);
     useEffect(() => {
         if (msgsStatusChangedSubsData?.taskMsgsStatusChanged) {
@@ -248,19 +248,20 @@ export default function MessagesWrapper({
             ref={msgsWrapper}
             onScroll={handleOnScroll}
             onClick={() => setShowPicker(false)}
-            className="messages__wrapper rounded-t-md flex flex-col space-y-3 w-full bg-[#fae8bc] overflow-auto"
+            className="messages__wrapper rounded-t-md flex flex-col-reverse space-y-3 w-full bg-[#fae8bc] overflow-auto"
         >
-            {messages?.map((message: MessageInterface, index: number) =>
-                message?.sender ? (
-                    <OviooMessage
-                        message={message}
-                        key={index}
-                        onResend={() => handleResend(message, index)}
-                    />
-                ) : (
-                    <OviooSystemMessage message={message} key={index} />
-                )
-            )}
+            {messages &&
+                messages?.map((message: MessageInterface, index: number) =>
+                    message?.sender ? (
+                        <OviooMessage
+                            message={message}
+                            key={index}
+                            onResend={() => handleResend(message, index)}
+                        />
+                    ) : (
+                        <OviooSystemMessage message={message} key={index} />
+                    )
+                )}
 
             {showChevronUp && (
                 <Badge
