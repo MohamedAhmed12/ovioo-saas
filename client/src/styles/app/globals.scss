@@ -66,11 +66,12 @@ body {
         &.with-shadow {
             --tw-shadow-color: #364e7e1a;
             --tw-shadow: var(--tw-shadow-colored);
-            --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+                0 4px 6px -4px rgb(0 0 0 / 0.1);
             --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
                 0 4px 6px -4px var(--tw-shadow-color);
-            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-                var(--tw-shadow);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+                var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
             .dark & {
                 --tw-shadow-color: #364e7e1a;
                 --tw-shadow: var(--tw-shadow-colored);
@@ -131,7 +132,7 @@ body {
             }
         }
     }
-    .dashboard-file-upload{
+    .dashboard-file-upload {
         clip: rect(0 0 0 0);
         clip-path: inset(50%);
         height: 1px;
@@ -140,6 +141,19 @@ body {
         bottom: 0;
         left: 0;
         white-space: nowrap;
-        width: 1px;      
-    } 
+        width: 1px;
+    }
+    .custom-scrollbar {
+        overflow-y: scroll;
+        &::-webkit-scrollbar,
+        &::-webkit-scrollbar-thumb {
+            background: var(--dashboard-dark-border);
+            border-radius: 5px;
+            width: 8px;
+        }
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-corner  {
+            background-color: #f1f1f1;
+        }
+    }
 }
