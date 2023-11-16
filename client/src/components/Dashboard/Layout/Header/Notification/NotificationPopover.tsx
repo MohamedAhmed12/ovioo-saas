@@ -1,85 +1,67 @@
 import NotificationItem from "@/components/Dashboard/Layout/Header/Notification/NotificationItem";
+import { NotificationInterface } from "@/interfaces";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
+import { getClient } from "@/utils/getClient";
+import { gql, useQuery } from "@apollo/client";
 import IconButton from "@mui/joy/IconButton";
-import {
-    Badge,
-    Box,
-    Button,
-    Divider,
-    List,
-    ListSubheader,
-    Popover,
-    Tooltip,
-    Typography,
-} from "@mui/material";
-import { set, sub } from "date-fns";
-import { MouseEvent, useState } from "react";
+import { Badge, Box, Divider, List, Popover, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { MouseEvent, useEffect, useState } from "react";
 import { IoNotificationsSharp } from "react-icons/io5";
-import { MdDoneAll } from "react-icons/md";
-import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
-const NOTIFICATIONS = [
-    {
-        id: 1,
-        title: "Your order is placed",
-        description: "waiting for shipping",
-        avatar: null,
-        type: "order_placed",
-        createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-        isUnRead: true,
-    },
-    {
-        id: 2,
-        title: "user 2",
-        description: "answered to your comment on the Minimal",
-        avatar: "/assets/images/avatars/avatar_2.jpg",
-        type: "friend_interactive",
-        createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
-        isUnRead: true,
-    },
-    {
-        id: 3,
-        title: "You have new message",
-        description: "5 unread messages",
-        avatar: null,
-        type: "chat_message",
-        createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),
-        isUnRead: false,
-    },
-    {
-        id: 4,
-        title: "You have new mail",
-        description: "sent from Guido Padberg",
-        avatar: null,
-        type: "mail",
-        createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
-        isUnRead: false,
-    },
-    {
-        id: 5,
-        title: "Delivery processing",
-        description: "Your order is being shipped",
-        avatar: null,
-        type: "order_shipped",
-        createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),
-        isUnRead: false,
-    },
-];
+const LIST_NOTIFICATIONS = gql`
+    query ListNotifications($data: ListNotificationsDto!) {
+        listNotifications(data: $data) {
+            id
+            content
+            action
+            is_read
+            created_at
+            userId
+        }
+    }
+`;
 
 export default function NotificationPopover() {
-    const [notifications, setNotifications] = useState(NOTIFICATIONS);
-
-    const totalUnRead = notifications.filter(
-        (item: any) => item.isUnRead === true
-    ).length;
-
+    const [notifications, setNotifications] = useState<NotificationInterface[]>(
+        []
+    );
     const [open, setOpen] = useState<HTMLElement | null>(null);
+    const [page, setPage] = useState<number>(1);
+    const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
 
+    const session = useSession();
+    const client = getClient(session);
+    const {
+        loading,
+        error,
+        data: notificationData,
+        fetchMore,
+    } = useQuery(LIST_NOTIFICATIONS, {
+        variables: { data: { page } },
+        client,
+        fetchPolicy: "network-only",
+    });
+
+    if (error) throw new Error(JSON.stringify(error));
+
+    const handleOnScroll = ({ currentTarget }: any) => {
+        if (
+            currentTarget.scrollTop ==
+            currentTarget.scrollHeight - currentTarget.clientHeight
+        ) {
+            setPage((page) => page + 1);
+            fetchMore({
+                variables: {
+                    data: { page: page + 1 },
+                },
+            });
+        }
+    };
     const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
         setOpen(event ? event.currentTarget : null);
     };
-
     const handleMarkAsRead = (id: number) => {
         setNotifications(
             notifications.map((notification) => {
@@ -94,45 +76,56 @@ export default function NotificationPopover() {
         );
     };
 
-    const handleMarkAllAsRead = () => {
-        setNotifications(
-            notifications.map((notification) => ({
-                ...notification,
-                isUnRead: false,
-            }))
-        );
-    };
+    useEffect(() => {
+        if (notificationData) {
+            setNotifications((notifications) => [
+                ...notifications,
+                ...notificationData.listNotifications,
+            ]);
+
+            const unread = notificationData.listNotifications.filter(
+                (item: NotificationInterface) => !item.is_read
+            );
+            setUnreadNotifications(
+                (unreadNotification) => unreadNotification + unread.length
+            );
+        }
+    }, [notificationData]);
 
     return (
-        <div className="notifications-popover">
-            <IconButton
-                className={`notification__icon-button toolbar-icon ${
-                    open ? "opened" : "closed"
-                }`}
-                onClick={handleToggle}
-            >
-                <Badge badgeContent={totalUnRead} color="error">
-                    <IoNotificationsSharp size="26" />
-                </Badge>
-            </IconButton>
+        notifications?.length > 0 && (
+            <div className="notifications-popover">
+                <IconButton
+                    className={`notification__icon-button toolbar-icon ${
+                        open ? "opened" : "closed"
+                    }`}
+                    onClick={handleToggle}
+                >
+                    <Badge badgeContent={unreadNotifications} color="error">
+                        <IoNotificationsSharp size="26" />
+                    </Badge>
+                </IconButton>
 
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={() => handleToggle(null)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-                slotProps={{
-                    paper: {
-                        sx: {
-                            mt: 1.5,
-                            ml: 0.75,
-                            width: 360,
+                <Popover
+                    open={Boolean(open)}
+                    anchorEl={open}
+                    onClose={() => handleToggle(null)}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    transformOrigin={{ vertical: "top", horizontal: "right" }}
+                    slotProps={{
+                        paper: {
+                            sx: {
+                                mt: 1.5,
+                                ml: 0.75,
+                                width: 360,
+                                overflow: "hidden",
+                            },
+                            className:
+                                "notifications-popover__paper custom-scrollbar",
+                            onScroll: handleOnScroll,
                         },
-                    },
-                }}
-            >
-                <SimpleBar style={{ maxHeight: 300 }}>
+                    }}
+                >
                     <Box
                         sx={{
                             display: "flex",
@@ -149,36 +142,15 @@ export default function NotificationPopover() {
                                 variant="body2"
                                 sx={{ color: "text.secondary" }}
                             >
-                                You have {totalUnRead} unread messages
+                                You have {unreadNotifications} unread messages
                             </Typography>
                         </Box>
-
-                        {totalUnRead > 0 && (
-                            <Tooltip title=" Mark all as read">
-                                <IconButton
-                                    color="primary"
-                                    onClick={handleMarkAllAsRead}
-                                >
-                                    <MdDoneAll size="24" />
-                                </IconButton>
-                            </Tooltip>
-                        )}
                     </Box>
 
                     <Divider sx={{ borderStyle: "dashed" }} />
 
-                    <List
-                        disablePadding
-                        subheader={
-                            <ListSubheader
-                                disableSticky
-                                sx={{ py: 1, px: 2.5, typography: "overline" }}
-                            >
-                                New
-                            </ListSubheader>
-                        }
-                    >
-                        {notifications.slice(0, 2).map((notification) => (
+                    <List disablePadding>
+                        {notifications.map((notification) => (
                             <NotificationItem
                                 key={notification.id}
                                 notification={notification}
@@ -188,38 +160,8 @@ export default function NotificationPopover() {
                             />
                         ))}
                     </List>
-
-                    <List
-                        disablePadding
-                        subheader={
-                            <ListSubheader
-                                disableSticky
-                                sx={{ py: 1, px: 2.5, typography: "overline" }}
-                            >
-                                Before that
-                            </ListSubheader>
-                        }
-                    >
-                        {notifications.slice(2, 5).map((notification) => (
-                            <NotificationItem
-                                key={notification.id}
-                                notification={notification}
-                                onClick={() =>
-                                    handleMarkAsRead(notification.id)
-                                }
-                            />
-                        ))}
-                    </List>
-
-                    <Divider sx={{ borderStyle: "dashed" }} />
-
-                    <Box sx={{ p: 1 }}>
-                        <Button fullWidth disableRipple>
-                            View All
-                        </Button>
-                    </Box>
-                </SimpleBar>
-            </Popover>
-        </div>
+                </Popover>
+            </div>
+        )
     );
 }

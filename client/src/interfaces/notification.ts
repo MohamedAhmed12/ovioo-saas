@@ -1,9 +1,8 @@
-export interface Notification {
-    createdAt: Date,
-    id: number,
-    isUnRead: boolean,
-    title: string,
-    description: string,
-    type: string,
-    avatar: string|null,
-};
+export interface NotificationInterface {
+    id: number;
+    content: string;
+    action: string;
+    is_read: boolean;
+    created_at: Date;
+    userId: number;
+}

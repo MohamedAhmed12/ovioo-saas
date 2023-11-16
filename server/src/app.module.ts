@@ -6,14 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AssetModule } from './asset/asset.module';
+import { ChatModule } from './chat/chat.module';
+import { NotificationModule } from './notification/notification.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProjectModule } from './project/project.module';
+import { TaskType } from './task/task-type.entity';
+import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
-import { TaskTypeSeeder } from './task/task-type.seed';
-import { TaskType } from './task/task-type.entity';
-import { ChatModule } from './chat/chat.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ormConfig = require('../ormconfig.json');
@@ -27,6 +28,7 @@ const ormConfig = require('../ormconfig.json');
     AssetModule,
     ProjectModule,
     ChatModule,
+    NotificationModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',

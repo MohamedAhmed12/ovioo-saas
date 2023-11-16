@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""notifications"""
+type Notification {
+  id: ID!
+  content: String
+  action: String!
+  is_read: Boolean
+  created_at: DateTime!
+  user: User!
+  userId: ID!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 """profiles"""
 type Profile {
   id: ID!
@@ -16,11 +32,6 @@ type Profile {
   updated_at: DateTime!
   user: User!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 """users"""
 type User {
@@ -38,6 +49,7 @@ type User {
   role: String
   team: Team!
   messages: [Message!]!
+  notifications: [Notification!]!
   assignedTasks: [Task!]!
 }
 
@@ -112,16 +124,16 @@ type Asset {
   message: Message!
 }
 
+type TaskMsgsStatusChangedSubsResponseDto {
+  status: String!
+  fullname: String!
+}
+
 type ChangeUserStatusResponseDto {
   id: String!
   avatar: String!
   fullname: String!
   isActive: Boolean!
-}
-
-type TaskMsgsStatusChangedSubsResponseDto {
-  status: String!
-  fullname: String!
 }
 
 """task-types"""
@@ -146,6 +158,7 @@ type Query {
   showProject(id: String!): Project!
   listMessages(data: ListMessageDto!): [Message!]!
   listTaskUnreadMessages: [Task!]!
+  listNotifications(data: ListNotificationsDto!): [Notification!]!
 }
 
 input ListMessageDto {
@@ -153,6 +166,11 @@ input ListMessageDto {
   team_id: String
   page: Float!
   offsetPlus: Float
+  limit: Float
+}
+
+input ListNotificationsDto {
+  page: Float!
   limit: Float
 }
 

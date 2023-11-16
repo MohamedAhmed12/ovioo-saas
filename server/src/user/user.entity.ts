@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcrypt';
 import { Message } from 'src/chat/message.entity';
+import { Notification } from 'src/notification/notification.entity';
 import { Profile } from 'src/profile/profile.entity';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
@@ -82,6 +83,10 @@ export class User extends BaseEntity {
   @OneToMany(() => Message, (message) => message.sender)
   @Field(() => [Message])
   messages: Message[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  @Field(() => [Notification])
+  notifications: Notification[];
 
   // as a designer not an owner
   @OneToMany(() => Task, (task) => task.designer)
