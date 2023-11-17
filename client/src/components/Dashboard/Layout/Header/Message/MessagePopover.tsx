@@ -191,7 +191,7 @@ export default function MessagePopover() {
     return (
         !graphQLloading &&
         data.listTaskUnreadMessages && (
-            <div className="notifications-popover">
+            <div>
                 <IconButton
                     className={` toolbar-icon ${open ? "opened" : "closed"}`}
                     onClick={handleClick}
@@ -214,43 +214,40 @@ export default function MessagePopover() {
                                 ml: 0.75,
                                 width: 360,
                             },
+                            className:
+                                "notifications-popover__paper custom-scrollbar",
                         },
                     }}
                 >
-                    <SimpleBar style={{ maxHeight: 300 }}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                py: 2,
-                                px: 2.5,
-                                flexGrow: 1,
-                            }}
-                        >
-                            <Box>
-                                <Typography variant="subtitle1">
-                                    Chats
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: "text.secondary" }}
-                                >
-                                    You have {allUnreadMsgsCount} unread
-                                    messages
-                                </Typography>
-                            </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            py: 2,
+                            px: 2.5,
+                            flexGrow: 1,
+                        }}
+                    >
+                        <Box>
+                            <Typography variant="subtitle1">Chats</Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ color: "text.secondary" }}
+                            >
+                                You have {allUnreadMsgsCount} unread messages
+                            </Typography>
                         </Box>
+                    </Box>
 
-                        <Divider sx={{ borderStyle: "dashed" }} />
+                    <Divider sx={{ borderStyle: "dashed" }} />
 
-                        <List disablePadding>
-                            {data?.listTaskUnreadMessages.map(
-                                (task: TaskInterface) => (
-                                    <MessageItem key={+task.id} task={task} />
-                                )
-                            )}
-                        </List>
-                    </SimpleBar>
+                    <List disablePadding>
+                        {data?.listTaskUnreadMessages.map(
+                            (task: TaskInterface) => (
+                                <MessageItem key={+task.id} task={task} />
+                            )
+                        )}
+                    </List>
                 </Popover>
             </div>
         )
