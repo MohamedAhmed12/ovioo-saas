@@ -67,8 +67,6 @@ export default function NotificationPopover() {
             Math.floor(currentTarget.scrollHeight - currentTarget.scrollTop) ==
             currentTarget.clientHeight
         ) {
-            console.log("scroll more");
-
             setPage((page) => page + 1);
             fetchMore({
                 variables: {
@@ -83,15 +81,16 @@ export default function NotificationPopover() {
                 ) => {
                     if (
                         !fetchMoreResult ||
-                        fetchMoreResult.notificationReceived.length == 0
+                        fetchMoreResult?.listNotifications?.length == 0
                     ) {
                         return;
                     }
 
                     const newNotifications = [
                         ...notifications,
-                        ...fetchMoreResult.notificationReceived,
+                        ...fetchMoreResult.listNotifications,
                     ];
+
                     setNotifications(newNotifications);
                     getNotificationsCount(newNotifications);
                 },
@@ -153,7 +152,7 @@ export default function NotificationPopover() {
         };
     }, []);
     useEffect(() => {
-        if (notificationData) {
+        if (notificationData && notifications.length == 0) {
             setNotifications(notificationData.listNotifications);
             getNotificationsCount(notificationData.listNotifications);
         }
@@ -161,7 +160,7 @@ export default function NotificationPopover() {
 
     return (
         notifications && (
-            <div className="notifications-popover">
+            <div>
                 <IconButton
                     className={`notification__icon-button toolbar-icon ${
                         open ? "opened" : "closed"
