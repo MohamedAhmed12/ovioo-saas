@@ -31,4 +31,25 @@ export class NotificationResolver {
   ) {
     return await this.notificationService.listNotifications(authUser, data);
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Notification)
+  async sendNotification(@Args('data') data: NotificationDto) {
+    const notification = await this.notificationService.sendNotification(data);
+
+    this.pubSub.publish('notificationReceived', {
+      notificationReceived: notification,
+    });
+
+    return notification;
+  }
+
+  @UseGuards(AuthGuard)
+  @Subscription((returns) => Notification, {
+    filter: async (payload: any, variables: any, context: any) =>
+      payload.notificationReceived.userId == context.user.id,
+  })
+  notificationReceived(@Args('data') data: NotificationDto) {
+    return this.pubSub.asyncIterator('notificationReceived');
+  }
 }

@@ -11,5 +11,10 @@ export class ListNotificationsDto {
   @IsOptional()
   @IsNumber()
   @Field(() => Number, { nullable: true })
+  offsetPlus?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Field(() => Number, { nullable: true })
   limit?: number;
 }

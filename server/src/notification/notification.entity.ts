@@ -20,8 +20,8 @@ export class Notification extends BaseEntity {
   @Field(() => String, { nullable: true })
   content: string;
 
-  @Column('text')
-  @Field(() => String)
+  @Column('text', { nullable: true })
+  @Field(() => String, { nullable: true })
   action: string;
 
   @Column('boolean', { default: false, nullable: true })

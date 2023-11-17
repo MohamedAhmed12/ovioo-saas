@@ -17,9 +17,9 @@ export class NotificationService {
 
   async listNotifications(
     authUser: User,
-    { page, limit = 10 }: ListNotificationsDto,
+    { page, offsetPlus = 0, limit = 10 }: ListNotificationsDto,
   ) {
-    const offset = (page - 1) * limit;
+    const offset = (page - 1) * limit + offsetPlus;
 
     return await this.notificationRepository
       .createQueryBuilder('notifications')
@@ -29,5 +29,10 @@ export class NotificationService {
       .skip(offset)
       .take(limit)
       .getMany();
+  }
+
+  async sendNotification(data: NotificationDto): Promise<Notification> {
+    const notification = await this.notificationRepository.create(data);
+    return await this.notificationRepository.save(notification);
   }
 }

@@ -6,7 +6,7 @@
 type Notification {
   id: ID!
   content: String
-  action: String!
+  action: String
   is_read: Boolean
   created_at: DateTime!
   user: User!
@@ -171,6 +171,7 @@ input ListMessageDto {
 
 input ListNotificationsDto {
   page: Float!
+  offsetPlus: Float
   limit: Float
 }
 
@@ -199,6 +200,7 @@ type Mutation {
   receiveAllSentMessages: Boolean!
   readTaskMessages(taskId: String!): Boolean!
   receiveTaskMessages(taskId: String!): Boolean!
+  sendNotification(data: NotificationDto!): Notification!
 }
 
 input LoginDto {
@@ -320,10 +322,20 @@ input UpdateMessageDto {
   status: String
 }
 
+input NotificationDto {
+  id: String
+  content: String
+  is_read: Boolean
+  action: String
+  userId: String
+  created_at: DateTime
+}
+
 type Subscription {
   userStatusChanged: ChangeUserStatusResponseDto!
   taskMsgsStatusChanged(teamId: String!): TaskMsgsStatusChangedSubsResponseDto!
   messageSent(data: MessageSentSubscriptionDto!): Message!
+  notificationReceived(data: NotificationDto!): Notification!
 }
 
 input MessageSentSubscriptionDto {

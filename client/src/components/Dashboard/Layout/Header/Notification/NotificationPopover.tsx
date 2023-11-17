@@ -1,4 +1,5 @@
 import NotificationItem from "@/components/Dashboard/Layout/Header/Notification/NotificationItem";
+import { useAppSelector } from "@/hooks/redux";
 import { NotificationInterface } from "@/interfaces";
 import "@/styles/components/dashboard/layout/header/notifications-popover.scss";
 import { getClient } from "@/utils/getClient";
@@ -22,6 +23,18 @@ const LIST_NOTIFICATIONS = gql`
         }
     }
 `;
+const NOTIFICATION_SENT = gql`
+    subscription Subscription($data: NotificationDto!) {
+        notificationReceived(data: $data) {
+            id
+            content
+            is_read
+            created_at
+            userId
+            action
+        }
+    }
+`;
 
 export default function NotificationPopover() {
     const [notifications, setNotifications] = useState<NotificationInterface[]>(
@@ -29,7 +42,9 @@ export default function NotificationPopover() {
     );
     const [open, setOpen] = useState<HTMLElement | null>(null);
     const [page, setPage] = useState<number>(1);
+    const [offsetPlus, setOffsetPlus] = useState<number>(0);
     const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
+    const authUser = useAppSelector((state) => state.userReducer.user);
 
     const session = useSession();
     const client = getClient(session);
@@ -38,6 +53,7 @@ export default function NotificationPopover() {
         error,
         data: notificationData,
         fetchMore,
+        subscribeToMore,
     } = useQuery(LIST_NOTIFICATIONS, {
         variables: { data: { page } },
         client,
@@ -48,13 +64,36 @@ export default function NotificationPopover() {
 
     const handleOnScroll = ({ currentTarget }: any) => {
         if (
-            currentTarget.scrollTop ==
-            currentTarget.scrollHeight - currentTarget.clientHeight
+            Math.floor(currentTarget.scrollHeight - currentTarget.scrollTop) ==
+            currentTarget.clientHeight
         ) {
+            console.log("scroll more");
+
             setPage((page) => page + 1);
             fetchMore({
                 variables: {
-                    data: { page: page + 1 },
+                    data: {
+                        page: page + 1,
+                        offsetPlus,
+                    },
+                },
+                updateQuery: (
+                    prev: any,
+                    { fetchMoreResult }: { fetchMoreResult: any }
+                ) => {
+                    if (
+                        !fetchMoreResult ||
+                        fetchMoreResult.notificationReceived.length == 0
+                    ) {
+                        return;
+                    }
+
+                    const newNotifications = [
+                        ...notifications,
+                        ...fetchMoreResult.notificationReceived,
+                    ];
+                    setNotifications(newNotifications);
+                    getNotificationsCount(newNotifications);
                 },
             });
         }
@@ -75,25 +114,53 @@ export default function NotificationPopover() {
             })
         );
     };
+    const getNotificationsCount = (notifications: NotificationInterface[]) => {
+        const unread = notifications.filter(
+            (item: NotificationInterface) => !item.is_read
+        );
+        setUnreadNotifications(
+            (unreadNotification) => unreadNotification + unread.length
+        );
+    };
 
     useEffect(() => {
-        if (notificationData) {
-            setNotifications((notifications) => [
-                ...notifications,
-                ...notificationData.listNotifications,
-            ]);
+        const unsubscribeNotificationSent = subscribeToMore({
+            document: NOTIFICATION_SENT,
+            variables: { data: { userId: authUser.id } },
+            updateQuery: (
+                prev: any,
+                { subscriptionData }: { subscriptionData: any }
+            ) => {
+                if (!subscriptionData?.data?.notificationReceived) {
+                    return;
+                }
 
-            const unread = notificationData.listNotifications.filter(
-                (item: NotificationInterface) => !item.is_read
-            );
-            setUnreadNotifications(
-                (unreadNotification) => unreadNotification + unread.length
-            );
+                setOffsetPlus((offsetPlus) => offsetPlus + 1); // to prevent fetching notifications already exist
+
+                setNotifications([
+                    subscriptionData.data.notificationReceived,
+                    ...prev.listNotifications,
+                ]);
+
+                if (!subscriptionData.data.notificationReceived.is_read) {
+                    setUnreadNotifications((count) => count + 1);
+                }
+            },
+        });
+
+        return () => {
+            unsubscribeNotificationSent();
+        };
+    }, []);
+    useEffect(() => {
+        if (notificationData) {
+            setNotifications(notificationData.listNotifications);
+            getNotificationsCount(notificationData.listNotifications);
         }
     }, [notificationData]);
 
     return (
-        notifications?.length > 0 && (
+        notifications && (
             <div className="notifications-popover">
                 <IconButton
                     className={`notification__icon-button toolbar-icon ${
