@@ -14,7 +14,8 @@ const httpLink = new HttpLink({
 const wsLink = (session: any) =>
     new GraphQLWsLink(
         createClient({
-            url: `ws://localhost:3000/graphql`,
+            url: `ws://127.0.0.1:3000/graphql`,
+            shouldRetry: () => true,
             connectionParams: () => {
                 return {
                     Authorization: `Bearer ${
@@ -22,6 +23,7 @@ const wsLink = (session: any) =>
                     }`,
                 };
             },
+            
         })
     );
 
@@ -52,7 +54,7 @@ const splitLink = (session: any) =>
 
 export const getClient = (session?: any) => {
     // log GraphQL error messages only in a dev environment
-    if (process.env.NODE_ENV ==='development') {    
+    if (process.env.NODE_ENV === "development") {
         loadDevMessages();
         loadErrorMessages();
     }
