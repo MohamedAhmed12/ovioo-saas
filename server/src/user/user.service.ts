@@ -21,18 +21,18 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
-
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
-
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>,
+    private readonly mailerService: MailerService,
   ) {}
 
   async login(data: LoginDto): Promise<User> {
@@ -86,6 +86,32 @@ export class UserService {
       );
 
     return user;
+  }
+
+  async forgetPassword(email: string): Promise<boolean> {
+    const user = await this.UserRepository.findOneBy({ email });
+    if (!user) throw new NotFoundException();
+
+    user.resetToken = await hash(Math.random().toString(36).slice(-15), 12);
+
+    const now = new Date();
+    const oneHourFromNow = new Date(now);
+    oneHourFromNow.setHours(now.getHours() + 1);
+    user.resetTokenExpired_at = oneHourFromNow;
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${user.resetToken}`;
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Reset Password',
+      template: 'reset-password',
+      context: {
+        resetLink,
+        user,
+      },
+    });
+
+    return true;
   }
 
   async changePassword(

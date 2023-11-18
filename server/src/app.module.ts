@@ -1,4 +1,6 @@
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -41,6 +43,26 @@ const ormConfig = require('../ormconfig.json');
     }),
     TypeOrmModule.forRoot(ormConfig[0]),
     TypeOrmModule.forFeature([TaskType]),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAILER_HOST,
+        port: process.env.MAILER_PORT,
+        auth: {
+          user: process.env.MAILER_USER,
+          pass: process.env.MAILER_PASSWORD,
+        },
+      },
+      defaults: {
+        from: '<support@ovioo.com>',
+      },
+      template: {
+        dir: process.cwd() + '/src/emails',
+        adapter: new EjsAdapter(),
+        options: {
+          strict: false,
+        },
+      },
+    }),
   ],
   providers: [AppResolver, AppService, TaskTypeSeeder],
 })

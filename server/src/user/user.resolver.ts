@@ -45,6 +45,11 @@ export class UserResolver {
     return this.userService.register(registerDto);
   }
 
+  @Mutation(() => Boolean)
+  async forgetPassword(@Args('email') email: string) {
+    return await this.userService.forgetPassword(email);
+  }
+
   @UseGuards(new AuthGuard())
   @Mutation(() => Boolean)
   async changePassword(

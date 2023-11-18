@@ -57,6 +57,16 @@ export class User extends BaseEntity {
   @Field(() => String)
   provider: string;
 
+  @Column('text', { default: UserRoleEnum.User })
+  @Field(() => String, { nullable: true })
+  role: UserRoleEnum;
+
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true })
+  resetTokenExpired_at: Date;
+
   @CreateDateColumn()
   @Field()
   created_at: Date;
@@ -71,10 +81,6 @@ export class User extends BaseEntity {
   })
   @Field(() => Profile)
   profile: Profile;
-
-  @Column('text', { default: UserRoleEnum.User })
-  @Field(() => String, { nullable: true })
-  role: UserRoleEnum;
 
   @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
   @Field(() => Team)

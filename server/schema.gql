@@ -43,10 +43,10 @@ type User {
   phone: Int
   isActive: Boolean!
   provider: String!
+  role: String
   created_at: DateTime!
   updated_at: DateTime!
   profile: Profile!
-  role: String
   team: Team!
   messages: [Message!]!
   notifications: [Notification!]!
@@ -178,6 +178,7 @@ input ListNotificationsDto {
 type Mutation {
   login(user: LoginDto!): User!
   register(user: RegisterDto!): User!
+  forgetPassword(email: String!): Boolean!
   changePassword(data: ChangePasswordDto!): Boolean!
   updateUser(data: UpdateUserDto!): User!
   createMember(member: CreateMemberDto!): User!
