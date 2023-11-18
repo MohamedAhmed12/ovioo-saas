@@ -1,52 +1,77 @@
 "use client";
 
+import { useGraphError } from "@/hooks/useGraphError";
 import "@/styles/app/auth/login.scss";
+import { getClient } from "@/utils/getClient";
+import { gql, useMutation } from "@apollo/client";
 import { Button as JoyButton } from "@mui/joy";
-import {
-    Button,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    IconButton,
-    InputAdornment,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
+import { Stack, TextField, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
+
+const FORGET_PASSWORD = gql`
+    mutation ForgetPassword($email: String!) {
+        forgetPassword(email: $email)
+    }
+`;
 
 export default function ForgotPassForm() {
-    const router = useRouter();
-
-    const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
-    const handleClick = () => {
-        router.push("/dashboard");
+    const router = useRouter();
+    const { errors, errorHandler } = useGraphError({});
+
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+    const [forgetPassword] = useMutation(FORGET_PASSWORD, { client });
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setLoading(true);
+
+        try {
+            const { data } = await forgetPassword({
+                variables: { email },
+            });
+
+            data && toast.success("Reset password email sent successfully");
+        } catch (e: any) {
+            errorHandler(e);
+        }
+        setEmail("");
+        setLoading(false);
     };
 
     return (
-        <div className="px-10">
+        <form className="px-10" onSubmit={handleSubmit}>
             <Typography variant="h4" gutterBottom>
                 Reset Password
             </Typography>
 
             <Stack spacing={3}>
-                <TextField name="email" label="Email address" />
+                <TextField
+                    name="email"
+                    label="Email address"
+                    type="email"
+                    error={errors.hasOwnProperty("email")}
+                    helperText={errors["email"]}
+                    value={email || ""}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
             </Stack>
 
             <JoyButton
                 loading={loading}
-                onClick={handleClick}
                 variant="solid"
                 type="submit"
                 className="auth-btn !mt-4 w-full"
             >
-                Send Password Reset Link
+                {!loading && "Send Password Reset Link"}
             </JoyButton>
-        </div>
+        </form>
     );
 }

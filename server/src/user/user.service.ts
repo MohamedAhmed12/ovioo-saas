@@ -90,7 +90,22 @@ export class UserService {
 
   async forgetPassword(email: string): Promise<boolean> {
     const user = await this.UserRepository.findOneBy({ email });
-    if (!user) throw new NotFoundException();
+    if (!user)
+      throw new GraphQLError(
+        'Couldn’t find an Ovioo account associated with this email.',
+        {
+          extensions: {
+            originalError: {
+              message: [
+                {
+                  email:
+                    'Couldn’t find an Ovioo account associated with this email.',
+                },
+              ],
+            },
+          },
+        },
+      );
 
     user.resetToken = await hash(Math.random().toString(36).slice(-15), 12);
 
