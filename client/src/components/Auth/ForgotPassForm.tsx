@@ -7,7 +7,6 @@ import { gql, useMutation } from "@apollo/client";
 import { Button as JoyButton } from "@mui/joy";
 import { Stack, TextField, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -21,7 +20,6 @@ export default function ForgotPassForm() {
     const [email, setEmail] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
-    const router = useRouter();
     const { errors, errorHandler } = useGraphError({});
 
     const { data: session } = useSession({ required: true });
@@ -48,7 +46,7 @@ export default function ForgotPassForm() {
     return (
         <form className="px-10" onSubmit={handleSubmit}>
             <Typography variant="h4" gutterBottom>
-                Reset Password
+                Forgot Password
             </Typography>
 
             <Stack spacing={3}>

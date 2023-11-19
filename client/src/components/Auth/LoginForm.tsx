@@ -136,7 +136,7 @@ export default function LoginForm() {
             >
                 <FormControlLabel control={<Checkbox />} label="Remember me" />
                 <Link
-                    href="/auth/forgot-password"
+                    href="/auth/password/forgot"
                     className="text-sm text-blue-600 font-normal"
                 >
                     Forgot password?

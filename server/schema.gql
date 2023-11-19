@@ -179,6 +179,7 @@ type Mutation {
   login(user: LoginDto!): User!
   register(user: RegisterDto!): User!
   forgetPassword(email: String!): Boolean!
+  resetPassword(data: ResetPasswordDto!): Boolean!
   changePassword(data: ChangePasswordDto!): Boolean!
   updateUser(data: UpdateUserDto!): User!
   createMember(member: CreateMemberDto!): User!
@@ -219,10 +220,16 @@ input RegisterDto {
   provider: String!
 }
 
-input ChangePasswordDto {
-  current_password: String!
+input ResetPasswordDto {
   password: String!
   password_confirmation: String!
+  resetToken: String!
+}
+
+input ChangePasswordDto {
+  password: String!
+  password_confirmation: String!
+  current_password: String!
 }
 
 input UpdateUserDto {

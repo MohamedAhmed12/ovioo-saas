@@ -18,6 +18,7 @@ import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { DeleteMemberDto } from './dto/delete-member.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
@@ -48,6 +49,11 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async forgetPassword(@Args('email') email: string) {
     return await this.userService.forgetPassword(email);
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(@Args('data') data: ResetPasswordDto) {
+    return await this.userService.resetPassword(data);
   }
 
   @UseGuards(new AuthGuard())

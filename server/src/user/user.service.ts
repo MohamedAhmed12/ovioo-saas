@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
   ConflictException,
@@ -18,10 +19,10 @@ import { CreateSsoUserDto } from './dto/create-sso-user.dto';
 import { DeleteMemberDto } from './dto/delete-member.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UserService {
@@ -107,14 +108,16 @@ export class UserService {
         },
       );
 
-    user.resetToken = await hash(Math.random().toString(36).slice(-15), 12);
+    const resetToken = await hash(Math.random().toString(36).slice(-12), 12);
+    user.resetToken = resetToken.replace(/[^a-zA-Z0-9]/g, '');
 
     const now = new Date();
     const oneHourFromNow = new Date(now);
     oneHourFromNow.setHours(now.getHours() + 1);
     user.resetTokenExpired_at = oneHourFromNow;
+    this.UserRepository.save(user);
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${user.resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/auth/password/reset/${user.resetToken}`;
 
     await this.mailerService.sendMail({
       to: email,
@@ -129,6 +132,32 @@ export class UserService {
     return true;
   }
 
+  async resetPassword({
+    resetToken,
+    password,
+  }: ResetPasswordDto): Promise<boolean> {
+    const user = await this.UserRepository.findOneBy({ resetToken });
+    const isValidCode = user && new Date() < user?.resetTokenExpired_at;
+
+    if (!isValidCode)
+      throw new GraphQLError('token', {
+        extensions: {
+          originalError: {
+            message: [
+              {
+                resetToken:
+                  'Invalid password reset code, Please ensure you are using the correct link from the latest email. If your code has expired, you can request a new password reset link',
+              },
+            ],
+          },
+        },
+      });
+
+    user.password = await hash(password, 12);
+    await this.UserRepository.save(user);
+
+    return true;
+  }
   async changePassword(
     { email }: { email: string },
     data: ChangePasswordDto,

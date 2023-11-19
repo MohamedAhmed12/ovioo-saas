@@ -1,31 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import {
-  IsStrongPassword,
-  MaxLength,
-  MinLength,
-  Validate,
-} from 'class-validator';
-import { MatchesProperty } from 'src/shared/validators/matches-property.validator';
+import { MaxLength, MinLength } from 'class-validator';
+import { PasswordDto } from './password.dto';
 
 @InputType()
-export class ChangePasswordDto {
+export class ChangePasswordDto extends PasswordDto {
   @MaxLength(32)
   @MinLength(8)
   @Field()
   current_password: string;
-
-  @IsStrongPassword()
-  @MaxLength(32)
-  @MinLength(8)
-  @Field()
-  password: string;
-
-  @IsStrongPassword()
-  @MaxLength(23)
-  @MinLength(8)
-  @Field()
-  @Validate(MatchesProperty, ['password'], {
-    message: 'Password confirmation must match password',
-  })
-  password_confirmation: string;
 }

@@ -4,7 +4,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsStrongPassword,
   MaxLength,
   MinLength,
   Validate,
@@ -19,13 +18,11 @@ export class RegisterDto extends LoginDto {
   @Field(() => String)
   fullname: string;
 
-  @IsStrongPassword()
   @MaxLength(32)
   @MinLength(8)
   @Field()
   password: string;
 
-  @IsStrongPassword()
   @MaxLength(23)
   @MinLength(8)
   @Field()

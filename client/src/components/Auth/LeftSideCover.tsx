@@ -28,7 +28,7 @@ export default function LeftSideCover() {
             </Link>
 
             <div className="styled-scetion__title hidden lg:flex flex-col flex-wrap items-center mt-16 text-center">
-                <h3 className={`mb-10 ${pathname !== "/auth/forgot-password" ? 'text-5xl leading-[3.6rem]': 'text-[2.5rem] leading-[3.3rem]'}`}>
+                <h3 className={`mb-10 ${!pathname.includes("/auth/password") ? 'text-5xl leading-[3.6rem]': 'text-[2rem] leading-[3.3rem]'}`}>
                     {ReactHtmlParser(leftSideTitle())}
                 </h3>
                 <Image
