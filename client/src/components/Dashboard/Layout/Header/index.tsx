@@ -12,6 +12,7 @@ import NotificationPopover from "./Notification/NotificationPopover";
 import { gql, useSubscription } from "@apollo/client";
 import { getClient } from "@/utils/getClient";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function DashboardHeader({
     openNav,
@@ -29,6 +30,17 @@ export default function DashboardHeader({
             position="absolute"
         >
             <Toolbar>
+                 <Image
+                    src="/svg/logo.svg"
+                    className="hamburger-icon slef-center"
+                    width="199"
+                    height="52"
+                    alt="logo"
+                    style={{
+                        height:52,
+                        width:199
+                    }}
+                />
                 {!openNav && (
                     <IconButton
                         onClick={onOpenNav}

@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/hooks/redux";
+import { RoleEnum } from "@/interfaces/user";
 import {
     Avatar,
     Box,
@@ -13,11 +15,13 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
 
-const MENU_OPTIONS = [
+const designerMenuOptions = [
     {
         title: "Profile",
         url: "/dashboard/profile",
     },
+];
+const menuOptions = [
     {
         title: "Company",
         url: "/dashboard/company",
@@ -31,8 +35,19 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
     const [open, setOpen] = useState<HTMLElement | null>(null);
 
+    const authUser = useAppSelector((state) => state.userReducer.user);
+
     const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
         setOpen(event ? event.currentTarget : null);
+    };
+    const getMenuOptions: () => {
+        title: string;
+        url: string;
+    }[] = () => {
+        if (authUser.role == RoleEnum.Designer) {
+            return designerMenuOptions;
+        }
+        return [...designerMenuOptions, ...menuOptions];
     };
 
     return (
@@ -99,8 +114,8 @@ export default function AccountPopover() {
 
                 <Divider sx={{ borderStyle: "dashed" }} />
 
-                <Stack sx={{ p: 1 }}>
-                    {MENU_OPTIONS.map(({ url, title }) => (
+                <Stack>
+                    {getMenuOptions().map(({ url, title }) => (
                         <Link
                             href={url}
                             key={title}
