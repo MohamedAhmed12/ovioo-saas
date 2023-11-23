@@ -26,10 +26,12 @@ export default function TaskTypeDropDown({
     onSelected,
     client,
     initialVal,
+    disabled,
 }: {
     onSelected: (selectedVal: string) => void;
     client?: ApolloClient<any> | undefined;
     initialVal?: string | number;
+    disabled?: boolean;
 }) {
     const { data: session } = useSession({ required: true });
     client = client || getClient(session);
@@ -73,6 +75,7 @@ export default function TaskTypeDropDown({
                 initialVal={initialVal}
                 onSelected={onSelected}
                 className="task-type__dropdown !my-4"
+                disabled={disabled}
             >
                 {data.listTaskTypes.map(
                     ({

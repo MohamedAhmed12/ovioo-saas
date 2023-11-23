@@ -12,12 +12,14 @@ export default function OviooDropDownWrapper({
     initialVal,
     inputLabel,
     className,
+    disabled,
 }: {
     onSelected: (selectedVal: string) => void;
     children: ReactNode;
     initialVal?: string | number;
     inputLabel?: string;
     className?: string;
+    disabled?: boolean;
 }) {
     const [val, setVal] = useState(String(initialVal));
 
@@ -34,6 +36,7 @@ export default function OviooDropDownWrapper({
             <Select
                 value={val}
                 onChange={handleChange}
+                disabled={disabled}
                 SelectDisplayProps={{
                     className: "dark:bg-slate-400",
                 }}

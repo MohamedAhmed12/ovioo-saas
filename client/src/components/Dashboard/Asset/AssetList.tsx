@@ -47,7 +47,7 @@ export default function AssetList({
     handleDelete,
 }: {
     task?: TaskInterface;
-    assets: AssetInterface[];
+    assets?: AssetInterface[];
     readOnly?: boolean;
     handleDelete: (asset: AssetInterface) => void;
 }) {
@@ -129,7 +129,7 @@ export default function AssetList({
                 flexDirection="row"
                 className="flex gap-6 flex-wrap"
             >
-                {assets.map((asset) => (
+                {assets&&assets.map((asset) => (
                     <AssetWrapper
                         key={asset.id}
                         handleDelete={handleDelete}

@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { SubTaskInterface, TaskInterface } from "@/interfaces";
 import { setSelectedTask } from "@/store/features/task";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,6 +11,7 @@ export default function Task({ task }: { task: TaskInterface }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const existInParams = searchParams.get("task");
+    const authUser = useAppSelector((state) => state.userReducer.user);
 
     let completed = 0;
     let subtasks: SubTaskInterface[] | undefined = task.subtasks;

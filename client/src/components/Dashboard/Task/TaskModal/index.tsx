@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { RoleEnum } from "@/interfaces";
 import { setSelectedTask } from "@/store/features/task";
 import "@/styles/components/dashboard/task/task-modal.scss";
 import { getClient } from "@/utils/getClient";
@@ -61,6 +62,14 @@ const EDIT_TASK = gql`
         }
     }
 `;
+const LIST_PROJECTS = gql`
+    query {
+        listProjects {
+            id
+            title
+        }
+    }
+`;
 
 export default function TaskModal({
     open,
@@ -77,13 +86,15 @@ export default function TaskModal({
     const dispatch = useAppDispatch();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
     const task = useAppSelector((state) => state.taskReducer.selectedTask);
+    const isDesigner = useAppSelector((state) => state.userReducer.user);
+
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
     const [editTask] = useMutation(EDIT_TASK, { client });
     const {
         loading: graphQLloading,
-        error,
-        data,
+        error: showTaskError,
+        data: showTaskData,
     } = useQuery(SHOW_TASK, {
         client,
         variables: {
@@ -92,14 +103,24 @@ export default function TaskModal({
         fetchPolicy: "no-cache",
     });
 
-    if (error) throw new Error(error.message);
+    if (showTaskError) throw new Error(showTaskError.message);
+
+    const { error: listProjectError, data: listProjectData } = useQuery(
+        LIST_PROJECTS,
+        {
+            client,
+            fetchPolicy: "no-cache",
+        }
+    );
+
+    if (listProjectError) throw new Error(JSON.stringify(listProjectError));
 
     useEffect(() => {
-        if (!graphQLloading && data?.showTask) {
-            dispatch(setSelectedTask(data?.showTask));
+        if (!graphQLloading && showTaskData?.showTask) {
+            dispatch(setSelectedTask(showTaskData?.showTask));
             setInitialDataLoaded(true);
         }
-    }, [graphQLloading, data, data?.showTask, dispatch]);
+    }, [graphQLloading, showTaskData, showTaskData?.showTask]);
 
     const handleOnChange = (name: string, value: any) =>
         dispatch(setSelectedTask({ ...task, [name]: value }));
@@ -121,6 +142,7 @@ export default function TaskModal({
 
     return (
         initialDataLoaded &&
+        listProjectData?.listProjects &&
         task && (
             <Dialog
                 fullScreen={fullScreen}
@@ -130,7 +152,7 @@ export default function TaskModal({
                 PaperProps={{
                     style: {
                         backgroundColor: "transparent",
-                        width: "85%",
+                        width: !isDesigner ? "85%" : "auto",
                         maxWidth: "85%",
                     },
                 }}
@@ -147,8 +169,10 @@ export default function TaskModal({
                         <TaskModalBody
                             task={task}
                             handleOnChange={handleOnChange}
+                            projects={listProjectData.listProjects}
                         />
-                        <Chat client={client} task={task} />
+
+                        {!isDesigner && <Chat client={client} task={task} />}
                     </div>
                 </div>
             </Dialog>

@@ -1,6 +1,6 @@
 import TaskTypeDropDown from "@/components/Dashboard/TaskTypeDropDown";
 import DeleteModal from "@/components/Modals/DeleteModal";
-import { useAppDispatch } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Member, TaskInterface, TaskStatus } from "@/interfaces";
 import { deleteTask as deleteTaskAction } from "@/store/features/board";
 import { getClient } from "@/utils/getClient";
@@ -46,6 +46,7 @@ export default function TaskModalHeader({
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
+    const isDesigner = useAppSelector((state) => state.userReducer.user);
     const session = useSession();
     const client = getClient(session);
     const [deleteTask] = useMutation(DELETE_TASK, { client });
@@ -85,7 +86,7 @@ export default function TaskModalHeader({
             const userIndex: number = activeUsers.findIndex(
                 (user) => user.id == userStatusChangedData.userStatusChanged.id
             );
-            
+
             userIndex == -1
                 ? activeUsers.push(userStatusChangedData.userStatusChanged)
                 : activeUsers.splice(userIndex, 1);
@@ -94,12 +95,17 @@ export default function TaskModalHeader({
 
     return (
         <div className="flex flex-col-reverse lg:flex-row task-modal__header justify-between max-w-full">
-            <div className="flex flex-col-reverse lg:flex-row basis-1/2 items-start lg:items-center px-[25px] flex-wrap max-w-full">
+            <div
+                className={`flex flex-col-reverse lg:flex-row items-start lg:items-center px-[25px] flex-wrap max-w-full ${
+                    !isDesigner ? "basis-1/2" : ""
+                }`}
+            >
                 <OviooDropDown
                     options={Object.values(TaskStatus)}
                     onSelected={(status) => handleOnChange("status", status)}
                     initialVal={task.status}
                     className="task-status-dropdown"
+                    disabled={isDesigner}
                 />
 
                 <TaskTypeDropDown
@@ -107,73 +113,81 @@ export default function TaskModalHeader({
                         handleOnChange("type", { id: typeId })
                     }
                     initialVal={task.type?.id}
+                    disabled={isDesigner}
                 />
 
-                {task?.designer?.avatar ? (
-                    <Avatar
-                        alt={task?.designer?.fullname || "designer"}
-                        sx={{ width: 55, height: 55 }}
-                        src={task?.designer?.avatar}
-                    />
-                ) : (
-                    <MdAccountCircle className="!text-[60px]" />
-                )}
+                {!isDesigner &&
+                    (task?.designer?.avatar ? (
+                        <Avatar
+                            alt={task?.designer?.fullname || "designer"}
+                            sx={{ width: 55, height: 55 }}
+                            src={task?.designer?.avatar}
+                        />
+                    ) : (
+                        <MdAccountCircle className="!text-[60px]" />
+                    ))}
             </div>
-            <div className="basis-1/2 flex justify-end px-[25px] lg:items-center">
-                {activeUsers && activeUsers?.length > 0 && (
-                    <AvatarGroup
-                        slotProps={{
-                            additionalAvatar: {
-                                slot: "testasasd",
-                                contextMenu: "ssada",
-                            },
-                        }}
-                    >
-                        {activeUsers
-                            .slice(0, NUM_SHOWN_ACTIVE_USERS)
-                            .map((member) => (
-                                <Badge
-                                    key={member.id}
-                                    overlap="circular"
-                                    anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "right",
-                                    }}
-                                    variant="dot"
-                                >
-                                    <Tooltip title={member.fullname}>
-                                        <Avatar
-                                            alt={member.fullname}
-                                            src={member.avatar}
-                                        />
-                                    </Tooltip>
-                                </Badge>
-                            ))}
 
-                        {activeUsers.length > NUM_SHOWN_ACTIVE_USERS && (
-                            <Tooltip
-                                title={activeUsers
-                                    .slice(NUM_SHOWN_ACTIVE_USERS)
-                                    .map((member) => (
-                                        <span
-                                            key={member.id}
-                                            className="flex flex-wrap"
-                                        >
-                                            {member.fullname}
-                                        </span>
-                                    ))}
-                            >
-                                <Avatar>
-                                    {getNumberOfExtraAvatar(activeUsers.length)}
-                                </Avatar>
-                            </Tooltip>
-                        )}
-                    </AvatarGroup>
-                )}
-                <IconButton onClick={setOpenDeleteModal}>
-                    <MdDelete className="text-red-600 text-4xl" />
-                </IconButton>
-            </div>
+            {!isDesigner && (
+                <div className="basis-1/2 flex justify-end px-[25px] lg:items-center">
+                    {activeUsers && activeUsers?.length > 0 && (
+                        <AvatarGroup
+                            slotProps={{
+                                additionalAvatar: {
+                                    slot: "testasasd",
+                                    contextMenu: "ssada",
+                                },
+                            }}
+                        >
+                            {activeUsers
+                                .slice(0, NUM_SHOWN_ACTIVE_USERS)
+                                .map((member) => (
+                                    <Badge
+                                        key={member.id}
+                                        overlap="circular"
+                                        anchorOrigin={{
+                                            vertical: "bottom",
+                                            horizontal: "right",
+                                        }}
+                                        variant="dot"
+                                    >
+                                        <Tooltip title={member.fullname}>
+                                            <Avatar
+                                                alt={member.fullname}
+                                                src={member.avatar}
+                                            />
+                                        </Tooltip>
+                                    </Badge>
+                                ))}
+
+                            {activeUsers.length > NUM_SHOWN_ACTIVE_USERS && (
+                                <Tooltip
+                                    title={activeUsers
+                                        .slice(NUM_SHOWN_ACTIVE_USERS)
+                                        .map((member) => (
+                                            <span
+                                                key={member.id}
+                                                className="flex flex-wrap"
+                                            >
+                                                {member.fullname}
+                                            </span>
+                                        ))}
+                                >
+                                    <Avatar>
+                                        {getNumberOfExtraAvatar(
+                                            activeUsers.length
+                                        )}
+                                    </Avatar>
+                                </Tooltip>
+                            )}
+                        </AvatarGroup>
+                    )}
+                    <IconButton onClick={setOpenDeleteModal}>
+                        <MdDelete className="text-red-600 text-4xl" />
+                    </IconButton>
+                </div>
+            )}
+
             {isDeleteModalOpen && (
                 <DeleteModal
                     onDeleteBtnClick={onDeleteBtnClick}
