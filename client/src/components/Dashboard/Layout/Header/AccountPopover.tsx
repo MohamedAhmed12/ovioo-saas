@@ -15,13 +15,13 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
 
-const designerMenuOptions = [
+const menuOptions = [
     {
         title: "Profile",
         url: "/dashboard/profile",
     },
 ];
-const menuOptions = [
+const userMenuOptions = [
     {
         title: "Company",
         url: "/dashboard/company",
@@ -44,10 +44,10 @@ export default function AccountPopover() {
         title: string;
         url: string;
     }[] = () => {
-        if (authUser.role == RoleEnum.Designer) {
-            return designerMenuOptions;
+        if (![RoleEnum.User, RoleEnum.Member].includes(authUser.role)) {
+            return menuOptions;
         }
-        return [...designerMenuOptions, ...menuOptions];
+        return [...menuOptions, ...userMenuOptions];
     };
 
     return (
