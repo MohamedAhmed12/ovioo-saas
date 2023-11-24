@@ -63,9 +63,8 @@ export default function CreateTaskBackdrop({
         type_id: "",
         project_id: "",
         status:
-            Object.keys(TaskStatus).find(
-                (key) => TaskStatus[key as keyof typeof TaskStatus] === status
-            ) || "IN_QUEUE",
+            Object.values(TaskStatus).find((value) => value === status) ||
+            "In queue",
     });
 
     const dispatch = useAppDispatch();
