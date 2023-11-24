@@ -142,7 +142,7 @@ export default function Chat({
         !graphQLloading &&
         data?.listMessages &&
         messages && (
-            <div className="chat basis-1/2 relative flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
+            <div className="chat basis-1/2 flex flex-col rounded-md text-black border-[0.5px] border-gray-600 focus:border-0 mt-[25px] mr-[25px]">
                 <MessagesWrapper
                     task={task}
                     setShowPicker={setShowPicker}
