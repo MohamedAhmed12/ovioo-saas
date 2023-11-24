@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Project as ProjectInterface } from "@/interfaces";
 import { deleteProject as storeDeleteProject } from "@/store/features/project";
 import "@/styles/components/dashboard/project/project-card.scss";
@@ -14,7 +14,6 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
@@ -44,13 +43,12 @@ export default function ProjectCard({
     const open = Boolean(anchorEl);
 
     const dispatch = useAppDispatch();
-    const router = useRouter();
     const [deleteProject] = useMutation(DELETE_PROJECT, { client });
+    const isManager = useAppSelector((state) => state.userReducer.isManager);
 
     const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
         setAnchorEl(event?.currentTarget ? event.currentTarget : null);
     };
-
     const handleDeleteProject = async (id: string) => {
         try {
             const { data } = await deleteProject({
@@ -73,14 +71,22 @@ export default function ProjectCard({
     };
 
     return (
-        <Card className="project-card ovioo-card px-6 my-5 flex flex-col justify-center truncate">
+        <Card className="project-card ovioo-card p-6 my-5 flex flex-col justify-start truncate">
             {
                 <>
                     <CardHeader
                         avatar={
-                            <p className="text-base dashboard-primary">
-                                {project?.tasks?.length || 0} tasks
-                            </p>
+                            <div className="flex flex-col">
+                                {/* TO DO: prototype either remove this owner prototype or enhance it's UI */}
+                                {isManager && (
+                                    <p className="text-base dashboard-primary block">
+                                        owner: test team
+                                    </p>
+                                )}
+                                <p className="text-base dashboard-primary block mb-1">
+                                    {project?.tasks?.length || 0} tasks
+                                </p>
+                            </div>
                         }
                         action={
                             !readOnly && (

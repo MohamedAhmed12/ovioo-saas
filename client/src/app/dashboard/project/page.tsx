@@ -25,6 +25,7 @@ export default function Projects() {
     const [open, setOpen] = useState(false);
     const [projectToEdit, setProjectToEdit] = useState({});
 
+    const isUser = useAppSelector((state) => state.userReducer.isUser);
     const projects = useAppSelector((state) => state.projectReducer.projects);
     const dispatch = useAppDispatch();
     const { data: session } = useSession({ required: true });
@@ -59,6 +60,7 @@ export default function Projects() {
                     <ProjectCard
                         project={project}
                         key={project.id}
+                        readOnly={!isUser}
                         actionURL={`/dashboard/project/${project.id}`}
                         client={apolloClient}
                         onEditProject={handleEditProject}

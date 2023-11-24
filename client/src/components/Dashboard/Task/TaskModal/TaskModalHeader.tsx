@@ -46,7 +46,7 @@ export default function TaskModalHeader({
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
-    const isDesigner = useAppSelector((state) => state.userReducer.user);
+    const isDesigner = useAppSelector((state) => state.userReducer.isDesigner);
     const session = useSession();
     const client = getClient(session);
     const [deleteTask] = useMutation(DELETE_TASK, { client });

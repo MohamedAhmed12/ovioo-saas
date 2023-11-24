@@ -19,22 +19,22 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import NavbarWrapper from "./NavbarWrapper";
 
-const DesignerNavbarTabs = [
+const NavbarTabs = [
     {
         title: "Tasks",
         url: "/dashboard/task",
         icon: <MdTask size="25" />,
+    },
+    {
+        title: "projects",
+        url: "/dashboard/project",
+        icon: <MdProductionQuantityLimits size="25" />,
     },
 ];
 const UserNavbarTabs = [
     {
         title: "My assets",
         url: "/dashboard/asset",
-        icon: <MdProductionQuantityLimits size="25" />,
-    },
-    {
-        title: "projects",
-        url: "/dashboard/project",
         icon: <MdProductionQuantityLimits size="25" />,
     },
     {
@@ -51,16 +51,16 @@ export default function Navbar({
     openNav: boolean;
     onCloseNav: () => void;
 }) {
-    const authUser = useAppSelector((state) => state.userReducer.user);
+    const isUser = useAppSelector((state) => state.userReducer.isUser);
     const navbarTabs: () => {
         title: string;
         url: string;
         icon: JSX.Element;
     }[] = () => {
-        if (authUser.role == RoleEnum.Designer) {
-            return DesignerNavbarTabs;
+        if (!isUser) {
+            return NavbarTabs;
         }
-        return [...DesignerNavbarTabs, ...UserNavbarTabs];
+        return [...NavbarTabs, ...UserNavbarTabs];
     };
 
     const renderContent = (
@@ -73,8 +73,8 @@ export default function Navbar({
                     height="52"
                     alt="logo"
                     style={{
-                        height:52,
-                        width:199
+                        height: 52,
+                        width: 199,
                     }}
                 />
             </Box>
@@ -102,12 +102,10 @@ export default function Navbar({
     );
 
     return (
-        authUser && (
-            <NavbarWrapper
-                content={renderContent}
-                openNav={openNav}
-                onCloseNav={onCloseNav}
-            />
-        )
+        <NavbarWrapper
+            content={renderContent}
+            openNav={openNav}
+            onCloseNav={onCloseNav}
+        />
     );
 }

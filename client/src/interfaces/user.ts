@@ -30,6 +30,8 @@ export enum RoleEnum {
     Member = "member",
     Admin = "admin",
     Designer = "designer",
+    AccountManager = "account-manager",
+    Agency = "agency",
 }
 
 export enum AuthProviderEnum {

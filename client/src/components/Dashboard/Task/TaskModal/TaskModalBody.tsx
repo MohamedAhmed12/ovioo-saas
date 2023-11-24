@@ -12,7 +12,7 @@ export default function TaskModalBody({
     projects: Project[];
     handleOnChange: (name: string, value: any) => void;
 }) {
-    const isDesigner = useAppSelector((state) => state.userReducer.user);
+    const isDesigner = useAppSelector((state) => state.userReducer.isDesigner);
 
     return (
         <div

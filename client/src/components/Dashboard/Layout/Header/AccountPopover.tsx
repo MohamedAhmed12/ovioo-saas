@@ -35,7 +35,7 @@ const userMenuOptions = [
 export default function AccountPopover() {
     const [open, setOpen] = useState<HTMLElement | null>(null);
 
-    const authUser = useAppSelector((state) => state.userReducer.user);
+    const isUser = useAppSelector((state) => state.userReducer.isUser);
 
     const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
         setOpen(event ? event.currentTarget : null);
@@ -44,7 +44,7 @@ export default function AccountPopover() {
         title: string;
         url: string;
     }[] = () => {
-        if (![RoleEnum.User, RoleEnum.Member].includes(authUser.role)) {
+        if (!isUser) {
             return menuOptions;
         }
         return [...menuOptions, ...userMenuOptions];

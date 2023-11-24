@@ -86,7 +86,7 @@ export default function TaskModal({
     const dispatch = useAppDispatch();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
     const task = useAppSelector((state) => state.taskReducer.selectedTask);
-    const isDesigner = useAppSelector((state) => state.userReducer.user);
+    const isDesigner = useAppSelector((state) => state.userReducer.isDesigner);
 
     const { data: session } = useSession({ required: true });
     const client = getClient(session);

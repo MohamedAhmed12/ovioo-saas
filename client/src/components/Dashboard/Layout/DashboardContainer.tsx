@@ -93,14 +93,16 @@ export default function DashboardContainer({
     }, []);
     useEffect(() => {
         if (!graphQLloading && userData?.me) {
-            const isDesigner = userData.me.role == RoleEnum.Designer;
+            const isDesigner = [RoleEnum.Designer, RoleEnum.Agency].includes(
+                userData.me.role
+            );
             dispatch(setUser(userData.me));
 
             if (isDesigner) setNavbarIsHidden(true);
 
             if (
-                isDesigner &&
-                !AllowedRoutes[RoleEnum.Designer].includes(pathname)
+                AllowedRoutes[userData.me.role] &&
+                !AllowedRoutes[userData.me.role].includes(pathname)
             ) {
                 redirect("/unauthorize");
             } else {

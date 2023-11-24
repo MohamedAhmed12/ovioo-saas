@@ -4,11 +4,15 @@ import { Project } from "../project";
 import { Team } from "../team";
 import { UserInterface } from "../user";
 
+export enum DesignerTaskStatus {
+    IN_QUEUE = "In queue",
+    IN_PROGRESS = "In progress",
+    DONE = "Done",
+}
 export enum TaskStatus {
     IN_QUEUE = "In queue",
     IN_PROGRESS = "In progress",
     REVIEW = "Review",
-    ON_HOLD = "On hold",
     DONE = "Done",
 }
 
