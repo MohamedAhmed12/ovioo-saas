@@ -6,7 +6,6 @@ const initialState: { tasks: Record<TaskStatus, TaskInterface[]> } = {
         "In queue": [],
         "In progress": [],
         Review: [],
-        "On hold": [],
         Done: [],
     },
 };
@@ -16,59 +15,25 @@ export const boardSlice = createSlice({
     initialState,
     reducers: {
         setTasks: (state, action) => {
-            state.tasks = action.payload.reduce(
-                (
-                    result: Record<TaskStatus, TaskInterface[]>,
-                    task: TaskInterface
-                ) => {
-                    if (!result[task.status as TaskStatus])
-                        result[task.status as TaskStatus] = [];
-                    result[task.status as TaskStatus].push(task);
-
-                    return result;
-                },
-                {}
-            );
+            action.payload.forEach((task: TaskInterface) => {
+                state.tasks[task.status].push(task);
+            });
         },
         pushNewTask: (state, action) => {
-            const { status } = action.payload;
+            const { status }: { status: TaskStatus } = action.payload;
+
             state.tasks = {
                 ...state.tasks,
-                [status]: [
-                    ...(state.tasks[status as TaskStatus] || []),
-                    action.payload,
-                ],
+                [status]: [...(state.tasks[status] || []), action.payload],
             };
         },
         deleteTask: (state, action) => {
-            const { status, id } = action.payload;
+            const { status, id }: { status: TaskStatus; id: string } =
+                action.payload;
 
-            state.tasks[status as TaskStatus] = state.tasks[
-                status as TaskStatus
-            ].filter((task: TaskInterface) => task.id != id);
-        },
-        editBoard: (state, action) => {
-            state.columns = action.payload.newColumns;
-        },
-        addTask: (
-            state,
-            { payload }: { payload: TaskInterface & { colId: number } }
-        ) => {
-            const { title, status, description, subtasks } = payload;
-            const task: TaskInterface = {
-                id: 55,
-                title,
-                description,
-                subtasks,
-                status,
-            };
-            const column: ColumnInterface | undefined = state.columns.find(
-                (col: ColumnInterface | undefined, index: number) =>
-                    index === payload.colId || 0
+            state.tasks[status] = state.tasks[status].filter(
+                (task: TaskInterface) => task.id != id
             );
-
-            if (column && column.tasks && task)
-                (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         editTask: (state, action) => {
             const {
@@ -111,24 +76,20 @@ export const boardSlice = createSlice({
                 (column.tasks as TaskInterface[]).push(task as TaskInterface);
         },
         dragTask: (state, action) => {
-            const {
-                task,
-                newColStatus,
-            }: { task: TaskInterface; newColStatus: TaskStatus } =
-                action.payload;
-
             if (!state.tasks) return;
 
-            const taskCurrentIndex: number = state.tasks[task.status].findIndex(
-                (elm) => elm.id == task.id
+            const {
+                task,
+                oldStatus,
+            }: { task: TaskInterface; oldStatus: TaskStatus } = action.payload;
+
+            const taskCurrentIndex: number = state.tasks[oldStatus].findIndex(
+                (elm: TaskInterface) => elm.id == task.id
             );
 
             if (taskCurrentIndex != -1) {
-                console.log(3);
-                state.tasks[task.status].splice(taskCurrentIndex, 1);
-
-                if (!state.tasks[newColStatus]) state.tasks[newColStatus] = [];
-                console.log(state.tasks[newColStatus].push(task));
+                state.tasks[oldStatus].splice(taskCurrentIndex, 1);
+                state.tasks[task.status].push(task);
             }
         },
         setSubtaskCompleted: (state, action) => {
@@ -157,8 +118,6 @@ export const boardSlice = createSlice({
 export const {
     setTasks,
     pushNewTask,
-    editBoard,
-    addTask,
     editTask,
     dragTask,
     setSubtaskCompleted,

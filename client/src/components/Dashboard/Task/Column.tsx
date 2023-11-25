@@ -3,10 +3,22 @@
 import { useAppDispatch } from "@/hooks/redux";
 import { TaskInterface, TaskStatus } from "@/interfaces";
 import { dragTask } from "@/store/features/board";
+import { getClient } from "@/utils/getClient";
+import { gql, useMutation } from "@apollo/client";
 import { Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { DragEvent, useState } from "react";
+import toast from "react-hot-toast";
 import CreateTaskBackdrop from "./CreateTaskBackdrop";
 import Task from "./Task";
+
+const EDIT_TASK = gql`
+    mutation updateTask($data: UpdateTaskDto!) {
+        updateTask(data: $data) {
+            id
+        }
+    }
+`;
 
 export default function Column({
     tasks,
@@ -17,14 +29,30 @@ export default function Column({
     title: TaskStatus;
     color: string;
 }) {
-    const dispatch = useAppDispatch();
     const [openCreateTask, setOpenCreateTask] = useState<boolean>(false);
 
-    const handleOnDrop = (e: DragEvent<HTMLDivElement>) => {
-        const { task } = JSON.parse(e.dataTransfer.getData("text"));
+    const dispatch = useAppDispatch();
+    const { data: session } = useSession({ required: true });
+    const client = getClient(session);
+    const [editTask] = useMutation(EDIT_TASK, { client });
 
-        if (task.status !== title) {
-            dispatch(dragTask({ task, newColStatus: title }));
+    const handleOnDrop = async (e: DragEvent<HTMLDivElement>) => {
+        const { task } = JSON.parse(e.dataTransfer.getData("text"));
+        const oldStatus = task.status;
+
+        if (oldStatus !== title) {
+            task.status = title;
+
+            try {
+                await editTask({
+                    variables: {
+                        data: task,
+                    },
+                });
+                dispatch(dragTask({ task, oldStatus }));
+            } catch (e: any) {
+                toast.error("Something went wrong!");
+            }
         }
     };
 
