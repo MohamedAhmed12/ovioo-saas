@@ -51,7 +51,6 @@ export default async function Team() {
                     <TeamMembersCard
                         headerTitle="your team"
                         team={team.getTeam}
-                        session={session}
                     />
                 )}
             </div>
