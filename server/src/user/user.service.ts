@@ -158,6 +158,7 @@ export class UserService {
 
     return true;
   }
+
   async changePassword(
     { email }: { email: string },
     data: ChangePasswordDto,
@@ -235,9 +236,11 @@ export class UserService {
       });
     }
 
+    const password = Math.random().toString(36).slice(-10);
+
     member = this.UserRepository.create({
       ...data,
-      password: Math.random().toString(36).slice(-10),
+      password,
       team: currentUser.team,
       provider: AuthProviderEnum.Credentials,
       role: UserRoleEnum.Member,
@@ -248,8 +251,21 @@ export class UserService {
     });
 
     member.profile = profile;
+    member = await this.UserRepository.save(member);
 
-    return await this.UserRepository.save(member);
+    await this.mailerService.sendMail({
+      to: email,
+      subject: `${currentUser.email} has invited you to join his team`,
+      template: 'new-member',
+      context: {
+        teamOwner: currentUser,
+        email: member.email,
+        password,
+        loginLink: `${process.env.FRONTEND_URL}/auth/login`,
+      },
+    });
+
+    return member;
   }
 
   async deleteMember(

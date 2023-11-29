@@ -60,8 +60,11 @@ export default function AddTeamMemberCard({
     if (currentUser?.id != team?.owner_id) return;
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        let userAddedTimeout;
+
         event.preventDefault();
         setLoading(true);
+        errorHandler({});
 
         try {
             const { data } = await createMember({
@@ -72,13 +75,20 @@ export default function AddTeamMemberCard({
 
             router.refresh();
             setUserAdded(true);
-            errorHandler({});
+            setFormData({
+                email: "",
+                fullname: "",
+            });
 
-            setTimeout(() => {
+            userAddedTimeout = setTimeout(() => {
                 setUserAdded(false);
-            }, 2500);
+            }, 2000);
         } catch (e: any) {
             errorHandler(e);
+        } finally {
+            if (userAddedTimeout) {
+                clearTimeout(userAddedTimeout);
+            }
         }
 
         setLoading(false);
@@ -86,11 +96,18 @@ export default function AddTeamMemberCard({
 
     return (
         <div className="new-user basis-[52%] flex flex-raw lg:flex-col px-5">
-            <DashBoardCard headerTitle={headerTitle} handleSubmit={handleSubmit}>
+            <DashBoardCard
+                headerTitle={headerTitle}
+                handleSubmit={handleSubmit}
+            >
                 <>
                     <div className="flex flex-row">
                         <div className="w-full flex flex-col">
-                            <Stack sx={{ width: "100%" }} spacing={2} className="mb-7">
+                            <Stack
+                                sx={{ width: "100%" }}
+                                spacing={2}
+                                className="mb-7"
+                            >
                                 {userAdded && (
                                     <Alert
                                         severity="success"
@@ -102,8 +119,11 @@ export default function AddTeamMemberCard({
                                         }}
                                         className="items-center !rounded-[10px]"
                                     >
-                                        New teammate was added! The invitation has been sent to
-                                        <span className="ml-1">{formData.email}</span>
+                                        New teammate was added! The invitation
+                                        has been sent to
+                                        <span className="ml-1">
+                                            {formData.email}
+                                        </span>
                                     </Alert>
                                 )}
                                 <Alert
@@ -115,8 +135,9 @@ export default function AddTeamMemberCard({
                                     }}
                                     className="items-center !rounded-[10px]"
                                 >
-                                    Users will be able to manage tasks and receive notifications.
-                                    Only you can add and delete your team users.
+                                    Users will be able to manage tasks and
+                                    receive notifications. Only you can add and
+                                    delete your team users.
                                 </Alert>
                             </Stack>
                             <TextField
@@ -156,7 +177,11 @@ export default function AddTeamMemberCard({
                         </div>
                     </div>
                     <div className="flex w-full justify-end mt-6">
-                        <Button loading={loading} className="dashboard__btn" type="submit">
+                        <Button
+                            loading={loading}
+                            className="dashboard__btn"
+                            type="submit"
+                        >
                             add member
                         </Button>
                     </div>
