@@ -20,7 +20,7 @@ export default function ForgotPassForm() {
     const [email, setEmail] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
-    const { errors, errorHandler } = useGraphError({});
+    const { errors, setErrors, errorHandler } = useGraphError({});
 
     const { data: session } = useSession({ required: true });
     const client = getClient(session);
@@ -29,6 +29,7 @@ export default function ForgotPassForm() {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
+        setErrors({});
 
         try {
             const { data } = await forgetPassword({
@@ -36,10 +37,11 @@ export default function ForgotPassForm() {
             });
 
             data && toast.success("Reset password email sent successfully");
+            setEmail("");
         } catch (e: any) {
             errorHandler(e);
         }
-        setEmail("");
+
         setLoading(false);
     };
 

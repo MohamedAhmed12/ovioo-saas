@@ -49,6 +49,7 @@ export default function ResetPassForm({ token }: { token: string }) {
         event.preventDefault();
         setLoading(true);
         setInvalidTokenErr(null);
+        setErrors({});
 
         try {
             const { data } = await resetPassword({
@@ -57,14 +58,6 @@ export default function ResetPassForm({ token }: { token: string }) {
                 },
             });
             data && toast.success("Reset password email sent successfully");
-            router.push("/auth/login");
-        } catch (e: any) {
-            const error = e?.graphQLErrors?.[0]?.extensions?.originalError;
-
-            setErrors({});
-            error && error.message[0].hasOwnProperty("resetToken")
-                ? setInvalidTokenErr(error.message[0]["resetToken"])
-                : errorHandler(e);
 
             // reset
             setFormData((form) => ({
@@ -72,8 +65,17 @@ export default function ResetPassForm({ token }: { token: string }) {
                 password: "",
                 password_confirmation: "",
             }));
-            setLoading(false);
+
+            router.push("/auth/login");
+        } catch (e: any) {
+            const error = e?.graphQLErrors?.[0]?.extensions?.originalError;
+
+            error && error.message[0].hasOwnProperty("resetToken")
+                ? setInvalidTokenErr(error.message[0]["resetToken"])
+                : errorHandler(e);
         }
+
+        setLoading(false);
     };
 
     return (
