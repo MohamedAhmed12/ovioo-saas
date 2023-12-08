@@ -10,6 +10,9 @@ import { AppService } from './app.service';
 import { AssetModule } from './asset/asset.module';
 import { ChatModule } from './chat/chat.module';
 import { NotificationModule } from './notification/notification.module';
+import { PlanSeeder } from './plan/plan-type.seed';
+import { Plan } from './plan/plan.entity';
+import { PlanModule } from './plan/plan.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProjectModule } from './project/project.module';
 import { TaskType } from './task/task-type.entity';
@@ -31,6 +34,7 @@ const ormConfig = require('../ormconfig.json');
     ProjectModule,
     ChatModule,
     NotificationModule,
+    PlanModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
@@ -42,7 +46,7 @@ const ormConfig = require('../ormconfig.json');
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot(ormConfig[0]),
-    TypeOrmModule.forFeature([TaskType]),
+    TypeOrmModule.forFeature([TaskType, Plan]),
     MailerModule.forRoot({
       transport: {
         host: process.env.MAILER_HOST,
@@ -64,12 +68,16 @@ const ormConfig = require('../ormconfig.json');
       },
     }),
   ],
-  providers: [AppResolver, AppService, TaskTypeSeeder],
+  providers: [AppResolver, AppService, TaskTypeSeeder, PlanSeeder],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly taskTypeSeeder: TaskTypeSeeder) {}
+  constructor(
+    private readonly taskTypeSeeder: TaskTypeSeeder,
+    private readonly planSeeder: PlanSeeder,
+  ) {}
 
   async onModuleInit() {
     this.taskTypeSeeder.seed();
+    this.planSeeder.seed();
   }
 }

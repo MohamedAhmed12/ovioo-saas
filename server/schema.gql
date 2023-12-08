@@ -129,6 +129,19 @@ type TaskMsgsStatusChangedSubsResponseDto {
   fullname: String!
 }
 
+"""plans"""
+type Plan {
+  id: ID!
+  title: String!
+  description: String!
+  services: [String!]!
+  background_color: String
+  daily_fees: Float
+  monthly_fees: Float
+  is_full_time: Boolean
+  is_most_popular: Boolean
+}
+
 type ChangeUserStatusResponseDto {
   id: String!
   avatar: String!
@@ -159,6 +172,7 @@ type Query {
   listMessages(data: ListMessageDto!): [Message!]!
   listTaskUnreadMessages: [Task!]!
   listNotifications(data: ListNotificationsDto!): [Notification!]!
+  listPlans: [Plan!]!
 }
 
 input ListMessageDto {

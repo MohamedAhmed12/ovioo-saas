@@ -20,10 +20,8 @@ const GET_TEAM = gql`
 `;
 
 export default async function Team() {
-    let client: ApolloClient<any> | undefined = undefined;
     const session = await getServerSession(authOptions);
-
-    client = getClient(session);
+    const client: ApolloClient<any> | undefined = getClient(session);
 
     const {
         loading: graphQLloading,
