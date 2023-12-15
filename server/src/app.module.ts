@@ -21,9 +21,6 @@ import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ormConfig = require('../ormconfig.json');
-
 @Module({
   imports: [
     UserModule,
@@ -45,7 +42,16 @@ const ormConfig = require('../ormconfig.json');
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    TypeOrmModule.forRoot(ormConfig[0]),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT, 10),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      synchronize: process.env.NODE_ENV !== 'production',
+      entities: ['dist/**/*.entity.js'],
+    }),
     TypeOrmModule.forFeature([TaskType, Plan]),
     MailerModule.forRoot({
       transport: {

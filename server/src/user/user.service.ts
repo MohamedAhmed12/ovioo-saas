@@ -8,7 +8,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
 import { Team } from 'src/team/team.entity';

@@ -1,5 +1,5 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { Message } from 'src/chat/message.entity';
 import { Notification } from 'src/notification/notification.entity';
 import { Profile } from 'src/profile/profile.entity';
