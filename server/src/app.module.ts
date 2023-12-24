@@ -51,6 +51,9 @@ import { UserModule } from './user/user.module';
       database: process.env.DATABASE_NAME,
       synchronize: process.env.NODE_ENV !== 'production',
       entities: ['dist/**/*.entity.js'],
+      ssl: {
+        rejectUnauthorized: false, // adjust after setup the ssl to RDS and domain to EC2
+      },
     }),
     TypeOrmModule.forFeature([TaskType, Plan]),
     MailerModule.forRoot({
