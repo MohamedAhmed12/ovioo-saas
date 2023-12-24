@@ -15,6 +15,7 @@ services:
     # Consider removing the volume mount for production
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
 
   nginx:
     image: nginx:1.25-alpine
