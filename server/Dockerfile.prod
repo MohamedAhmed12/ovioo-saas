@@ -1,0 +1,42 @@
+# Building Stage
+
+# Base image
+FROM node:20.0.0-alpine as development
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+
+# Install nestjs/cli globally
+RUN npm install -g @nestjs/cli
+
+# Install app dependencies only if NODE_ENV is not set to "development"
+RUN npm install --force
+
+# Bundle app source
+COPY . .
+
+RUN npm run build
+
+# CMD ["npm", "run", "build"]
+
+
+# Production Stage
+
+# Base image
+FROM node:20.0.0-alpine as production
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy artifacts from the "development" stage
+COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/node_modules ./node_modules
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package.json package-lock.json ./
+
+# Start the server using the appropriate command based on the environment
+CMD [ "node", "dist/main"]
