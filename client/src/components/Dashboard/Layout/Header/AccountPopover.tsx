@@ -1,7 +1,6 @@
 import { useAppSelector } from "@/hooks/redux";
 import { RoleEnum } from "@/interfaces/user";
 import {
-    Avatar,
     Box,
     Divider,
     IconButton,
@@ -14,6 +13,7 @@ import { alpha } from "@mui/material/styles";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
+import OviooAvatar from "../../OviooAvatar";
 
 const menuOptions = [
     {
@@ -34,8 +34,7 @@ const userMenuOptions = [
 
 export default function AccountPopover() {
     const [open, setOpen] = useState<HTMLElement | null>(null);
-
-    const isUser = useAppSelector((state) => state.userReducer.isUser);
+    const currentUser = useAppSelector((state) => state.userReducer.user);
 
     const handleToggle = (event: MouseEvent<HTMLElement> | null) => {
         setOpen(event ? event.currentTarget : null);
@@ -44,7 +43,7 @@ export default function AccountPopover() {
         title: string;
         url: string;
     }[] = () => {
-        if (!isUser) {
+        if (![RoleEnum.User, RoleEnum.Member].includes(currentUser.role)) {
             return menuOptions;
         }
         return [...menuOptions, ...userMenuOptions];
@@ -71,9 +70,9 @@ export default function AccountPopover() {
                     }),
                 }}
             >
-                <Avatar
-                    alt="Remy Sharp"
-                    src="https://i.pravatar.cc/400"
+                <OviooAvatar
+                    alt={currentUser.fullname}
+                    src={currentUser.avatar}
                     sx={{ width: 45, height: 45 }}
                 />
             </IconButton>
@@ -101,14 +100,14 @@ export default function AccountPopover() {
             >
                 <Box sx={{ my: 1.5, px: 2.5 }}>
                     <Typography variant="subtitle2" noWrap>
-                        My name
+                        {currentUser.fullname}
                     </Typography>
                     <Typography
                         variant="body2"
                         sx={{ color: "text.secondary" }}
                         noWrap
                     >
-                        My email
+                        {currentUser.email}
                     </Typography>
                 </Box>
 

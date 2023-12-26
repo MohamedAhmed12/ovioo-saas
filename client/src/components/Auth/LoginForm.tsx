@@ -67,8 +67,8 @@ export default function LoginForm() {
             });
         } catch (e: any) {
             errorHandler(e);
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
