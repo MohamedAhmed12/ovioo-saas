@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { AssetModule } from './asset/asset.module';
 import { ChatModule } from './chat/chat.module';
 import { NotificationModule } from './notification/notification.module';
+import { ormConfig } from './ormconfig.js';
 import { PlanSeeder } from './plan/plan-type.seed';
 import { Plan } from './plan/plan.entity';
 import { PlanModule } from './plan/plan.module';
@@ -42,19 +43,7 @@ import { UserModule } from './user/user.module';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT, 10),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      synchronize: process.env.NODE_ENV !== 'production',
-      entities: ['dist/**/*.entity.js'],
-      ssl: {
-        rejectUnauthorized: false, // adjust after setup the ssl to RDS and domain to EC2
-      },
-    }),
+    TypeOrmModule.forRoot(ormConfig()),
     TypeOrmModule.forFeature([TaskType, Plan]),
     MailerModule.forRoot({
       transport: {
