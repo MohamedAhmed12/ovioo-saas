@@ -13,6 +13,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class TaskService {
@@ -104,8 +105,8 @@ export class TaskService {
     return await this.taskRepository.save(task);
   }
 
-  async updateTask(data: UpdateTaskDto): Promise<Task> {
-    const task = await this.taskRepository.findOne({
+  async updateTask(authUser: User, data: UpdateTaskDto): Promise<Task> {
+    let task = await this.taskRepository.findOne({
       where: {
         id: data.id,
       },
@@ -121,6 +122,7 @@ export class TaskService {
       .where('id = :id', { id: task.id })
       .execute();
 
+    task = await this.showTask(authUser, String(task.id));
     return task;
   }
 

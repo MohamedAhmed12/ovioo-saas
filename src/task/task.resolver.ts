@@ -58,8 +58,16 @@ export class TaskResolver {
 
   @UseGuards(AuthGuard)
   @Mutation(() => Task)
-  async updateTask(@Args('data') data: UpdateTaskDto) {
-    return await this.taskService.updateTask(data);
+  async updateTask(
+    @Context('user') authUser: User,
+    @Args('data') data: UpdateTaskDto,
+  ) {
+    const task = await this.taskService.updateTask(authUser, data);
+    this.pubSub.publish('taskUpdated', {
+      taskUpdated: task,
+    });
+
+    return task;
   }
 
   @UseGuards(AuthGuard)
@@ -70,12 +78,22 @@ export class TaskResolver {
 
   @UseGuards(AuthGuard)
   @Subscription(() => Task, {
-    filter: async (payload: any, variables: any, context: any) => {
+    filter: async (payload: any, context: any) => {
       const taskTeam = await payload.taskCreated.team;
       return taskTeam.id == context.user.team.id;
     },
   })
   taskCreated() {
     return this.pubSub.asyncIterator('taskCreated');
+  }
+
+  @UseGuards(AuthGuard)
+  @Subscription(() => Task, {
+    filter: async (payload: any, variables: any) => {
+      return variables.taskId == payload.taskUpdated.id;
+    },
+  })
+  taskUpdated(@Args('taskId') taskId: string) {
+    return this.pubSub.asyncIterator('taskUpdated');
   }
 }
