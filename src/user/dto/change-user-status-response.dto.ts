@@ -8,7 +8,7 @@ export class ChangeUserStatusResponseDto {
   id: string;
 
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   avatar: string;
 
   @IsString()
