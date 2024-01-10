@@ -144,7 +144,7 @@ type Plan {
 
 type ChangeUserStatusResponseDto {
   id: String!
-  avatar: String!
+  avatar: String
   fullname: String!
   isActive: Boolean!
 }
@@ -355,6 +355,7 @@ input NotificationDto {
 
 type Subscription {
   userStatusChanged: ChangeUserStatusResponseDto!
+  taskCreated: Task!
   taskMsgsStatusChanged(teamId: String!): TaskMsgsStatusChangedSubsResponseDto!
   messageSent(data: MessageSentSubscriptionDto!): Message!
   notificationReceived(data: NotificationDto!): Notification!
