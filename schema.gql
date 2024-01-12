@@ -139,6 +139,8 @@ type Plan {
   background_color: String
   daily_fees: Float
   monthly_fees: Float
+  monthly_credit_hours: Float
+  daily_deducted_hours: Float
   is_full_time: Boolean
   is_most_popular: Boolean
 }

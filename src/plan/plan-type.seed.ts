@@ -18,6 +18,8 @@ export class PlanSeeder {
           'Best fit for your marketing and Social media needs. Achieve fast & high-quality graphic design results that will take your business to the next level!',
         daily_fees: 43,
         monthly_fees: 860,
+        monthly_credit_hours: 80,
+        daily_deducted_hours: 4,
         services: [
           'Social media',
           'Print & Packaging Design',
@@ -36,6 +38,8 @@ export class PlanSeeder {
           'Perfect match for startups and enterprise companies. Full range of design projects to help you leverage a design solution your brand can rely on.',
         daily_fees: 97,
         monthly_fees: 1944,
+        monthly_credit_hours: 80,
+        daily_deducted_hours: 4,
         services: [
           'Logo & Brand identity',
           'Presentations & Editorials',

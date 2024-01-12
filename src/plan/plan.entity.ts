@@ -38,6 +38,14 @@ export class Plan extends BaseEntity {
   @Field(() => Number, { nullable: true })
   monthly_fees: number;
 
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  monthly_credit_hours: number;
+
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  daily_deducted_hours: number;
+
   @Column('boolean', { default: false })
   @Field(() => Boolean, { nullable: true })
   is_full_time: boolean;
