@@ -87,6 +87,7 @@ type Task {
   title: String!
   description: String
   status: String
+  designer_fees: Float
   type: task_types!
   project: Project!
   team: Team!

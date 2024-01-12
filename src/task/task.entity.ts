@@ -38,6 +38,10 @@ export class Task extends BaseEntity {
   @Field(() => String, { nullable: true })
   status: TaskStatusEnum;
 
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  designer_fees: number;
+
   @ManyToOne(() => TaskType, (type) => type.tasks, { eager: true })
   @Field(() => TaskType)
   type: TaskType;
