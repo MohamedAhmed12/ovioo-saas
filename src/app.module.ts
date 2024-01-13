@@ -16,6 +16,7 @@ import { Plan } from './plan/plan.entity';
 import { PlanModule } from './plan/plan.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProjectModule } from './project/project.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 import { TaskType } from './task/task-type.entity';
 import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
@@ -33,6 +34,7 @@ import { UserModule } from './user/user.module';
     ChatModule,
     NotificationModule,
     PlanModule,
+    SubscriptionModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',

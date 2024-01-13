@@ -1,9 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { OviooSubscription } from 'src/subscription/subscription.entity';
 import {
   BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -40,6 +41,22 @@ export class Plan extends BaseEntity {
 
   @Column('int', { nullable: true })
   @Field(() => Number, { nullable: true })
+  quarterly_fees: number;
+
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  annual_fees: number;
+
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  extra_twenty_hrs_fees: number;
+
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  extra_forty_hrs_fees: number;
+
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
   monthly_credit_hours: number;
 
   @Column('int', { nullable: true })
@@ -53,4 +70,8 @@ export class Plan extends BaseEntity {
   @Column('boolean', { default: false, nullable: true })
   @Field(() => Boolean, { nullable: true })
   is_most_popular: boolean;
+
+  @OneToMany(() => OviooSubscription, (subscription) => subscription.plan)
+  @Field(() => [OviooSubscription], { defaultValue: [] })
+  subscriptions: OviooSubscription[];
 }

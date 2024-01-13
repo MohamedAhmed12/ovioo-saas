@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
-import { CreateProjectDto } from './dto/create-project.dto copy';
+import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './project.entity';
 

@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Project } from 'src/project/project.entity';
+import { OviooSubscription } from 'src/subscription/subscription.entity';
 import { Task } from 'src/task/task.entity';
 import { User } from 'src/user/user.entity';
 import {
@@ -36,4 +37,10 @@ export class Team extends BaseEntity {
   @OneToMany(() => Task, (task) => task.team, { cascade: true, lazy: true })
   @Field(() => [Task], { defaultValue: [] })
   tasks: Task[];
+
+  @OneToMany(() => OviooSubscription, (subscription) => subscription.team, {
+    onDelete: 'CASCADE',
+  })
+  @Field(() => [OviooSubscription], { defaultValue: [] })
+  subscriptions: OviooSubscription[];
 }

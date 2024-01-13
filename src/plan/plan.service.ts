@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Plan } from './plan.entity';
 
-import fs from 'fs';
 @Injectable()
 export class PlanService {
   constructor(

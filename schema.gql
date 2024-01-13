@@ -2,6 +2,43 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""plans"""
+type Plan {
+  id: ID!
+  title: String!
+  description: String!
+  services: [String!]!
+  background_color: String
+  daily_fees: Float
+  monthly_fees: Float
+  quarterly_fees: Float
+  annual_fees: Float
+  extra_twenty_hrs_fees: Float
+  extra_forty_hrs_fees: Float
+  monthly_credit_hours: Float
+  daily_deducted_hours: Float
+  is_full_time: Boolean
+  is_most_popular: Boolean
+  subscriptions: [OviooSubscription!]!
+}
+
+"""ovioo-subscriptions"""
+type OviooSubscription {
+  id: ID!
+  total_credit_hours: Float!
+  remaining_credit_hours: Float!
+  extra_bundle_hours: Float
+  team: Team!
+  plan: Plan!
+  start_at: DateTime!
+  expire_at: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 """notifications"""
 type Notification {
   id: ID!
@@ -12,11 +49,6 @@ type Notification {
   user: User!
   userId: ID!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 """profiles"""
 type Profile {
@@ -61,6 +93,7 @@ type Team {
   members: [User!]!
   projects: [Project!]!
   tasks: [Task!]!
+  subscriptions: [OviooSubscription!]!
 }
 
 """project"""
@@ -128,21 +161,6 @@ type Asset {
 type TaskMsgsStatusChangedSubsResponseDto {
   status: String!
   fullname: String!
-}
-
-"""plans"""
-type Plan {
-  id: ID!
-  title: String!
-  description: String!
-  services: [String!]!
-  background_color: String
-  daily_fees: Float
-  monthly_fees: Float
-  monthly_credit_hours: Float
-  daily_deducted_hours: Float
-  is_full_time: Boolean
-  is_most_popular: Boolean
 }
 
 type ChangeUserStatusResponseDto {
@@ -220,6 +238,7 @@ type Mutation {
   readTaskMessages(taskId: String!): Boolean!
   receiveTaskMessages(taskId: String!): Boolean!
   sendNotification(data: NotificationDto!): Notification!
+  createSubscription(planId: String!): OviooSubscription!
 }
 
 input LoginDto {
