@@ -239,6 +239,7 @@ type Mutation {
   receiveTaskMessages(taskId: String!): Boolean!
   sendNotification(data: NotificationDto!): Notification!
   createSubscription(planId: String!): OviooSubscription!
+  deductSubscriptionRemainingHours(data: UpdateSubscriptionDto!): OviooSubscription!
 }
 
 input LoginDto {
@@ -373,6 +374,13 @@ input NotificationDto {
   action: String
   userId: String
   created_at: DateTime
+}
+
+input UpdateSubscriptionDto {
+  id: String!
+  remaining_credit_hours: Float
+  extra_bundle_hours: Float
+  expire_at: DateTime
 }
 
 type Subscription {
