@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Plan } from 'src/plan/plan.entity';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { OviooSubscription } from './subscription.entity';
 
 @Injectable()
@@ -36,19 +36,28 @@ export class SubscriptionService {
     return await this.subscriptionRepository.save(subscription);
   }
 
-  async update(data: UpdateSubscriptionDto): Promise<OviooSubscription> {
-    const profile = await this.subscriptionRepository.findOneBy({
+  async deductRemainingHours(
+    data: DeductRemainingHoursDto,
+  ): Promise<OviooSubscription> {
+    const subscription = await this.subscriptionRepository.findOneBy({
       id: data.id,
     });
 
-    if (!profile)
+    if (!subscription)
       throw new NotFoundException(
         'Couldn’t find subscription matches this id.',
       );
 
-    await this.subscriptionRepository.merge(profile, data);
-    await this.subscriptionRepository.update(profile.id, profile);
+    const remaining_credit_hours =
+      subscription.remaining_credit_hours == 0
+        ? 0
+        : subscription.remaining_credit_hours - data.deducted_hours;
 
-    return profile;
+    await this.subscriptionRepository.merge(subscription, {
+      remaining_credit_hours,
+    });
+    await this.subscriptionRepository.update(subscription.id, subscription);
+
+    return subscription;
   }
 }
