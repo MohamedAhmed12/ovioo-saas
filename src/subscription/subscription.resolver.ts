@@ -3,10 +3,9 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { Cron } from '@nestjs/schedule';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { OviooSubscription } from './subscription.entity';
 import { SubscriptionService } from './subscription.service';
-import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 
 @Resolver(() => OviooSubscription)
 export class SubscriptionResolver {
@@ -25,5 +24,10 @@ export class SubscriptionResolver {
   @Mutation(() => OviooSubscription)
   async deductRemainingHours(@Args('data') data: DeductRemainingHoursDto) {
     return await this.subscriptionService.deductRemainingHours(data);
+  }
+
+  @Cron('5 0 * * *')
+  async handleDailySubscriptionUpdatesJob() {
+    return await this.subscriptionService.handleDailySubscriptionUpdatesJob();
   }
 }

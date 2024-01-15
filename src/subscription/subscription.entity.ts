@@ -10,6 +10,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 
 @Entity('ovioo_subscriptions')
 @ObjectType({ description: 'ovioo-subscriptions' })
@@ -30,13 +31,16 @@ export class OviooSubscription extends BaseEntity {
   @Field(() => Number, { nullable: true })
   extra_bundle_hours?: number;
 
-  @ManyToOne(() => Team, (team) => team.subscriptions, { onDelete: 'CASCADE' })
-  @Field(() => Team)
-  team: Team;
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  daily_deducted_hours: number;
 
-  @ManyToOne(() => Plan, (plan) => plan.subscriptions)
-  @Field(() => Plan)
-  plan: Plan;
+  @Column({
+    type: 'text',
+    default: SubscriptionStatusEnum.ACTIVE,
+  })
+  @Field(() => String, { nullable: true })
+  status: SubscriptionStatusEnum;
 
   @CreateDateColumn()
   @Field()
@@ -45,6 +49,14 @@ export class OviooSubscription extends BaseEntity {
   @CreateDateColumn()
   @Field()
   expire_at: Date;
+
+  @ManyToOne(() => Team, (team) => team.subscriptions, { onDelete: 'CASCADE' })
+  @Field(() => Team)
+  team: Team;
+
+  @ManyToOne(() => Plan, (plan) => plan.subscriptions)
+  @Field(() => Plan)
+  plan: Plan;
 
   @BeforeInsert()
   async autoSetExpireDate() {

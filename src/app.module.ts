@@ -22,6 +22,7 @@ import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { UserModule } from './user/user.module';
         },
       },
     }),
+    ScheduleModule.forRoot(),
   ],
   providers: [AppResolver, AppService, TaskTypeSeeder, PlanSeeder],
 })

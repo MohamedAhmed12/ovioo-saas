@@ -28,10 +28,12 @@ type OviooSubscription {
   total_credit_hours: Float!
   remaining_credit_hours: Float!
   extra_bundle_hours: Float
-  team: Team!
-  plan: Plan!
+  daily_deducted_hours: Float
+  status: String
   start_at: DateTime!
   expire_at: DateTime!
+  team: Team!
+  plan: Plan!
 }
 
 """
