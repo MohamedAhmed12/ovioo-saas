@@ -6,6 +6,7 @@ import { User } from 'src/user/user.entity';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { OviooSubscription } from './subscription.entity';
 import { SubscriptionService } from './subscription.service';
+import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 
 @Resolver(() => OviooSubscription)
 export class SubscriptionResolver {
@@ -29,5 +30,11 @@ export class SubscriptionResolver {
   @Cron('5 0 * * *')
   async handleDailySubscriptionUpdatesJob() {
     return await this.subscriptionService.handleDailySubscriptionUpdatesJob();
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => OviooSubscription)
+  async addExtraBundle(@Args('data') data: AddExtraBundleDto) {
+    return await this.subscriptionService.addExtraBundle(data);
   }
 }

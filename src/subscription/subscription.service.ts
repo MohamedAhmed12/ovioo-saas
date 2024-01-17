@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { Plan } from 'src/plan/plan.entity';
 import { User } from 'src/user/user.entity';
 import { Not, Repository } from 'typeorm';
+import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
@@ -12,8 +14,8 @@ export class SubscriptionService {
   constructor(
     @InjectRepository(OviooSubscription)
     private readonly subscriptionRepository: Repository<OviooSubscription>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(PlanExtraBundle)
+    private readonly planExtraBundleRepository: Repository<PlanExtraBundle>,
     @InjectRepository(Plan)
     private readonly planRepository: Repository<Plan>,
   ) {}
@@ -49,7 +51,7 @@ export class SubscriptionService {
     return await this.processHoursDeduction(subscription, deducted_hours);
   }
 
-  async handleDailySubscriptionUpdatesJob(): Promise<string> {
+  async handleDailySubscriptionUpdatesJob(): Promise<void> {
     const nonExpiredSubs = await this.subscriptionRepository.find({
       where: {
         status: Not(SubscriptionStatusEnum.EXPIRED),
@@ -64,9 +66,41 @@ export class SubscriptionService {
         this.updateStatusBasedOnCredit(sub);
       }
     }
-    this.subscriptionRepository.save(nonExpiredSubs);
 
-    return 'aaaaaaaaaaaaaa';
+    this.subscriptionRepository.save(nonExpiredSubs);
+  }
+
+  async addExtraBundle({
+    id,
+    extra_bundle_id,
+  }: AddExtraBundleDto): Promise<OviooSubscription> {
+    const subscription = await this.subscriptionRepository.findOneBy({
+      id,
+    });
+
+    if (!subscription)
+      throw new NotFoundException(
+        'Couldn’t find subscription matches this id.',
+      );
+
+    if (subscription.status == SubscriptionStatusEnum.EXPIRED)
+      throw new NotFoundException('This subscription has been expired.');
+
+    const extraBundle = await this.planExtraBundleRepository.findOneBy({
+      id: extra_bundle_id,
+    });
+    console.log(extraBundle,extra_bundle_id);
+    
+
+    if (!extraBundle)
+      throw new NotFoundException(
+        'Couldn’t find extra bundle matches this id.',
+      );
+
+    subscription.extra_bundle_hours += extraBundle.hours;
+    subscription.remaining_credit_hours += extraBundle.hours;
+    subscription.status = SubscriptionStatusEnum.ACTIVE;
+    return this.subscriptionRepository.save(subscription);
   }
 
   private expireOutdatedSubscription(subscription: OviooSubscription): void {
