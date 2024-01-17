@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { PlanExtraBundle } from './plan-extra-bundle.entity';
 
 @Entity('plans')
 @ObjectType({ description: 'plans' })
@@ -49,14 +50,6 @@ export class Plan extends BaseEntity {
 
   @Column('int', { nullable: true })
   @Field(() => Number, { nullable: true })
-  extra_twenty_hrs_fees: number;
-
-  @Column('int', { nullable: true })
-  @Field(() => Number, { nullable: true })
-  extra_forty_hrs_fees: number;
-
-  @Column('int', { nullable: true })
-  @Field(() => Number, { nullable: true })
   monthly_credit_hours: number;
 
   @Column('int', { nullable: true })
@@ -74,4 +67,8 @@ export class Plan extends BaseEntity {
   @OneToMany(() => OviooSubscription, (subscription) => subscription.plan)
   @Field(() => [OviooSubscription], { defaultValue: [] })
   subscriptions: OviooSubscription[];
+
+  @OneToMany(() => PlanExtraBundle, (bundle) => bundle.plan)
+  @Field(() => [PlanExtraBundle], { defaultValue: [] })
+  bundles: PlanExtraBundle[];
 }

@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""plan-extra-bundles"""
+type PlanExtraBundle {
+  id: ID!
+  hours: Float!
+  fees: Float!
+  plan: Plan!
+}
+
 """plans"""
 type Plan {
   id: ID!
@@ -13,13 +21,12 @@ type Plan {
   monthly_fees: Float
   quarterly_fees: Float
   annual_fees: Float
-  extra_twenty_hrs_fees: Float
-  extra_forty_hrs_fees: Float
   monthly_credit_hours: Float
   daily_deducted_hours: Float
   is_full_time: Boolean
   is_most_popular: Boolean
   subscriptions: [OviooSubscription!]!
+  bundles: [PlanExtraBundle!]!
 }
 
 """ovioo-subscriptions"""
@@ -242,6 +249,7 @@ type Mutation {
   sendNotification(data: NotificationDto!): Notification!
   createSubscription(planId: String!): OviooSubscription!
   deductRemainingHours(data: DeductRemainingHoursDto!): OviooSubscription!
+  addExtraBundle(data: AddExtraBundleDto!): OviooSubscription!
 }
 
 input LoginDto {
@@ -381,6 +389,11 @@ input NotificationDto {
 input DeductRemainingHoursDto {
   id: String!
   deducted_hours: Float!
+}
+
+input AddExtraBundleDto {
+  id: String!
+  extra_bundle_id: String!
 }
 
 type Subscription {
