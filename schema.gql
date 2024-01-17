@@ -203,6 +203,7 @@ type Query {
   listTaskUnreadMessages: [Task!]!
   listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
+  listExtraBundles(planId: String!): [PlanExtraBundle!]!
 }
 
 input ListMessageDto {

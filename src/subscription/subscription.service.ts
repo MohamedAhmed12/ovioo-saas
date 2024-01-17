@@ -70,6 +70,16 @@ export class SubscriptionService {
     this.subscriptionRepository.save(nonExpiredSubs);
   }
 
+  async listExtraBundles(planId: string): Promise<PlanExtraBundle[]> {
+    return await this.planExtraBundleRepository.find({
+      where: {
+        plan: {
+          id: +planId,
+        },
+      },
+    });
+  }
+
   async addExtraBundle({
     id,
     extra_bundle_id,
@@ -89,8 +99,6 @@ export class SubscriptionService {
     const extraBundle = await this.planExtraBundleRepository.findOneBy({
       id: extra_bundle_id,
     });
-    console.log(extraBundle,extra_bundle_id);
-    
 
     if (!extraBundle)
       throw new NotFoundException(
