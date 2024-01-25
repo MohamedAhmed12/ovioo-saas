@@ -9,6 +9,16 @@ export const ormConfig = () => {
     synchronize: process.env.NODE_ENV !== 'production',
     entities: ['dist/**/*.entity.js'],
   };
+  const testingConfig: any = {
+    type: 'postgres',
+    host: '127.0.0.1',
+    port: '5432',
+    username: 'postgres',
+    password: 'postgres',
+    database: 'ovioo_testing',
+    synchronize: 'true',
+    entities: [__dirname + '/**/*.entity.ts'],
+  };
 
   if (process.env.NODE_ENV == 'production') {
     config['ssl'] = {
@@ -16,5 +26,5 @@ export const ormConfig = () => {
     };
   }
 
-  return config;
+  return process.env.NODE_ENV == 'test' ? testingConfig : config;
 };
