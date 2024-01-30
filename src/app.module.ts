@@ -4,6 +4,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
@@ -21,8 +22,23 @@ import { TaskType } from './task/task-type.entity';
 import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
+import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
-import { ScheduleModule } from '@nestjs/schedule';
+import { Task } from './task/task.entity';
+import { Team } from './team/team.entity';
+import { Project } from './project/project.entity';
+
+const DEFAULT_ADMIN = {
+  email: 'admin@example.com',
+  password: 'password',
+};
+
+const authenticate = async (email: string, password: string) => {
+  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    return Promise.resolve(DEFAULT_ADMIN);
+  }
+  return null;
+};
 
 @Module({
   imports: [
@@ -69,6 +85,52 @@ import { ScheduleModule } from '@nestjs/schedule';
       },
     }),
     ScheduleModule.forRoot(),
+    import('@adminjs/nestjs').then(({ AdminModule }) =>
+      AdminModule.createAdminAsync({
+        useFactory: async () => {
+          await import('adminjs').then(async ({ AdminJS }) => {
+            const AdminJSTypeorm = await import('@adminjs/typeorm');
+            AdminJS.registerAdapter({
+              Resource: AdminJSTypeorm.Resource,
+              Database: AdminJSTypeorm.Database,
+            });
+          });
+          return {
+            adminJsOptions: {
+              rootPath: '/admin',
+              resources: [
+                Task,
+                TaskType,
+                Project,
+                Team,
+                {
+                  resource: User,
+                  options: {
+                    properties: {
+                      bio: {
+                        isVisible: {
+                            list: false,
+                          },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            // auth: {
+            //   authenticate,
+            //   cookieName: 'adminjs',
+            //   cookiePassword: 'secret',
+            // },
+            // sessionOptions: {
+            //   resave: true,
+            //   saveUninitialized: true,
+            //   secret: 'secret',
+            // },
+          };
+        },
+      }),
+    ),
   ],
   providers: [AppResolver, AppService, TaskTypeSeeder, PlanSeeder],
 })
@@ -79,7 +141,20 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    // this.configureAdminJS();
+
     this.taskTypeSeeder.seed();
     this.planSeeder.seed();
   }
+
+  //   private async configureAdminJS() {
+  //     const AdminJS: any = await import('adminjs');
+  //     const AdminJSTypeorm = await import('@adminjs/typeorm');
+  //     // import * as AdminJSTypeorm from '@adminjs/typeorm';
+  //     console.log(AdminJS);
+  //     AdminJS.registerAdapter({
+  //       Resource: AdminJSTypeorm.Resource,
+  //       Database: AdminJSTypeorm.Database,
+  //     });
+  //   }
 }
