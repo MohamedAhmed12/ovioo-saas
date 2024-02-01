@@ -11,6 +11,7 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
 
@@ -60,6 +61,27 @@ export class TaskService {
       throw new UnauthorizedException('You are not allowed to view this task.');
 
     return task;
+  }
+
+  async findIdleDesigner(): Promise<number | null> {
+    /* get designer which has no assigned tasks
+     * or the earliest one to finishe all his tasks(the one who spent most idle time)
+     * or if all users is busy the earliest one got assigned to a task
+     */
+    const designer = await this.userRepository
+      .createQueryBuilder('users')
+      .leftJoin('users.assignedTasks', 'task')
+      .addOrderBy('COALESCE(MAX(task.updated_at), :defaultDate)', 'ASC') // COALESCE is to handle the null tasks cases it put updated_at = 0
+      .setParameter('defaultDate', new Date(0)) // A default date for users without tasks
+      .where('task.id IS NULL')
+      .orWhere(
+        `NOT EXISTS (SELECT 1 FROM tasks WHERE tasks."designerId" = users.id AND tasks.status != '${TaskStatusEnum.DONE}')`,
+      )
+      .orWhere('task.id IS NOT NULL')
+      .groupBy('users.id')
+      .getOne();
+
+    return designer?.id;
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {

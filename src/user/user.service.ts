@@ -311,17 +311,13 @@ export class UserService {
     let user = this.UserRepository.create(data);
     user = await this.UserRepository.save(user);
 
-    const profile = this.profileRepository.create({
+    user.profile = this.profileRepository.create({
       company_name: data.company,
     });
 
-    user.profile = profile;
-
-    const team = this.teamRepository.create({
+    user.team = this.teamRepository.create({
       owner_id: user.id,
     });
-
-    user.team = team;
 
     return await this.UserRepository.save(user);
   }

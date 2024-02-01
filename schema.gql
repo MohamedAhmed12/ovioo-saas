@@ -139,6 +139,8 @@ type Task {
   unreadMessagesCount: Float
   subtasks: [Task!]!
   parent: Task!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 """message"""
@@ -196,6 +198,7 @@ type Query {
   listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
+  findIdleDesigner: Float
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
