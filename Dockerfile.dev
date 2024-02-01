@@ -11,7 +11,7 @@ COPY package.json package-lock.json ./
 RUN npm install -g @nestjs/cli
 
 # Install app dependencies only if NODE_ENV is not set to "development"
-RUN npm install --force
+RUN npm install --legacy-peer-deps
 
 # Bundle app source
 COPY . .
