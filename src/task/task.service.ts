@@ -8,12 +8,13 @@ import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
 import { Project } from 'src/project/project.entity';
 import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 @Injectable()
 export class TaskService {
@@ -63,7 +64,7 @@ export class TaskService {
     return task;
   }
 
-  async findIdleDesigner(): Promise<number | null> {
+  async findIdleDesigner(): Promise<User> {
     /* get designer which has no assigned tasks
      * or the earliest one to finishe all his tasks(the one who spent most idle time)
      * or if all users is busy the earliest one got assigned to a task
@@ -73,15 +74,21 @@ export class TaskService {
       .leftJoin('users.assignedTasks', 'task')
       .addOrderBy('COALESCE(MAX(task.updated_at), :defaultDate)', 'ASC') // COALESCE is to handle the null tasks cases it put updated_at = 0
       .setParameter('defaultDate', new Date(0)) // A default date for users without tasks
-      .where('task.id IS NULL')
-      .orWhere(
-        `NOT EXISTS (SELECT 1 FROM tasks WHERE tasks."designerId" = users.id AND tasks.status != '${TaskStatusEnum.DONE}')`,
+      .where('users.role = :role', { role: UserRoleEnum.Designer })
+      .andWhere(
+        new Brackets((query) => {
+          query
+            .where('task.id IS NULL')
+            .orWhere(
+              `NOT EXISTS (SELECT 1 FROM tasks WHERE tasks."designerId" = users.id AND tasks.status != '${TaskStatusEnum.DONE}')`,
+            )
+            .orWhere('task.id IS NOT NULL');
+        }),
       )
-      .orWhere('task.id IS NOT NULL')
       .groupBy('users.id')
       .getOne();
 
-    return designer?.id;
+    return designer;
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {

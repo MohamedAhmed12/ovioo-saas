@@ -16,6 +16,7 @@ import { Task } from './task.entity';
 import { taskFactory } from './task.factory';
 import { TaskModule } from './task.module';
 import { TaskService } from './task.service';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 describe('TaskService', () => {
   let app: INestApplication;
@@ -82,24 +83,39 @@ describe('TaskService', () => {
   });
 
   describe('findIdleDesigner', () => {
-    it('should return new designer with no prev tasks', async () => {
-      let designerWithNoTasks = await userFactory();
-      designerWithNoTasks = await userRepository.save(designerWithNoTasks);
+    it('should only apply on users with designer role', async () => {
+      const user = await userFactory({ role: UserRoleEnum.User });
+      await userRepository.save(user);
 
-      const [designerWithDoneTasks] = await createUserWithTask({
+      const [designerWithDoneTasks] = await createDesignerWithTask({
         status: TaskStatusEnum.DONE,
       });
 
-      const idleDesignerId = await taskService.findIdleDesigner();
+      const idleDesigne = await taskService.findIdleDesigner();
 
-      expect(idleDesignerId).toEqual(designerWithNoTasks.id);
+      expect(idleDesigne).toEqual(designerWithDoneTasks);
+    });
+
+    it('should return new designer with no prev tasks', async () => {
+      let designerWithNoTasks = await userFactory({
+        role: UserRoleEnum.Designer,
+      });
+      designerWithNoTasks = await userRepository.save(designerWithNoTasks);
+
+      const [designerWithDoneTasks] = await createDesignerWithTask({
+        status: TaskStatusEnum.DONE,
+      });
+
+      const idleDesigne = await taskService.findIdleDesigner();
+
+      expect(idleDesigne).toEqual(designerWithNoTasks);
     });
 
     it('should return idle designer', async () => {
-      const [idleDesigner] = await createUserWithTask({
+      const [idleDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.DONE,
       });
-      const [busyDesigner] = await createUserWithTask({
+      const [busyDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.IN_PROGRESS,
       });
 
@@ -111,47 +127,47 @@ describe('TaskService', () => {
       oldDoneTask.designer = busyDesigner;
       await taskRepository.save(oldDoneTask);
 
-      const idleDesignerId = await taskService.findIdleDesigner();
+      const idleDesigne = await taskService.findIdleDesigner();
 
-      expect(idleDesignerId).toEqual(idleDesigner.id);
+      expect(idleDesigne).toEqual(idleDesigner);
     });
 
     it('should return designer with the longest idle time', async () => {
       const oldUpdatedAtDate = new Date();
       oldUpdatedAtDate.setMonth(oldUpdatedAtDate.getMonth() - 1);
 
-      const [longestIdleDesigner] = await createUserWithTask({
+      const [longestIdleDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.DONE,
         updated_at: oldUpdatedAtDate,
       });
-      const [lessIdleDesigner] = await createUserWithTask({
+      const [lessIdleDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.DONE,
       });
 
-      const idleDesignerId = await taskService.findIdleDesigner();
+      const idleDesigne = await taskService.findIdleDesigner();
 
-      expect(idleDesignerId).toEqual(longestIdleDesigner.id);
+      expect(idleDesigne).toEqual(longestIdleDesigner);
     });
 
     it('should return designer with the older task if no one is idle', async () => {
       const oldUpdatedAtDate = new Date();
       oldUpdatedAtDate.setMonth(oldUpdatedAtDate.getMonth() - 1);
 
-      const [olderAssignedDesigner] = await createUserWithTask({
+      const [olderAssignedDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.IN_PROGRESS,
         updated_at: oldUpdatedAtDate,
       });
-      const [newerAssignedDesigner] = await createUserWithTask({
+      const [newerAssignedDesigner] = await createDesignerWithTask({
         status: TaskStatusEnum.IN_PROGRESS,
       });
 
-      const idleDesignerId = await taskService.findIdleDesigner();
+      const idleDesigne = await taskService.findIdleDesigner();
 
-      expect(idleDesignerId).toEqual(olderAssignedDesigner.id);
+      expect(idleDesigne).toEqual(olderAssignedDesigner);
     });
   });
 
-  async function createUserWithTask(
+  async function createDesignerWithTask(
     taskData: Partial<Task>,
     existedUserId?: number,
   ) {
@@ -160,7 +176,7 @@ describe('TaskService', () => {
     if (existedUserId) {
       designer = await userRepository.findOneBy({ id: existedUserId });
     } else {
-      designer = await userFactory();
+      designer = await userFactory({ role: UserRoleEnum.Designer });
       designer = await userRepository.save(designer);
     }
 

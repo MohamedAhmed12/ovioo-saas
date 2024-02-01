@@ -11,4 +11,5 @@ export const userFactory: (data?: Partial<User>) => Partial<User> = (
   provider: AuthProviderEnum.Credentials,
   created_at: new Date(),
   updated_at: new Date(),
+  ...data,
 });
