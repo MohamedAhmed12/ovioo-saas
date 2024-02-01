@@ -13,7 +13,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
-import { stringify } from 'querystring';
 
 @Injectable()
 export class TaskService {
@@ -106,7 +105,7 @@ export class TaskService {
   }
 
   async updateTask(authUser: User, data: UpdateTaskDto): Promise<Task> {
-    let task = await this.taskRepository.findOne({
+    const task = await this.taskRepository.findOne({
       where: {
         id: data.id,
       },
@@ -115,14 +114,7 @@ export class TaskService {
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
 
-    await this.taskRepository
-      .createQueryBuilder()
-      .update(task)
-      .set(data)
-      .where('id = :id', { id: task.id })
-      .execute();
-
-    task = await this.showTask(authUser, String(task.id));
+    await this.taskRepository.update(task.id, data);
     return task;
   }
 
