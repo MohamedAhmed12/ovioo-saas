@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
 import { Project } from 'src/project/project.entity';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
 import { Brackets, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -14,7 +15,6 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
-import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 @Injectable()
 export class TaskService {
@@ -126,10 +126,13 @@ export class TaskService {
         },
       });
 
+    const idleDesigner = await this.findIdleDesigner();
+
     const task = await this.taskRepository.create(data);
     task.project = project;
     task.team = authUser.team;
     task.type = type;
+    task.designer = idleDesigner;
     return await this.taskRepository.save(task);
   }
 
