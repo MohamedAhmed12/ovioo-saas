@@ -32,15 +32,10 @@ describe('AssetService', () => {
         TypeOrmModule.forFeature([User, Project]),
       ],
       providers: [
-        AssetService,
         {
           provide: getRepositoryToken(Asset),
           useClass: Repository,
         },
-        // {
-        //   provide: getRepositoryToken(User),
-        //   useClass: Repository,
-        // },
         {
           provide: getRepositoryToken(Team),
           useClass: Repository,
@@ -67,7 +62,7 @@ describe('AssetService', () => {
     dataSource = await setupDatabase(app);
   });
   afterEach(async () => {
-    // await cleanupDatabase(dataSource);
+    await cleanupDatabase(dataSource);
   });
 
   afterAll(async () => {
