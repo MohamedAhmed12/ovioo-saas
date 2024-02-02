@@ -10,6 +10,7 @@ import { cleanupDatabase, setupDatabase } from '../../test/test-setup';
 import { Project } from './project.entity';
 import { ProjectModule } from './project.module';
 import { ProjectService } from './project.service';
+import { projectFactory } from './project.factory';
 
 describe('ProjectService', () => {
   let app: INestApplication;
@@ -73,6 +74,31 @@ describe('ProjectService', () => {
 
       expect(projects.length).toBe(1);
       expect(projects[0].id).toEqual(createdProject.id);
+    });
+  });
+
+  describe('listProjects', () => {
+    it('should create project', async () => {
+      // users
+      const userData = await userFactory();
+      const user = await userRepository.save(userData);
+
+      // team
+      const team = await teamRepository.create({ name: 'team one' });
+      team.owner_id = user.id;
+      team.members = [user];
+      await teamRepository.save(team);
+
+      const firstProject = await projectFactory({
+        team: team,
+      });
+      const secondProject = await projectFactory({
+        team: team,
+      });
+      await projectRepository.save([firstProject, secondProject]);
+
+      const projects = await projectService.listProjects(user);
+      expect(projects.length).toBe(2);
     });
   });
 });
