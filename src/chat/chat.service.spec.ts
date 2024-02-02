@@ -124,5 +124,41 @@ describe('AssetService', () => {
     });
   });
 
+  describe('receiveAllSentMessages', () => {
+    it('should convert all unread msgs oter than auth user msgs to status received', async () => {
+      const userData = await userFactory();
+      let user = await userRepository.save(userData);
 
+      const accountManager = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      await userRepository.save(accountManager);
+
+      const task = await taskFactory();
+      await taskRepository.save(task);
+
+      const team = await teamRepository.create({ name: 'team one' });
+      team.owner_id = user.id;
+      team.members = [user, accountManager];
+      team.tasks = [task];
+      await teamRepository.save(team);
+
+      let firstMsg = await messageRepository.create({
+        content: 'First message',
+        sender_id: accountManager.id,
+        sender: accountManager,
+        task: task,
+      });
+      await messageRepository.save(firstMsg);
+
+      user = await userRepository.findOneBy({ id: user.id });
+
+      await chatService.receiveAllSentMessages(user);
+
+      firstMsg = await messageRepository.findOneBy({ id: firstMsg.id });
+
+      expect(firstMsg.status).toBe(MessageStatusEnum.RECEIVED);
+      expect(firstMsg.status).toBe(MessageStatusEnum.RECEIVED);
+    });
+  });
 });
