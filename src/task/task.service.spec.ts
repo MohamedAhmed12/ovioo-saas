@@ -6,6 +6,7 @@ import { AssetService } from 'src/asset/asset.service';
 import { ormConfig } from 'src/ormconfig';
 import { Project } from 'src/project/project.entity';
 import { Team } from 'src/team/team.entity';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
 import { userFactory } from 'src/user/user.factory';
 import { DataSource, Repository } from 'typeorm';
@@ -16,7 +17,6 @@ import { Task } from './task.entity';
 import { taskFactory } from './task.factory';
 import { TaskModule } from './task.module';
 import { TaskService } from './task.service';
-import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 describe('TaskService', () => {
   let app: INestApplication;
