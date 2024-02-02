@@ -15,7 +15,7 @@ import { ChatService } from './chat.service';
 import { MessageStatusEnum } from './enum/message-status.enum';
 import { Message } from './message.entity';
 
-describe('AssetService', () => {
+describe('ChatService', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let chatService: ChatService;
@@ -26,25 +26,7 @@ describe('AssetService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ChatModule,
-        TypeOrmModule.forRoot(ormConfig()),
-        // TypeOrmModule.forFeature([User, Project]),
-      ],
-      providers: [
-        // {
-        //   provide: getRepositoryToken(Asset),
-        //   useClass: Repository,
-        // },
-        // {
-        //   provide: getRepositoryToken(Team),
-        //   useClass: Repository,
-        // },
-        // {
-        //   provide: getRepositoryToken(Task),
-        //   useClass: Repository,
-        // },
-      ],
+      imports: [ChatModule, TypeOrmModule.forRoot(ormConfig())],
     }).compile();
 
     app = module.createNestApplication();
