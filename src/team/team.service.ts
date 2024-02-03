@@ -19,23 +19,22 @@ export class TeamService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getTeam({ email, provider }: AuthGuardUserDto): Promise<Team> {
+  async getUserTeam({ email }: AuthGuardUserDto): Promise<Team> {
     const user = await this.userRepository.findOne({
-      where: {
-        email,
-        provider,
-      },
-      relations: ['team.members'],
+      where: { email },
+      relations: ['teams.members'],
     });
+    const userTeam = user.teams[0];
 
-    const ownerIndex = user.team.members.findIndex(
-      (member: User) => member.id == user.team.owner_id,
+    // move team owner to first index of members array
+    const ownerIndex = userTeam.members.findIndex(
+      (member: User) => member.id == userTeam.owner_id,
     );
-    const owner = user.team.members[+ownerIndex];
-    user.team.members.splice(+ownerIndex, 1);
-    user.team.members.unshift(owner);
+    const owner = userTeam.members[+ownerIndex];
+    userTeam.members.splice(+ownerIndex, 1);
+    userTeam.members.unshift(owner);
 
-    return user.team;
+    return userTeam;
   }
 
   async transferOwnership(
@@ -47,18 +46,19 @@ export class TeamService {
         email,
         provider,
       },
-      relations: ['team.members'],
+      relations: ['teams.members'],
     });
+    const authUserTeam = authUser.teams[0];
 
     if (
-      authUser.id != authUser.team.owner_id &&
+      authUser.id != authUserTeam.owner_id &&
       authUser.role == UserRoleEnum.User
     )
       throw new ForbiddenException('Not allowed');
 
     let memberIndex = -1;
 
-    authUser.team.members.map((user, i) => {
+    authUserTeam.members.map((user, i) => {
       if (user.id === +memberId) {
         user.role = UserRoleEnum.User;
         memberIndex = i;
@@ -70,10 +70,10 @@ export class TeamService {
     if (memberIndex == -1)
       throw new NotFoundException('Couldn’t find team member matches this id.');
 
-    this.userRepository.save(authUser.team.members);
+    this.userRepository.save(authUserTeam.members);
 
-    authUser.team.owner_id = +memberId;
-    this.teamRepository.save(authUser.team);
+    authUserTeam.owner_id = +memberId;
+    await this.teamRepository.save(authUserTeam);
 
     return true;
   }
