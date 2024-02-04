@@ -13,5 +13,7 @@ export const setupDatabase = async (
 export const cleanupDatabase = async (
   dataSource: DataSource,
 ): Promise<void> => {
-  await dataSource.query('ROLLBACK');
+  if (dataSource) {
+    await dataSource.query('ROLLBACK');
+  }
 };

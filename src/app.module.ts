@@ -12,21 +12,22 @@ import { AssetModule } from './asset/asset.module';
 import { ChatModule } from './chat/chat.module';
 import { NotificationModule } from './notification/notification.module';
 import { ormConfig } from './ormconfig.js';
-import { PlanSeeder } from './plan/plan-type.seed';
+import { PlanExtraBundle } from './plan/plan-extra-bundle.entity';
 import { Plan } from './plan/plan.entity';
 import { PlanModule } from './plan/plan.module';
+import { PlanSeeder } from './plan/plan.seed';
 import { ProfileModule } from './profile/profile.module';
+import { Project } from './project/project.entity';
 import { ProjectModule } from './project/project.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { TaskType } from './task/task-type.entity';
 import { TaskTypeSeeder } from './task/task-type.seed';
+import { Task } from './task/task.entity';
 import { TaskModule } from './task/task.module';
+import { Team } from './team/team.entity';
 import { TeamModule } from './team/team.module';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
-import { Task } from './task/task.entity';
-import { Team } from './team/team.entity';
-import { Project } from './project/project.entity';
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
@@ -63,7 +64,7 @@ const authenticate = async (email: string, password: string) => {
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot(ormConfig()),
-    TypeOrmModule.forFeature([TaskType, Plan]),
+    TypeOrmModule.forFeature([TaskType, Plan, PlanExtraBundle]),
     MailerModule.forRoot({
       transport: {
         host: process.env.MAILER_HOST,
@@ -109,8 +110,8 @@ const authenticate = async (email: string, password: string) => {
                     properties: {
                       bio: {
                         isVisible: {
-                            list: false,
-                          },
+                          list: false,
+                        },
                       },
                     },
                   },
@@ -141,20 +142,7 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    // this.configureAdminJS();
-
     this.taskTypeSeeder.seed();
     this.planSeeder.seed();
   }
-
-  //   private async configureAdminJS() {
-  //     const AdminJS: any = await import('adminjs');
-  //     const AdminJSTypeorm = await import('@adminjs/typeorm');
-  //     // import * as AdminJSTypeorm from '@adminjs/typeorm';
-  //     console.log(AdminJS);
-  //     AdminJS.registerAdapter({
-  //       Resource: AdminJSTypeorm.Resource,
-  //       Database: AdminJSTypeorm.Database,
-  //     });
-  //   }
 }

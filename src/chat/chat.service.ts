@@ -86,6 +86,8 @@ export class ChatService {
   }
 
   async listTaskUnreadMessages(authUser: User): Promise<Task[]> {
+    const authUserTeamsIds = authUser.teams.map((team) => team.id);
+
     const tasks = await this.taskRepository
       .createQueryBuilder('task')
       .select('task')
@@ -105,15 +107,16 @@ export class ChatService {
             `sender_id != '${authUser.id}' AND (status != '${MessageStatusEnum.READ}' OR (status = '${MessageStatusEnum.READ}' AND ' ${authUser.fullname}' != ANY(read_by)))`,
           ),
       )
-      .where('task.teamId = :teamId', { teamId: authUser.team.id })
+      .where('task.teamId IN (:...authUserTeamsIds)', { authUserTeamsIds })
       .orderBy('message.created_at', 'DESC')
       .getMany();
 
     return tasks.filter((task) => {
-      if (task?.messages && task?.messages?.length == 0) return;
+      if (task?.messages && task?.messages?.length == 0) {
+        return false;
+      }
 
-      task.messages = [task.messages[0]];
-      return task;
+      return true;
     });
   }
 
@@ -162,9 +165,7 @@ export class ChatService {
     const messages = await this.messageRepository.find({
       where: {
         task: {
-          team: {
-            id: authUser.team.id,
-          },
+          team: { id: In(authUser.teams.map((team) => team.id)) },
         },
       },
     });

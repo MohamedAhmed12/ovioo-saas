@@ -88,7 +88,7 @@ type User {
   created_at: DateTime!
   updated_at: DateTime!
   profile: Profile!
-  team: Team!
+  teams: [Team!]!
   messages: [Message!]!
   notifications: [Notification!]!
   assignedTasks: [Task!]!
@@ -194,7 +194,7 @@ type Query {
   getHello: String!
   me: User!
   findProfile: Profile!
-  getTeam: Team!
+  getUserTeam: Team!
   listTaskTypes: [task_types!]!
   listTasks: [Task!]!
   showTask(id: String!): Task!
@@ -321,7 +321,7 @@ input UpdateProfileDto {
 
 input CreateTaskDto {
   title: String!
-  status: String!
+  status: String
   project_id: String!
   type_id: String!
   parent_id: String

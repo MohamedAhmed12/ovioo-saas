@@ -7,6 +7,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -26,7 +27,7 @@ export class Team extends BaseEntity {
   @Field(() => Number)
   owner_id: number;
 
-  @OneToMany(() => User, (user) => user.team, { cascade: ['update'] })
+  @ManyToMany(() => User, (user) => user.teams, { cascade: ['update'] })
   @Field(() => [User], { defaultValue: [] })
   members: User[];
 

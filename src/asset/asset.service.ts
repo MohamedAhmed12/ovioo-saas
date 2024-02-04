@@ -23,12 +23,13 @@ export class AssetService {
   ) {}
 
   async listAssets(authUser: User, id?: number): Promise<Asset[]> {
-    const team = await authUser.team;
+    const [firstTeam] = await authUser.teams;
+
     const options = {
       where: {
         project: {
           team: {
-            id: team.id,
+            id: firstTeam.id,
           },
         },
       },

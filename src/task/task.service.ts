@@ -9,7 +9,7 @@ import { AssetService } from 'src/asset/asset.service';
 import { Project } from 'src/project/project.entity';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
-import { Brackets, Repository } from 'typeorm';
+import { Brackets, In, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatusEnum } from './enums/task-status.enum';
@@ -35,11 +35,9 @@ export class TaskService {
   }
 
   async listTasks(authUser: User): Promise<Task[]> {
-    const team = await authUser.team;
-
-    return this.taskRepository.find({
+    return await this.taskRepository.find({
       where: {
-        team: { id: team.id },
+        team: { id: In(authUser.teams.map((team) => team.id)) },
       },
       relations: ['subtasks'],
     });
@@ -58,7 +56,7 @@ export class TaskService {
     if (!task)
       throw new NotFoundException('Couldn’t find task matches this id.');
 
-    if (taskTeam.id != authUser.team.id)
+    if (!authUser.teams.some((team) => team.id == taskTeam.id))
       throw new UnauthorizedException('You are not allowed to view this task.');
 
     return task;
@@ -69,7 +67,7 @@ export class TaskService {
      * or the earliest one to finishe all his tasks(the one who spent most idle time)
      * or if all users is busy the earliest one got assigned to a task
      */
-    const designer = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder('users')
       .leftJoin('users.assignedTasks', 'task')
       .addOrderBy('COALESCE(MAX(task.updated_at), :defaultDate)', 'ASC') // COALESCE is to handle the null tasks cases it put updated_at = 0
@@ -87,8 +85,6 @@ export class TaskService {
       )
       .groupBy('users.id')
       .getOne();
-
-    return designer;
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {
@@ -130,7 +126,7 @@ export class TaskService {
 
     const task = await this.taskRepository.create(data);
     task.project = project;
-    task.team = authUser.team;
+    task.team = authUser.teams[0];
     task.type = type;
     task.designer = idleDesigner;
     return await this.taskRepository.save(task);

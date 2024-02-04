@@ -78,7 +78,7 @@ export class UserService {
         email,
         provider,
       },
-      relations: ['profile', 'team'],
+      relations: ['profile'],
     });
 
     if (!user)
@@ -241,7 +241,7 @@ export class UserService {
     member = this.UserRepository.create({
       ...data,
       password,
-      team: currentUser.team,
+      teams: currentUser.teams,
       provider: AuthProviderEnum.Credentials,
       role: UserRoleEnum.Member,
     });
@@ -308,16 +308,18 @@ export class UserService {
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
-    let user = this.UserRepository.create(data);
+    let user = await this.UserRepository.create(data);
     user = await this.UserRepository.save(user);
 
-    user.profile = this.profileRepository.create({
+    user.profile = await this.profileRepository.create({
       company_name: data.company,
     });
 
-    user.team = this.teamRepository.create({
-      owner_id: user.id,
-    });
+    user.teams = [
+      await this.teamRepository.create({
+        owner_id: user.id,
+      }),
+    ];
 
     return await this.UserRepository.save(user);
   }
