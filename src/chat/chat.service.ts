@@ -23,14 +23,14 @@ export class ChatService {
     private readonly assetService: AssetService,
   ) {}
 
-  async listMessages(
+  async listTaskMessages(
     authUser: User,
     { page, offsetPlus = 0, limit = 10, task_id }: ListMessageDto,
   ): Promise<Message[]> {
     let messages: Message[];
 
     if (page == 1) {
-      messages = await this.listUnreadMessages(authUser, task_id);
+      messages = await this.listTaskUnreadMessages(authUser, task_id);
       if (messages.length >= 10) {
         return messages;
       }
@@ -59,7 +59,7 @@ export class ChatService {
       .getMany();
   }
 
-  private async listUnreadMessages(
+  private async listTaskUnreadMessages(
     authUser: User,
     task_id: number,
   ): Promise<Message[]> {
@@ -85,7 +85,7 @@ export class ChatService {
       .getMany();
   }
 
-  async listTaskUnreadMessages(authUser: User): Promise<Task[]> {
+  async listUnreadMessages(authUser: User): Promise<Task[]> {
     const authUserTeamsIds = authUser.teams.map((team) => team.id);
 
     const tasks = await this.taskRepository

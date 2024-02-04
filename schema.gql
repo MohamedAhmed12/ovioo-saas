@@ -202,8 +202,8 @@ type Query {
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
-  listMessages(data: ListMessageDto!): [Message!]!
-  listTaskUnreadMessages: [Task!]!
+  listTaskMessages(data: ListMessageDto!): [Message!]!
+  listUnreadMessages: [Task!]!
   listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
   listExtraBundles(planId: String!): [PlanExtraBundle!]!
