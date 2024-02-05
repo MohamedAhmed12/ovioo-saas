@@ -24,6 +24,7 @@ describe('TaskService', () => {
   let taskService: TaskService;
   let userRepository;
   let taskRepository;
+  let teamRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -63,6 +64,7 @@ describe('TaskService', () => {
 
     userRepository = module.get(getRepositoryToken(User));
     taskRepository = module.get(getRepositoryToken(Task));
+    teamRepository = module.get(getRepositoryToken(Team));
 
     taskService = module.get<TaskService>(TaskService);
   });
@@ -80,6 +82,69 @@ describe('TaskService', () => {
 
   it('taskService should be defined', () => {
     expect(taskService).toBeDefined();
+  });
+
+  describe('listTasks', () => {
+    it('should list all tasks for user related teams', async () => {
+      // task
+      const firstTask = await taskFactory();
+      const secondTask = await taskFactory();
+
+      // team
+      let team1 = await teamRepository.create({
+        name: 'team one',
+        owner_id: 1,
+        tasks: [firstTask],
+      });
+      team1 = await teamRepository.save(team1);
+
+      let team2 = await teamRepository.create({
+        name: 'team two',
+        owner_id: 1,
+        tasks: [secondTask],
+      });
+      team2 = await teamRepository.save(team2);
+
+      // user
+      const userData = await userFactory();
+      userData.teams = [team1, team2];
+      const user = await userRepository.save(userData);
+
+      const tasks = await taskService.listTasks(user);
+
+      expect(tasks.length).toBe(2);
+    });
+  });
+
+  describe('showTask', () => {
+    it('should show task for task team members', async () => {
+      // task
+      const firstTask = await taskFactory();
+
+      // team
+      let team1 = await teamRepository.create({
+        name: 'team one',
+        owner_id: 1,
+        tasks: [firstTask],
+      });
+      team1 = await teamRepository.save(team1);
+      const team1Task = await team1.tasks;
+
+      let team2 = await teamRepository.create({
+        name: 'team two',
+        owner_id: 1,
+      });
+      team2 = await teamRepository.save(team2);
+
+      // user
+      const userData = await userFactory();
+      userData.teams = [team1, team2];
+      const user = await userRepository.save(userData);
+
+      const task = await taskService.showTask(user, team1Task[0].id);
+
+      expect(task.id).toEqual(team1Task[0].id);
+    });
   });
 
   describe('findIdleDesigner', () => {
