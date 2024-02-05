@@ -57,8 +57,8 @@ describe('ChatService', () => {
     expect(chatService).toBeDefined();
   });
 
-  describe('listTaskUnreadMessages', () => {
-    it('should return task unread messages', async () => {
+  describe('listUnreadMessages', () => {
+    it('should return unread messages for all tasks', async () => {
       // users
       const userData = await userFactory();
       let user = await userRepository.save(userData);
@@ -69,40 +69,51 @@ describe('ChatService', () => {
       await userRepository.save(accountManager);
 
       // task
-      const task = await taskFactory();
-      await taskRepository.save(task);
+      const task1 = await taskFactory();
+      const task2 = await taskFactory();
+      await taskRepository.save([task1, task2]);
 
       // team
-      const team = await teamRepository.create({ name: 'team one' });
-      team.owner_id = user.id;
-      team.members = [user, accountManager];
-      team.tasks = [task];
+      const team = await teamRepository.create({
+        name: 'team one',
+        owner_id: user.id,
+        members: [user, accountManager],
+        tasks: [task1, task2],
+      });
       await teamRepository.save(team);
 
       // messages
-      const firstMsg = await messageRepository.create({
+      const unreadMsg1 = await messageRepository.create({
         content: 'First message',
         sender_id: accountManager.id,
         sender: accountManager,
-        task: task,
+        task: task1,
       });
-      const secondMsg = await messageRepository.create({
+      const unreadMsg2 = await messageRepository.create({
         content: 'Second message',
         sender_id: accountManager.id,
         sender: accountManager,
-        task: task,
+        task: task2,
+      });
+      const readMsg = await messageRepository.create({
+        content: 'Second message',
+        sender_id: accountManager.id,
+        sender: accountManager,
+        task: task2,
+        status: MessageStatusEnum.READ,
       });
 
-      await messageRepository.save([firstMsg, secondMsg]);
+      await messageRepository.save([unreadMsg1, unreadMsg2, readMsg]);
 
       user = await userRepository.findOneBy({ id: user.id });
-      const tasks = await chatService.listTaskUnreadMessages(user);
 
-      expect(tasks[0].messages.length).toBe(2);
-      expect(tasks[0].messages.map((msg) => msg.status)).toEqual([
-        MessageStatusEnum.SENT,
-        MessageStatusEnum.SENT,
-      ]);
+      const tasks = await chatService.listUnreadMessages(user);
+
+      expect(tasks.length).toBe(2);
+      expect(tasks[0].messages.length).toBe(1);
+      expect(tasks[0].messages[0].status).toEqual(MessageStatusEnum.SENT);
+      expect(tasks[1].messages.length).toBe(1);
+      expect(tasks[1].messages[0].status).toEqual(MessageStatusEnum.SENT);
     });
   });
 
