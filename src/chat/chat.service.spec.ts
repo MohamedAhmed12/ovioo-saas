@@ -57,6 +57,112 @@ describe('ChatService', () => {
     expect(chatService).toBeDefined();
   });
 
+  describe('listTaskMessages', () => {
+    it('should return latest 10 task messges with various statuses', async () => {
+      // users
+      const userData = await userFactory();
+      let user = await userRepository.save(userData);
+
+      const accountManager = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      await userRepository.save(accountManager);
+
+      // task
+      const task1 = await taskFactory();
+      await taskRepository.save(task1);
+
+      // team
+      const team = await teamRepository.create({
+        name: 'team one',
+        owner_id: user.id,
+        members: [user, accountManager],
+        tasks: [task1],
+      });
+      await teamRepository.save(team);
+
+      // messages
+      const unreadMessages = [];
+      for (let i = 0; i < 5; i++) {
+        unreadMessages.push(
+          await messageRepository.create({
+            content: 'First message',
+            sender_id: accountManager.id,
+            sender: accountManager,
+            task: task1,
+            status: MessageStatusEnum.READ,
+          }),
+        );
+      }
+      for (let i = 0; i < 5; i++) {
+        unreadMessages.push(
+          await messageRepository.create({
+            content: 'First message',
+            sender_id: accountManager.id,
+            sender: accountManager,
+            task: task1,
+          }),
+        );
+      }
+      await messageRepository.save(unreadMessages);
+
+      user = await userRepository.findOneBy({ id: user.id });
+
+      const messages = await chatService.listTaskMessages(user, {
+        page: 1,
+        task_id: task1.id,
+      });
+
+      expect(messages.length).toBe(10);
+    });
+    it('should return latest unread messages on single page even if they are more than 10', async () => {
+      // users
+      const userData = await userFactory();
+      let user = await userRepository.save(userData);
+
+      const accountManager = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      await userRepository.save(accountManager);
+
+      // task
+      const task1 = await taskFactory();
+      await taskRepository.save(task1);
+
+      // team
+      const team = await teamRepository.create({
+        name: 'team one',
+        owner_id: user.id,
+        members: [user, accountManager],
+        tasks: [task1],
+      });
+      await teamRepository.save(team);
+
+      // messages
+      const unreadMessages = [];
+      for (let i = 0; i < 12; i++) {
+        unreadMessages.push(
+          await messageRepository.create({
+            content: 'First message',
+            sender_id: accountManager.id,
+            sender: accountManager,
+            task: task1,
+          }),
+        );
+      }
+      await messageRepository.save(unreadMessages);
+
+      user = await userRepository.findOneBy({ id: user.id });
+
+      const messages = await chatService.listTaskMessages(user, {
+        page: 1,
+        task_id: task1.id,
+      });
+
+      expect(messages.length).toBe(12);
+    });
+  });
+
   describe('listUnreadMessages', () => {
     it('should return unread messages for all tasks', async () => {
       // users
