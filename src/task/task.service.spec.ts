@@ -1,4 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import {
+  ForbiddenException,
+  INestApplication,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Asset } from 'src/asset/asset.entity';
@@ -229,6 +233,33 @@ describe('TaskService', () => {
       const idleDesigne = await taskService.findIdleDesigner();
 
       expect(idleDesigne).toEqual(olderAssignedDesigner);
+    });
+  });
+
+  describe('updateTask', () => {
+    it('should fire NotFoundException if there is no task matches the passed id', async () => {
+      // user
+      const userData = await userFactory();
+      const user = await userRepository.save(userData);
+
+      await expect(
+        async () => await taskService.updateTask(user, { id: 1 }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should fire ForbiddenException when update attempt happen to task with done status', async () => {
+      // user
+      const userData = await userFactory();
+      const user = await userRepository.save(userData);
+
+      const task = await taskFactory({
+        status: TaskStatusEnum.DONE,
+      });
+      await taskRepository.save(task);
+
+      await expect(
+        async () => await taskService.updateTask(user, { id: 1 }),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 

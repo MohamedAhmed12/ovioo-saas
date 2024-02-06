@@ -13,23 +13,23 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  title: string;
+  title?: string;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  description: string;
+  description?: string;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  status: TaskStatusEnum;
+  status?: TaskStatusEnum;
 
   @IsOptional()
   @Field(() => UpdateTaskRelatedEntityDto, { nullable: true })
-  type: UpdateTaskRelatedEntityDto;
+  type?: UpdateTaskRelatedEntityDto;
 
   @IsOptional()
   @Field(() => UpdateTaskRelatedEntityDto, { nullable: true })
-  project: UpdateTaskRelatedEntityDto;
+  project?: UpdateTaskRelatedEntityDto;
 }
