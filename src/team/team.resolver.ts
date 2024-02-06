@@ -11,8 +11,8 @@ export class TeamResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => Team)
-  async getTeam(@Context('user') authUser: AuthGuardUserDto) {
-    return await this.teamService.getTeam(authUser);
+  async getUserTeam(@Context('user') authUser: AuthGuardUserDto) {
+    return await this.teamService.getUserTeam(authUser);
   }
 
   @UseGuards(AuthGuard)

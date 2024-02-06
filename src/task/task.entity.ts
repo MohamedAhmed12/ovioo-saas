@@ -7,11 +7,13 @@ import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
@@ -62,6 +64,7 @@ export class Task extends BaseEntity {
   team: Team;
 
   @ManyToOne(() => User, (user) => user.assignedTasks, { eager: true })
+  @JoinColumn({ name: 'designerId' })
   @Field(() => User, { nullable: true })
   designer: User;
 
@@ -93,4 +96,12 @@ export class Task extends BaseEntity {
   })
   @Field(() => Task, { defaultValue: null })
   parent: Task;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', onUpdate: 'CURRENT_TIMESTAMP(3)' })
+  @Field()
+  updated_at: Date;
 }

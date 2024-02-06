@@ -9,9 +9,9 @@ export class CreateTaskDto {
   @Field(() => String)
   title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   status: TaskStatusEnum;
 
   @IsNotEmpty()

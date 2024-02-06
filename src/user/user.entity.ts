@@ -11,7 +11,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -82,9 +83,13 @@ export class User extends BaseEntity {
   @Field(() => Profile)
   profile: Profile;
 
-  @ManyToOne(() => Team, (team) => team.members, { cascade: true, eager: true })
-  @Field(() => Team)
-  team: Team;
+  @ManyToMany(() => Team, (team) => team.members, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable()
+  @Field(() => [Team])
+  teams: Team[];
 
   @OneToMany(() => Message, (message) => message.sender)
   @Field(() => [Message])

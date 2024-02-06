@@ -34,7 +34,8 @@ export class SubscriptionService {
       daily_deducted_hours: plan.daily_deducted_hours,
       start_at: new Date(),
     });
-    subscription.team = authUser.team;
+
+    subscription.team = authUser.teams[0];
     subscription.plan = plan;
 
     return await this.subscriptionRepository.save(subscription);

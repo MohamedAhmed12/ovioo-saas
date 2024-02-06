@@ -19,23 +19,33 @@ export class TeamService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getTeam({ email, provider }: AuthGuardUserDto): Promise<Team> {
-    const user = await this.userRepository.findOne({
-      where: {
-        email,
-        provider,
-      },
-      relations: ['team.members'],
+  async createTeam(owner_id: number) {
+    const idleAccountManager = await this.findIdleAccountManager();
+    const team = await this.teamRepository.create({
+      owner_id,
     });
 
-    const ownerIndex = user.team.members.findIndex(
-      (member: User) => member.id == user.team.owner_id,
-    );
-    const owner = user.team.members[+ownerIndex];
-    user.team.members.splice(+ownerIndex, 1);
-    user.team.members.unshift(owner);
+    if (idleAccountManager) team.members = [idleAccountManager];
 
-    return user.team;
+    return team;
+  }
+
+  async getUserTeam({ email }: AuthGuardUserDto): Promise<Team> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['teams.members'],
+    });
+    const userTeam = user.teams[0];
+
+    // move team owner to first index of members array
+    const ownerIndex = userTeam.members.findIndex(
+      (member: User) => member.id == userTeam.owner_id,
+    );
+    const owner = userTeam.members[+ownerIndex];
+    userTeam.members.splice(+ownerIndex, 1);
+    userTeam.members.unshift(owner);
+
+    return userTeam;
   }
 
   async transferOwnership(
@@ -47,18 +57,19 @@ export class TeamService {
         email,
         provider,
       },
-      relations: ['team.members'],
+      relations: ['teams.members'],
     });
+    const authUserTeam = authUser.teams[0];
 
     if (
-      authUser.id != authUser.team.owner_id &&
+      authUser.id != authUserTeam.owner_id &&
       authUser.role == UserRoleEnum.User
     )
       throw new ForbiddenException('Not allowed');
 
     let memberIndex = -1;
 
-    authUser.team.members.map((user, i) => {
+    authUserTeam.members.map((user, i) => {
       if (user.id === +memberId) {
         user.role = UserRoleEnum.User;
         memberIndex = i;
@@ -70,11 +81,22 @@ export class TeamService {
     if (memberIndex == -1)
       throw new NotFoundException('Couldn’t find team member matches this id.');
 
-    this.userRepository.save(authUser.team.members);
+    this.userRepository.save(authUserTeam.members);
 
-    authUser.team.owner_id = +memberId;
-    this.teamRepository.save(authUser.team);
+    authUserTeam.owner_id = +memberId;
+    await this.teamRepository.save(authUserTeam);
 
     return true;
+  }
+
+  async findIdleAccountManager(): Promise<User> {
+    //get AccountManager with less teams
+    return await this.userRepository
+      .createQueryBuilder('users')
+      .leftJoin('users.teams', 'teams')
+      .where('users.role = :role', { role: UserRoleEnum.AccountManager })
+      .groupBy('users.id')
+      .orderBy('COUNT(teams.id)', 'ASC')
+      .getOne();
   }
 }

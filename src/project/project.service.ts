@@ -20,19 +20,13 @@ export class ProjectService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async listProjects({
-    email,
-    provider,
-  }: AuthGuardUserDto): Promise<Project[]> {
+  async listProjects({ email }: AuthGuardUserDto): Promise<Project[]> {
     const authUser = await this.userRepository.findOne({
-      where: {
-        email,
-        provider,
-      },
-      relations: ['team.projects'],
+      where: { email },
+      relations: ['teams.projects'],
     });
 
-    return authUser.team.projects;
+    return authUser.teams[0].projects;
   }
 
   async showProject(id: string): Promise<Project> {
@@ -40,22 +34,16 @@ export class ProjectService {
   }
 
   async createProject(
-    { email, provider }: AuthGuardUserDto,
+    { email }: AuthGuardUserDto,
     data: CreateProjectDto,
   ): Promise<Project> {
-    const authUser = await this.userRepository.findOne({
-      where: {
-        email,
-        provider,
-      },
-      relations: ['team'],
-    });
+    const authUser = await this.userRepository.findOneBy({ email });
 
     if (!authUser) throw new ForbiddenException('Not allowed');
 
     const project = this.projectRepository.create({
       ...data,
-      team: authUser.team,
+      team: authUser.teams[0],
     });
 
     return await this.projectRepository.save(project);

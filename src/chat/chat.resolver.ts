@@ -30,11 +30,11 @@ export class ChatResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Message])
-  async listMessages(
+  async listTaskMessages(
     @Context('user') authUser: User,
     @Args('data') data: ListMessageDto,
   ) {
-    return await this.chatService.listMessages(authUser, data);
+    return await this.chatService.listTaskMessages(authUser, data);
   }
 
   @UseGuards(AuthGuard)
@@ -54,8 +54,8 @@ export class ChatResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Task])
-  async listTaskUnreadMessages(@Context('user') authUser: User) {
-    return await this.chatService.listTaskUnreadMessages(authUser);
+  async listUnreadMessages(@Context('user') authUser: User) {
+    return await this.chatService.listUnreadMessages(authUser);
   }
 
   @UseGuards(AuthGuard)

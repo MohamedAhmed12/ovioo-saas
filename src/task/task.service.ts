@@ -7,13 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
 import { Project } from 'src/project/project.entity';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
+import { Brackets, In, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
-import { stringify } from 'querystring';
 
 @Injectable()
 export class TaskService {
@@ -34,11 +35,9 @@ export class TaskService {
   }
 
   async listTasks(authUser: User): Promise<Task[]> {
-    const team = await authUser.team;
-
-    return this.taskRepository.find({
+    return await this.taskRepository.find({
       where: {
-        team: { id: team.id },
+        team: { id: In(authUser.teams.map((team) => team.id)) },
       },
       relations: ['subtasks'],
     });
@@ -57,10 +56,35 @@ export class TaskService {
     if (!task)
       throw new NotFoundException('Couldn’t find task matches this id.');
 
-    if (taskTeam.id != authUser.team.id)
+    if (!authUser.teams.some((team) => team.id == taskTeam.id))
       throw new UnauthorizedException('You are not allowed to view this task.');
 
     return task;
+  }
+
+  async findIdleDesigner(): Promise<User> {
+    /* get designer which has no assigned tasks
+     * or the earliest one to finishe all his tasks(the one who spent most idle time)
+     * or if all users is busy the earliest one got assigned to a task
+     */
+    return await this.userRepository
+      .createQueryBuilder('users')
+      .leftJoin('users.assignedTasks', 'task')
+      .addOrderBy('COALESCE(MAX(task.updated_at), :defaultDate)', 'ASC') // COALESCE is to handle the null tasks cases it put updated_at = 0
+      .setParameter('defaultDate', new Date(0)) // A default date for users without tasks
+      .where('users.role = :role', { role: UserRoleEnum.Designer })
+      .andWhere(
+        new Brackets((query) => {
+          query
+            .where('task.id IS NULL')
+            .orWhere(
+              `NOT EXISTS (SELECT 1 FROM tasks WHERE tasks."designerId" = users.id AND tasks.status != '${TaskStatusEnum.DONE}')`,
+            )
+            .orWhere('task.id IS NOT NULL');
+        }),
+      )
+      .groupBy('users.id')
+      .getOne();
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {
@@ -98,15 +122,18 @@ export class TaskService {
         },
       });
 
+    const idleDesigner = await this.findIdleDesigner();
+
     const task = await this.taskRepository.create(data);
     task.project = project;
-    task.team = authUser.team;
+    task.team = authUser.teams[0];
     task.type = type;
+    task.designer = idleDesigner;
     return await this.taskRepository.save(task);
   }
 
   async updateTask(authUser: User, data: UpdateTaskDto): Promise<Task> {
-    let task = await this.taskRepository.findOne({
+    const task = await this.taskRepository.findOne({
       where: {
         id: data.id,
       },
@@ -115,14 +142,7 @@ export class TaskService {
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
 
-    await this.taskRepository
-      .createQueryBuilder()
-      .update(task)
-      .set(data)
-      .where('id = :id', { id: task.id })
-      .execute();
-
-    task = await this.showTask(authUser, String(task.id));
+    await this.taskRepository.update(task.id, data);
     return task;
   }
 

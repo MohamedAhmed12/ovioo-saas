@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
-import { Team } from 'src/team/team.entity';
+import { TeamService } from 'src/team/team.service';
 import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -31,9 +31,8 @@ export class UserService {
     private readonly UserRepository: Repository<User>,
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
-    @InjectRepository(Team)
-    private readonly teamRepository: Repository<Team>,
     private readonly mailerService: MailerService,
+    private readonly teamService: TeamService,
   ) {}
 
   async login(data: LoginDto): Promise<User> {
@@ -78,7 +77,7 @@ export class UserService {
         email,
         provider,
       },
-      relations: ['profile', 'team'],
+      relations: ['profile'],
     });
 
     if (!user)
@@ -241,7 +240,7 @@ export class UserService {
     member = this.UserRepository.create({
       ...data,
       password,
-      team: currentUser.team,
+      teams: currentUser.teams,
       provider: AuthProviderEnum.Credentials,
       role: UserRoleEnum.Member,
     });
@@ -308,20 +307,14 @@ export class UserService {
   }
 
   async createUseWithRelatedEntities(data: DeepPartial<User>): Promise<User> {
-    let user = this.UserRepository.create(data);
+    let user = await this.UserRepository.create(data);
     user = await this.UserRepository.save(user);
 
-    const profile = this.profileRepository.create({
+    user.profile = await this.profileRepository.create({
       company_name: data.company,
     });
 
-    user.profile = profile;
-
-    const team = this.teamRepository.create({
-      owner_id: user.id,
-    });
-
-    user.team = team;
+    user.teams = [await this.teamService.createTeam(user.id)];
 
     return await this.UserRepository.save(user);
   }

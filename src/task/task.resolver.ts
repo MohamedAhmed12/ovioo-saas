@@ -7,6 +7,7 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -14,7 +15,6 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';
-import { PubSub } from 'graphql-subscriptions';
 
 @Resolver(() => Task)
 export class TaskResolver {
@@ -40,6 +40,12 @@ export class TaskResolver {
   @Query(() => Task)
   async showTask(@Context('user') authUser: User, @Args('id') id: string) {
     return await this.taskService.showTask(authUser, id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => Number, { nullable: true })
+  async findIdleDesigner() {
+    return await this.taskService.findIdleDesigner();
   }
 
   @UseGuards(AuthGuard)
@@ -78,9 +84,9 @@ export class TaskResolver {
 
   @UseGuards(AuthGuard)
   @Subscription(() => Task, {
-    filter: async (payload: any, context: any) => {
+    filter: async (payload: any, variables: any, context: any) => {
       const taskTeam = await payload.taskCreated.team;
-      return taskTeam.id == context.user.team.id;
+      return context.user.teams.some((team) => team.id == taskTeam.id);
     },
   })
   taskCreated() {
