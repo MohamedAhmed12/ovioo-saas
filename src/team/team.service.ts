@@ -19,6 +19,17 @@ export class TeamService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async createTeam(owner_id: number) {
+    const idleAccountManager = await this.findIdleAccountManager();
+    const team = await this.teamRepository.create({
+      owner_id,
+    });
+
+    if (idleAccountManager) team.members = [idleAccountManager];
+
+    return team;
+  }
+
   async getUserTeam({ email }: AuthGuardUserDto): Promise<Team> {
     const user = await this.userRepository.findOne({
       where: { email },
@@ -76,5 +87,16 @@ export class TeamService {
     await this.teamRepository.save(authUserTeam);
 
     return true;
+  }
+
+  async findIdleAccountManager(): Promise<User> {
+    //get AccountManager with less teams
+    return await this.userRepository
+      .createQueryBuilder('users')
+      .leftJoin('users.teams', 'teams')
+      .where('users.role = :role', { role: UserRoleEnum.AccountManager })
+      .groupBy('users.id')
+      .orderBy('COUNT(teams.id)', 'ASC')
+      .getOne();
   }
 }

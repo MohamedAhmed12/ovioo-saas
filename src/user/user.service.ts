@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
-import { Team } from 'src/team/team.entity';
+import { TeamService } from 'src/team/team.service';
 import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -31,9 +31,8 @@ export class UserService {
     private readonly UserRepository: Repository<User>,
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
-    @InjectRepository(Team)
-    private readonly teamRepository: Repository<Team>,
     private readonly mailerService: MailerService,
+    private readonly teamService: TeamService,
   ) {}
 
   async login(data: LoginDto): Promise<User> {
@@ -315,11 +314,7 @@ export class UserService {
       company_name: data.company,
     });
 
-    user.teams = [
-      await this.teamRepository.create({
-        owner_id: user.id,
-      }),
-    ];
+    user.teams = [await this.teamService.createTeam(user.id)];
 
     return await this.UserRepository.save(user);
   }

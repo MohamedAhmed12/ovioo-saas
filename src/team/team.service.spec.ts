@@ -9,6 +9,7 @@ import { cleanupDatabase, setupDatabase } from '../../test/test-setup';
 import { Team } from './team.entity';
 import { TeamModule } from './team.module';
 import { TeamService } from './team.service';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 describe('TeamService', () => {
   let app: INestApplication;
@@ -44,6 +45,80 @@ describe('TeamService', () => {
 
   it('teamService should be defined', () => {
     expect(TeamService).toBeDefined();
+  });
+
+  describe('createTeam', () => {
+    it('should return account manager with lowest number of teams', async () => {
+      // account managers
+      const accountManager1 = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      const accountManager2 = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      await userRepository.save([accountManager1, accountManager2]);
+
+      // team
+      const team1 = await teamRepository.create({
+        name: 'team one',
+        owner_id: accountManager1.id,
+        members: [accountManager1, accountManager2],
+      });
+      const team2 = await teamRepository.create({
+        name: 'team two',
+        owner_id: accountManager1.id,
+        members: [accountManager1],
+      });
+      await teamRepository.save([team1, team2]);
+
+      // it doesnt matter which id to pass in this case
+      const team = await teamService.createTeam(accountManager2.id);
+
+      expect(team.members.length).toBe(1);
+      expect(team.members[0].id).toEqual(accountManager2.id);
+    });
+
+    it('should return single account manager if all of them have same amount of teams', async () => {
+      // account managers
+      const accountManager1 = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      const accountManager2 = await userFactory({
+        role: UserRoleEnum.AccountManager,
+      });
+      await userRepository.save([accountManager1, accountManager2]);
+
+      // team
+      const team1 = await teamRepository.create({
+        name: 'team one',
+        owner_id: accountManager1.id,
+        members: [accountManager1],
+      });
+      const team2 = await teamRepository.create({
+        name: 'team two',
+        owner_id: accountManager2.id,
+        members: [accountManager2],
+      });
+      await teamRepository.save([team1, team2]);
+
+      // it doesnt matter which id to pass in this case
+      const team = await teamService.createTeam(accountManager1.id);
+
+      expect(team.members.length).toBe(1);
+      expect(team.members[0].id).toEqual(accountManager1.id);
+    });
+
+    it('should not break if there is not account manager in the system', async () => {
+      // account managers
+      const placeHolder = await userFactory({
+        role: UserRoleEnum.User,
+      });
+
+      // it doesnt matter which id to pass in this case
+      const team = await teamService.createTeam(placeHolder.id);
+
+      expect(team.members.length).toBe(0);
+    });
   });
 
   describe('getUserTeam', () => {
