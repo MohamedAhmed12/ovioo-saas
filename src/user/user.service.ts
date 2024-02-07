@@ -318,4 +318,12 @@ export class UserService {
 
     return await this.UserRepository.save(user);
   }
+
+  async getDesigners() {
+    return await this.UserRepository.find({
+      where: {
+        role: UserRoleEnum.Designer,
+      },
+    });
+  }
 }
