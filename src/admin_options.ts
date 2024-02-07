@@ -12,6 +12,21 @@ export const adminJsOptions = {
     TaskType,
     Project,
     Team,
-    User
+    User,
+    {
+      resource: DesignerTransaction,
+      options: {
+        editProperties: ['amount', 'status'],
+        properties: {
+          status: {
+            availableValues: [
+              { value: 'pending', label: 'Pending' },
+              { value: 'completed', label: 'Completed' },
+              { value: 'failed', label: 'Failed' },
+            ],
+          },
+        },
+      },
+    },
   ],
 };

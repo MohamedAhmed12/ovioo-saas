@@ -85,6 +85,7 @@ type User {
   isActive: Boolean!
   provider: String!
   role: String
+  designer_credit: Float
   created_at: DateTime!
   updated_at: DateTime!
   profile: Profile!
@@ -92,6 +93,7 @@ type User {
   messages: [Message!]!
   notifications: [Notification!]!
   assignedTasks: [Task!]!
+  designer_transactions: [Task!]!
 }
 
 """teams"""
@@ -103,16 +105,6 @@ type Team {
   projects: [Project!]!
   tasks: [Task!]!
   subscriptions: [OviooSubscription!]!
-}
-
-"""project"""
-type Project {
-  id: ID!
-  title: String!
-  description: String!
-  team: Team!
-  tasks: [Task!]!
-  assets: [Asset!]!
 }
 
 type task_types {
@@ -167,6 +159,16 @@ type Asset {
   project: Project
   task: Task!
   message: Message!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
 }
 
 type TaskMsgsStatusChangedSubsResponseDto {
