@@ -1,10 +1,13 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { TaskStatusEnum } from 'src/task/enums/task-status.enum';
+import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,4 +28,14 @@ export class DesignerTransaction extends BaseEntity {
 
   @Column('text', { default: 'completed' })
   status: TaskStatusEnum;
+
+  @Column('int')
+  @Field(() => Number)
+  designerId: number;
+
+  @ManyToOne(() => User, (designer) => designer.designer_transactions, {
+    onDelete: 'CASCADE',
+  })
+  @Field(() => User)
+  designer: User;
 }
