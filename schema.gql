@@ -48,6 +48,81 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""teams"""
+type Team {
+  id: ID!
+  name: String
+  owner_id: Float!
+  members: [User!]!
+  projects: [Project!]!
+  tasks: [Task!]!
+  subscriptions: [OviooSubscription!]!
+}
+
+type task_types {
+  id: ID!
+  title: String
+  info: [String!]
+  extraInfo: String
+  plan: String
+}
+
+"""tasks"""
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+  designer_fees: Float
+  type: task_types!
+  project: Project!
+  team: Team!
+  designer: User
+  assets: [Asset!]!
+  messages: [Message!]!
+  unreadMessagesCount: Float
+  subtasks: [Task!]!
+  parent: Task!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
+}
+
+"""asset"""
+type Asset {
+  id: ID!
+  src: String!
+  alt: String!
+  type: String!
+  project: Project
+  task: Task!
+  message: Message!
+}
+
+"""message"""
+type Message {
+  id: ID!
+  content: String
+  voice_note_src: String
+  status: String
+  received_by: [String!]!
+  read_by: [String!]!
+  sender: User
+  task: Task!
+  asset: Asset
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
 """notifications"""
 type Notification {
   id: ID!
@@ -93,82 +168,13 @@ type User {
   messages: [Message!]!
   notifications: [Notification!]!
   assignedTasks: [Task!]!
-  designer_transactions: [Task!]!
+  designer_transactions: [DesignerTransaction!]!
 }
 
-"""teams"""
-type Team {
-  id: ID!
-  name: String
-  owner_id: Float!
-  members: [User!]!
-  projects: [Project!]!
-  tasks: [Task!]!
-  subscriptions: [OviooSubscription!]!
-}
-
-type task_types {
-  id: ID!
-  title: String
-  info: [String!]
-  extraInfo: String
-  plan: String
-}
-
-"""tasks"""
-type Task {
-  id: ID!
-  title: String!
-  description: String
-  status: String
-  designer_fees: Float
-  type: task_types!
-  project: Project!
-  team: Team!
-  designer: User
-  assets: [Asset!]!
-  messages: [Message!]!
-  unreadMessagesCount: Float
-  subtasks: [Task!]!
-  parent: Task!
-  created_at: DateTime!
-  updated_at: DateTime!
-}
-
-"""message"""
-type Message {
-  id: ID!
-  content: String
-  voice_note_src: String
-  status: String
-  received_by: [String!]!
-  read_by: [String!]!
-  sender: User
-  task: Task!
-  asset: Asset
-  created_at: DateTime!
-  updated_at: DateTime!
-}
-
-"""asset"""
-type Asset {
-  id: ID!
-  src: String!
-  alt: String!
-  type: String!
-  project: Project
-  task: Task!
-  message: Message!
-}
-
-"""project"""
-type Project {
-  id: ID!
-  title: String!
-  description: String!
-  team: Team!
-  tasks: [Task!]!
-  assets: [Asset!]!
+"""designer_transactions"""
+type DesignerTransaction {
+  designerId: Float!
+  designer: User!
 }
 
 type TaskMsgsStatusChangedSubsResponseDto {

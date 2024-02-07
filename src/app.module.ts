@@ -6,7 +6,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { adminJsOptions } from './admin_options';
+import { adminJSConfig } from './admin_options';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AssetModule } from './asset/asset.module';
@@ -25,18 +25,6 @@ import { TaskTypeSeeder } from './task/task-type.seed';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
-
-const DEFAULT_ADMIN = {
-  email: 'admin@example.com',
-  password: 'password',
-};
-
-const authenticate = async (email: string, password: string) => {
-  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
-    return Promise.resolve(DEFAULT_ADMIN);
-  }
-  return null;
-};
 
 @Module({
   imports: [
@@ -93,19 +81,8 @@ const authenticate = async (email: string, password: string) => {
               Database: AdminJSTypeorm.Database,
             });
           });
-          return {
-            adminJsOptions,
-            // auth: {
-            //   authenticate,
-            //   cookieName: 'adminjs',
-            //   cookiePassword: 'secret',
-            // },
-            // sessionOptions: {
-            //   resave: true,
-            //   saveUninitialized: true,
-            //   secret: 'secret',
-            // },
-          };
+
+          return adminJSConfig;
         },
       }),
     ),
