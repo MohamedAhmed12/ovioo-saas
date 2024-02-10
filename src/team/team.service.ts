@@ -21,12 +21,13 @@ export class TeamService {
 
   async createTeam(owner_id: number) {
     const idleAccountManager = await this.findIdleAccountManager();
-    const team = await this.teamRepository.create({
+    let team = await this.teamRepository.create({
       owner_id,
     });
 
     if (idleAccountManager) team.members = [idleAccountManager];
 
+    team = await this.teamRepository.save(team);
     return team;
   }
 

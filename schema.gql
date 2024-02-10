@@ -243,6 +243,7 @@ type Mutation {
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   toggleUserStatus(isActive: Boolean!): Boolean!
   updateProfile(profile: UpdateProfileDto!): Profile!
+  deleteTeam(id: String!): Boolean!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
   updateTask(data: UpdateTaskDto!): Task!
