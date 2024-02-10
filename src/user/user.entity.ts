@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import { Message } from 'src/chat/message.entity';
+import { DesignerTransaction } from 'src/designerTransaction /designerTransaction.entity';
 import { Notification } from 'src/notification/notification.entity';
 import { Profile } from 'src/profile/profile.entity';
 import { Task } from 'src/task/task.entity';
@@ -68,6 +69,10 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   resetTokenExpired_at: Date;
 
+  @Column('int', { nullable: true })
+  @Field(() => Number, { nullable: true })
+  designer_credit: number;
+
   @CreateDateColumn()
   @Field()
   created_at: Date;
@@ -83,12 +88,9 @@ export class User extends BaseEntity {
   @Field(() => Profile)
   profile: Profile;
 
-  @ManyToMany(() => Team, (team) => team.members, {
-    cascade: true,
-    eager: true,
-  })
+  @ManyToMany(() => Team, (team) => team.members)
   @JoinTable()
-  @Field(() => [Team])
+  @Field(() => [Team], { defaultValue: [] })
   teams: Team[];
 
   @OneToMany(() => Message, (message) => message.sender)
@@ -103,6 +105,11 @@ export class User extends BaseEntity {
   @OneToMany(() => Task, (task) => task.designer)
   @Field(() => [Task])
   assignedTasks: Task[];
+
+  // as a designer not an owner
+  @OneToMany(() => DesignerTransaction, (transaction) => transaction.designer)
+  @Field(() => [DesignerTransaction])
+  designer_transactions: DesignerTransaction;
 
   @BeforeInsert()
   async hashPass() {
