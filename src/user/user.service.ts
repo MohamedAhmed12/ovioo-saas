@@ -77,7 +77,7 @@ export class UserService {
         email,
         provider,
       },
-      relations: ['profile'],
+      relations: ['teams'],
     });
 
     if (!user)
@@ -314,7 +314,8 @@ export class UserService {
       company_name: data.company,
     });
 
-    user.teams = [await this.teamService.createTeam(user.id)];
+    const team = await this.teamService.createTeam(user.id);
+    user.teams = [team];
 
     return await this.UserRepository.save(user);
   }
