@@ -23,5 +23,5 @@ export class SendMessageDto extends MessageSentSubscriptionDto {
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  status: MessageStatusEnum;
+  status?: MessageStatusEnum;
 }
