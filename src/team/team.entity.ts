@@ -7,6 +7,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -27,7 +28,7 @@ export class Team extends BaseEntity {
   @Field(() => Number)
   owner_id: number;
 
-  @ManyToMany(() => User, (user) => user.teams, { cascade: ['update'] })
+  @ManyToMany(() => User, (member) => member.teams)
   @Field(() => [User], { defaultValue: [] })
   members: User[];
 
