@@ -30,6 +30,18 @@ export class TeamService {
     return team;
   }
 
+  async deleteTeam(id: number) {
+    const res = await this.teamRepository
+      .createQueryBuilder('users_teams_teams')
+      .delete()
+      .from('users_teams_teams')
+      .where('teamsId = :teamId', { teamId: id })
+      .execute();
+    console.log(res);
+
+    return true;
+  }
+
   async getUserTeam({ email }: AuthGuardUserDto): Promise<Team> {
     const user = await this.userRepository.findOne({
       where: { email },
