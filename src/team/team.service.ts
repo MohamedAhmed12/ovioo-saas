@@ -4,10 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StripeService } from 'src/subscription/stripe.service';
 import { AuthGuardUserDto } from 'src/user/dto/auth-guard-user.dto';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
+import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
 
 @Injectable()
@@ -17,18 +19,23 @@ export class TeamService {
     private readonly teamRepository: Repository<Team>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly stripeService: StripeService,
   ) {}
 
-  async createTeam(owner_id: number) {
+  async createTeam(data: CreateTeamDto) {
+    const team = await this.teamRepository.create(data);
+
     const idleAccountManager = await this.findIdleAccountManager();
-    let team = await this.teamRepository.create({
-      owner_id,
-    });
+    if (idleAccountManager) {
+      team.members = [idleAccountManager];
+    }
 
-    if (idleAccountManager) team.members = [idleAccountManager];
+    const stripeCustomer = await this.stripeService.createStripeClient(
+      team.name,
+    );
+    team.stripe_client_reference_id = stripeCustomer.id;
 
-    team = await this.teamRepository.save(team);
-    return team;
+    return await this.teamRepository.save(team);
   }
 
   async deleteTeam(id: number) {

@@ -314,7 +314,7 @@ export class UserService {
       company_name: data.company,
     });
 
-    const team = await this.teamService.createTeam(user.id);
+    const team = await this.teamService.createTeam({ owner_id: user.id });
     user.teams = [team];
 
     return await this.UserRepository.save(user);

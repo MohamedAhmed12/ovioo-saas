@@ -53,6 +53,7 @@ type Team {
   id: ID!
   name: String
   owner_id: Float!
+  stripe_client_reference_id: String!
   members: [User!]!
   projects: [Project!]!
   tasks: [Task!]!
