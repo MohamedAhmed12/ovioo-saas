@@ -11,7 +11,7 @@ async function bootstrap() {
     region: process.env.AWS_REGION,
   });
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.enableCors();
   app.useGlobalPipes(
