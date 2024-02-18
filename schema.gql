@@ -216,6 +216,7 @@ type Query {
   listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
   listExtraBundles(planId: String!): [PlanExtraBundle!]!
+  generateCustomerSecret: String!
 }
 
 input ListMessageDto {

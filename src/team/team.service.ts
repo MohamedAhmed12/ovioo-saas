@@ -30,7 +30,7 @@ export class TeamService {
       team.members = [idleAccountManager];
     }
 
-    const stripeCustomer = await this.stripeService.createStripeClient(
+    const stripeCustomer = await this.stripeService.createStripeCustomer(
       team.name,
     );
     team.stripe_client_reference_id = stripeCustomer.id;
