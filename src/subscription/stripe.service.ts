@@ -36,6 +36,17 @@ export class StripeService {
     return customerSession.client_secret;
   }
 
+  async createBillingPortal(authUser: User): Promise<string> {
+    const billingPortal = await this.stripeClient.billingPortal.sessions.create(
+      {
+        customer: authUser.teams[0].stripe_client_reference_id,
+        return_url: `${process.env.FRONTEND_URL}/dashboard/payment`,
+      },
+    );
+
+    return billingPortal.url;
+  }
+
   async handleWebhook(signatur: string, rawBody: string | Buffer) {
     let event: Stripe.Event;
 

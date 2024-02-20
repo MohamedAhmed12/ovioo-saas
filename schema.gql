@@ -217,6 +217,7 @@ type Query {
   listPlans: [Plan!]!
   listExtraBundles(planId: String!): [PlanExtraBundle!]!
   generateCustomerSecret: String!
+  getManagePlanURL: String!
 }
 
 input ListMessageDto {

@@ -13,4 +13,10 @@ export class StripeResolver {
   async generateCustomerSecret(@Context('user') authUser: User) {
     return await this.stripeService.generateCustomerSecret(authUser);
   }
+
+  @UseGuards(AuthGuard)
+  @Query(() => String)
+  async getManagePlanURL(@Context('user') authUser: User) {
+    return await this.stripeService.createBillingPortal(authUser);
+  }
 }
