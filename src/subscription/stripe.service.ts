@@ -1,5 +1,5 @@
 import { Controller, HttpStatus } from '@nestjs/common';
-import { Response } from 'express';
+import { User } from 'src/user/user.entity';
 import Stripe from 'stripe';
 
 @Controller()
@@ -21,6 +21,19 @@ export class StripeService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async generateCustomerSecret(authUser: User): Promise<string> {
+    const customerSession = await this.stripeClient.customerSessions.create({
+      customer: authUser.teams[0].stripe_client_reference_id,
+      components: {
+        pricing_table: {
+          enabled: true,
+        },
+      },
+    });
+
+    return customerSession.client_secret;
   }
 
   async handleWebhook(signatur: string, rawBody: string | Buffer) {
