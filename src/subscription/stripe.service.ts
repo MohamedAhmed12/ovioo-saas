@@ -13,6 +13,16 @@ export class StripeService {
     });
   }
 
+  async createStripeCustomer(
+    name?: string,
+  ): Promise<Stripe.Response<Stripe.Customer>> {
+    try {
+      return await this.stripeClient.customers.create({ name });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async handleWebhook(signatur: string, rawBody: string | Buffer) {
     let event: Stripe.Event;
 
