@@ -16,7 +16,7 @@ export class StripeResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => String)
-  async getManagePlanURL(@Context('user') authUser: User) {
+  async getManageSubscriptionURL(@Context('user') authUser: User) {
     return await this.stripeService.createBillingPortal(authUser);
   }
 }
