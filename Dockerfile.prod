@@ -13,7 +13,7 @@ COPY package*.json ./
 RUN npm install -g @nestjs/cli
 
 # Install app dependencies only if NODE_ENV is not set to "development"
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Bundle app source
 COPY . .
