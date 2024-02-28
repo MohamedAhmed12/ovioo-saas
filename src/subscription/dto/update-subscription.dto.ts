@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { SubscriptionStatusEnum } from '../enums/subscription-status.enum';
 
 @InputType()
@@ -18,4 +18,9 @@ export class UpdateSubscriptionDto {
   @IsString()
   @Field(() => String, { nullable: true })
   status?: SubscriptionStatusEnum;
+
+  @IsOptional()
+  @IsDate()
+  @Field(() => Date, { nullable: true })
+  canceled_at?: Date;
 }

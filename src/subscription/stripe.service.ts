@@ -6,6 +6,8 @@ import { User } from 'src/user/user.entity';
 import Stripe from 'stripe';
 import { Repository } from 'typeorm';
 import { SubscriptionService } from './subscription.service';
+import { OviooSubscription } from './subscription.entity';
+import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 
 @Controller()
 export class StripeService {
@@ -16,6 +18,8 @@ export class StripeService {
     private readonly teamRepository: Repository<Team>,
     @InjectRepository(Plan)
     private readonly planRepository: Repository<Plan>,
+    @InjectRepository(OviooSubscription)
+    private readonly subscriptionRepository: Repository<OviooSubscription>,
     private readonly subscriptionService: SubscriptionService,
   ) {
     this.stripeClient = new Stripe(process.env.STRIPE_API_KEY, {
@@ -88,7 +92,9 @@ export class StripeService {
           plan,
         );
         break;
-
+      case 'customer.subscription.deleted':
+        await this.handleStripeSubUpdated(event.data.object);
+        break;
       default:
         console.warn(`Unhandled event type: ${event.type}`);
     }
@@ -97,6 +103,29 @@ export class StripeService {
       status: HttpStatus.OK,
       message: { received: true },
     };
+  }
+
+  private async handleStripeSubUpdated(data) {
+    if (data.status == 'canceled') {
+      const canceled_at = new Date(data.canceled_at * 1000);
+      const subscription = await this.subscriptionRepository.findOneBy({
+        stripe_id: data.id,
+      });
+
+      await this.subscriptionService.updateSubscription(subscription, {
+        status: SubscriptionStatusEnum.CANCELED,
+        canceled_at,
+      });
+    } else {
+      console.log('normal', data, 'normal');
+    }
+
+    console.log(data);
+
+    // if (!subscription)
+    // throw new NotFoundException('Couldn’t find subscription matches id.');
+
+    //   await this.subscriptionService.cancelSubscription(team, plan);
   }
 
   private async getWebhookEventRelatedModels(event): Promise<[Team, Plan]> {
