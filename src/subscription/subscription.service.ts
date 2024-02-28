@@ -55,15 +55,16 @@ export class SubscriptionService {
   }
 
   async handleDailySubscriptionUpdatesJob(): Promise<void> {
-    const nonExpiredSubs = await this.subscriptionRepository.find({
+    const activeSubs = await this.subscriptionRepository.find({
       where: {
-        status: Not(
-          In([SubscriptionStatusEnum.EXPIRED, SubscriptionStatusEnum.CANCELED]),
-        ),
+        status: In([
+          SubscriptionStatusEnum.ACTIVE,
+          SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
+        ]),
       },
     });
 
-    for (let sub of nonExpiredSubs) {
+    for (let sub of activeSubs) {
       this.expireOutdatedSubscription(sub);
 
       if (sub.status == SubscriptionStatusEnum.ACTIVE) {
@@ -72,7 +73,7 @@ export class SubscriptionService {
       }
     }
 
-    this.subscriptionRepository.save(nonExpiredSubs);
+    this.subscriptionRepository.save(activeSubs);
   }
 
   async listExtraBundles(planId: string): Promise<PlanExtraBundle[]> {
