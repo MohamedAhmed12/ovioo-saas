@@ -2,13 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { Plan } from 'src/plan/plan.entity';
-import { User } from 'src/user/user.entity';
-import { Not, Repository } from 'typeorm';
+import { Team } from 'src/team/team.entity';
+import { In, Not, Repository } from 'typeorm';
 import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
-import { Team } from 'src/team/team.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -49,7 +48,9 @@ export class SubscriptionService {
   async handleDailySubscriptionUpdatesJob(): Promise<void> {
     const nonExpiredSubs = await this.subscriptionRepository.find({
       where: {
-        status: Not(SubscriptionStatusEnum.EXPIRED),
+        status: Not(
+          In([SubscriptionStatusEnum.EXPIRED, SubscriptionStatusEnum.CANCELED]),
+        ),
       },
     });
 
@@ -88,8 +89,16 @@ export class SubscriptionService {
         'Couldn’t find subscription matches this id.',
       );
 
-    if (subscription.status == SubscriptionStatusEnum.EXPIRED)
-      throw new NotFoundException('This subscription has been expired.');
+    if (
+      [
+        SubscriptionStatusEnum.EXPIRED,
+        SubscriptionStatusEnum.CANCELED,
+      ].includes(subscription.status)
+    ) {
+      throw new NotFoundException(
+        `This subscription has been ${subscription.status}.`,
+      );
+    }
 
     const extraBundle = await this.planExtraBundleRepository.findOneBy({
       id: extra_bundle_id,
