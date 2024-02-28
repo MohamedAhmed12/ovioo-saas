@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { Plan } from 'src/plan/plan.entity';
@@ -8,6 +12,7 @@ import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
 @Injectable()
 export class SubscriptionService {
@@ -137,12 +142,9 @@ export class SubscriptionService {
         ? subscription.remaining_credit_hours
         : subscription.remaining_credit_hours - deducted_hours;
 
-    await this.subscriptionRepository.merge(subscription, {
+    return this.updateSubscription(subscription, {
       remaining_credit_hours,
     });
-    await this.subscriptionRepository.update(subscription.id, subscription);
-
-    return subscription;
   }
 
   private updateStatusBasedOnCredit(subscription: OviooSubscription): void {
@@ -152,5 +154,18 @@ export class SubscriptionService {
     ) {
       subscription.status = SubscriptionStatusEnum.INSUFFICIENT_CREDIT;
     }
+  }
+
+  async updateSubscription(
+    subscription: OviooSubscription,
+    data: UpdateSubscriptionDto,
+  ): Promise<OviooSubscription> {
+    if (subscription.status == SubscriptionStatusEnum.CANCELED)
+      throw new ForbiddenException('You Can’t update canceled subscription.');
+
+    await this.subscriptionRepository.merge(subscription, data);
+    await this.subscriptionRepository.update(subscription.id, subscription);
+
+    return subscription;
   }
 }
