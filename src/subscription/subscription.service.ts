@@ -8,6 +8,7 @@ import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
+import { Team } from 'src/team/team.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -20,14 +21,7 @@ export class SubscriptionService {
     private readonly planRepository: Repository<Plan>,
   ) {}
 
-  async createSubscription(
-    authUser: User,
-    planId: string,
-  ): Promise<OviooSubscription> {
-    const plan = await this.planRepository.findOneBy({ id: +planId });
-
-    if (!plan) throw new NotFoundException('Couldn’t find plan matches id.');
-
+  async createSubscription(team: Team, plan: Plan): Promise<OviooSubscription> {
     const subscription = this.subscriptionRepository.create({
       total_credit_hours: plan.monthly_credit_hours,
       remaining_credit_hours: plan.monthly_credit_hours,
@@ -35,7 +29,7 @@ export class SubscriptionService {
       start_at: new Date(),
     });
 
-    subscription.team = authUser.teams[0];
+    subscription.team = team;
     subscription.plan = plan;
 
     return await this.subscriptionRepository.save(subscription);

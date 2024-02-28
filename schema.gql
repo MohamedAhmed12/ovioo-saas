@@ -202,6 +202,9 @@ input TaskType {
 type Query {
   getHello: String!
   me: User!
+  listExtraBundles(planId: String!): [PlanExtraBundle!]!
+  generateCustomerSecret: String!
+  getManageSubscriptionURL: String!
   findProfile: Profile!
   getUserTeam: Team!
   listTaskTypes: [task_types!]!
@@ -215,9 +218,6 @@ type Query {
   listUnreadMessages: [Task!]!
   listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
-  listExtraBundles(planId: String!): [PlanExtraBundle!]!
-  generateCustomerSecret: String!
-  getManageSubscriptionURL: String!
 }
 
 input ListMessageDto {
@@ -245,6 +245,8 @@ type Mutation {
   deleteMember(member: DeleteMemberDto!): Boolean!
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   toggleUserStatus(isActive: Boolean!): Boolean!
+  deductRemainingHours(data: DeductRemainingHoursDto!): OviooSubscription!
+  addExtraBundle(data: AddExtraBundleDto!): OviooSubscription!
   updateProfile(profile: UpdateProfileDto!): Profile!
   deleteTeam(id: String!): Boolean!
   transferOwnership(id: String!): Boolean!
@@ -263,9 +265,6 @@ type Mutation {
   readTaskMessages(taskId: String!): Boolean!
   receiveTaskMessages(taskId: String!): Boolean!
   sendNotification(data: NotificationDto!): Notification!
-  createSubscription(planId: String!): OviooSubscription!
-  deductRemainingHours(data: DeductRemainingHoursDto!): OviooSubscription!
-  addExtraBundle(data: AddExtraBundleDto!): OviooSubscription!
 }
 
 input LoginDto {
@@ -316,6 +315,16 @@ input CreateSsoUserDto {
   email: String!
   avatar: String
   provider: String!
+}
+
+input DeductRemainingHoursDto {
+  id: String!
+  deducted_hours: Float!
+}
+
+input AddExtraBundleDto {
+  id: String!
+  extra_bundle_id: String!
 }
 
 input UpdateProfileDto {
@@ -400,16 +409,6 @@ input NotificationDto {
   action: String
   userId: String
   created_at: DateTime
-}
-
-input DeductRemainingHoursDto {
-  id: String!
-  deducted_hours: Float!
-}
-
-input AddExtraBundleDto {
-  id: String!
-  extra_bundle_id: String!
 }
 
 type Subscription {

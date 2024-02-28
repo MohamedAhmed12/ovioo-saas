@@ -1,12 +1,23 @@
-import { Controller, HttpStatus } from '@nestjs/common';
+import { Controller, HttpStatus, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Plan } from 'src/plan/plan.entity';
+import { Team } from 'src/team/team.entity';
 import { User } from 'src/user/user.entity';
 import Stripe from 'stripe';
+import { Repository } from 'typeorm';
+import { SubscriptionService } from './subscription.service';
 
 @Controller()
 export class StripeService {
   private readonly stripeClient: Stripe;
 
-  constructor() {
+  constructor(
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
+    @InjectRepository(Plan)
+    private readonly planRepository: Repository<Plan>,
+    private readonly subscriptionService: SubscriptionService,
+  ) {
     this.stripeClient = new Stripe(process.env.STRIPE_API_KEY, {
       typescript: true,
       apiVersion: '2023-10-16',
@@ -48,7 +59,7 @@ export class StripeService {
   }
 
   async handleWebhook(signatur: string, rawBody: string | Buffer) {
-    let event: Stripe.Event;
+    let event;
 
     try {
       event = this.stripeClient.webhooks.constructEvent(
@@ -65,24 +76,42 @@ export class StripeService {
       };
     }
 
-    // Successfully constructed event
-    console.log('✅ Success:', event.id);
+    const [team, plan]: [Team, Plan] = await this.getWebhookEventRelatedModels(
+      event,
+    );
 
-    // Cast event data to Stripe object
-    if (event.type === 'payment_intent.succeeded') {
-      const stripeObject: Stripe.PaymentIntent = event.data
-        .object as Stripe.PaymentIntent;
-      console.log(`💰 PaymentIntent status: ${stripeObject.status}`);
-    } else if (event.type === 'charge.succeeded') {
-      const charge = event.data.object as Stripe.Charge;
-      console.log(`💵 Charge id: ${charge.id}`);
-    } else {
-      console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);
+    switch (event.type) {
+      case 'customer.subscription.created':
+        await this.subscriptionService.createSubscription(team, plan);
+        break;
+
+      default:
+        console.warn(`Unhandled event type: ${event.type}`);
     }
-
     return {
       status: HttpStatus.OK,
       message: { received: true },
     };
+  }
+
+  private async getWebhookEventRelatedModels(event): Promise<[Team, Plan]> {
+    let team: Team;
+    let plan: Plan;
+
+    if (event.data.object?.customer) {
+      team = await this.teamRepository.findOneBy({
+        stripe_client_reference_id: event.data.object?.customer,
+      });
+    }
+
+    if (event.data.object?.plan) {
+      plan = await this.planRepository.findOneBy({
+        stripe_id: event.data.object?.plan.id,
+      });
+
+      if (!plan) throw new NotFoundException('Couldn’t find plan matches id.');
+    }
+
+    return [team, plan];
   }
 }

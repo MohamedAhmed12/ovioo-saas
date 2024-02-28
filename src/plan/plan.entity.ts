@@ -64,6 +64,9 @@ export class Plan extends BaseEntity {
   @Field(() => Boolean, { nullable: true })
   is_most_popular: boolean;
 
+  @Column('text', { nullable: true })
+  stripe_id: string;
+
   @OneToMany(() => OviooSubscription, (subscription) => subscription.plan)
   @Field(() => [OviooSubscription], { defaultValue: [] })
   subscriptions: OviooSubscription[];

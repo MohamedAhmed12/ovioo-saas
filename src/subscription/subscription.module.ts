@@ -8,10 +8,12 @@ import { StripeService } from './stripe.service';
 import { OviooSubscription } from './subscription.entity';
 import { SubscriptionResolver } from './subscription.resolver';
 import { SubscriptionService } from './subscription.service';
+import { User } from 'src/user/user.entity';
+import { Team } from 'src/team/team.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OviooSubscription, Plan, PlanExtraBundle]),
+    TypeOrmModule.forFeature([Team, OviooSubscription, Plan, PlanExtraBundle]),
   ],
   providers: [
     SubscriptionResolver,
@@ -20,5 +22,6 @@ import { SubscriptionService } from './subscription.service';
     StripeService,
   ],
   controllers: [StripeController],
+  exports: [StripeService],
 })
 export class SubscriptionModule {}

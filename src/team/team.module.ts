@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StripeService } from 'src/subscription/stripe.service';
+import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { User } from 'src/user/user.entity';
 import { Team } from './team.entity';
 import { TeamResolver } from './team.resolver';
 import { TeamService } from './team.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Team])],
-  providers: [TeamResolver, TeamService, StripeService],
+  imports: [SubscriptionModule, TypeOrmModule.forFeature([User, Team])],
+  providers: [TeamResolver, TeamService],
 })
 export class TeamModule {}
