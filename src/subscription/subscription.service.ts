@@ -25,16 +25,20 @@ export class SubscriptionService {
     private readonly planRepository: Repository<Plan>,
   ) {}
 
-  async createSubscription(team: Team, plan: Plan): Promise<OviooSubscription> {
+  async createSubscription(
+    stripe_id: string,
+    team: Team,
+    plan: Plan,
+  ): Promise<OviooSubscription> {
     const subscription = this.subscriptionRepository.create({
       total_credit_hours: plan.monthly_credit_hours,
       remaining_credit_hours: plan.monthly_credit_hours,
       daily_deducted_hours: plan.daily_deducted_hours,
       start_at: new Date(),
+      stripe_id,
+      team: team,
+      plan: plan,
     });
-
-    subscription.team = team;
-    subscription.plan = plan;
 
     return await this.subscriptionRepository.save(subscription);
   }

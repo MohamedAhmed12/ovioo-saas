@@ -82,12 +82,17 @@ export class StripeService {
 
     switch (event.type) {
       case 'customer.subscription.created':
-        await this.subscriptionService.createSubscription(team, plan);
+        await this.subscriptionService.createSubscription(
+          event.data.object.id,
+          team,
+          plan,
+        );
         break;
 
       default:
         console.warn(`Unhandled event type: ${event.type}`);
     }
+
     return {
       status: HttpStatus.OK,
       message: { received: true },
