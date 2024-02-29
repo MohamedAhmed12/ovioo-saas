@@ -25,12 +25,41 @@ export class SubscriptionService {
     private readonly planRepository: Repository<Plan>,
   ) {}
 
+  async findActiveSubscription(stripe_id: string): Promise<OviooSubscription> {
+    return await this.findSubscription(stripe_id, [
+      SubscriptionStatusEnum.ACTIVE,
+      SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
+    ]);
+  }
+
+  async findSubscription(
+    stripe_id: string,
+    statuses: SubscriptionStatusEnum[],
+  ): Promise<OviooSubscription> {
+    const subscription = await this.subscriptionRepository.findOne({
+      where: {
+        stripe_id,
+        status: In(statuses),
+      },
+      relations: ['team', 'plan'],
+    });
+
+    if (!subscription)
+      throw new NotFoundException(
+        'Couldn’t find active subscription matches this id.',
+      );
+
+    return subscription;
+  }
+
   async createSubscription(
     stripe_id: string,
+    status: SubscriptionStatusEnum,
     team: Team,
     plan: Plan,
   ): Promise<OviooSubscription> {
     const subscription = this.subscriptionRepository.create({
+      status,
       total_credit_hours: plan.monthly_credit_hours,
       remaining_credit_hours: plan.monthly_credit_hours,
       daily_deducted_hours: plan.daily_deducted_hours,
