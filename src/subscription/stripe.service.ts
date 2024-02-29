@@ -1,4 +1,9 @@
-import { Controller, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  HttpStatus,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Plan } from 'src/plan/plan.entity';
 import { Team } from 'src/team/team.entity';
@@ -12,6 +17,7 @@ import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 @Controller()
 export class StripeService {
   private readonly stripeClient: Stripe;
+  private readonly logger = new Logger('stripe serve');
 
   constructor(
     @InjectRepository(Team)
@@ -66,14 +72,12 @@ export class StripeService {
     let event;
 
     try {
-      event = this.stripeClient.webhooks.constructEvent(
+      event = await this.stripeClient.webhooks.constructEvent(
         rawBody,
         signatur,
         process.env.STRIPE_WEBHOOK_SECRET,
       );
     } catch (err) {
-      // On error, log and return the error message
-      console.log(`❌ Error message: ${err.message}`);
       return {
         status: HttpStatus.BAD_REQUEST,
         message: `Webhook Error: ${err.message}`,
@@ -86,17 +90,33 @@ export class StripeService {
 
     switch (event.type) {
       case 'customer.subscription.created':
+        const { id: stripe_id, status } = event.data.object;
         await this.subscriptionService.createSubscription(
-          event.data.object.id,
+          stripe_id,
+          status,
           team,
           plan,
         );
         break;
+      case 'invoice.payment_succeeded':
+        await this.handleInvoicePayment(
+          event.data.object.subscription,
+          SubscriptionStatusEnum.ACTIVE,
+        );
+        break;
+      case 'invoice.payment_failed':
+        await this.handleInvoicePayment(
+          event.data.object.subscription,
+          SubscriptionStatusEnum.INCOMPLETE,
+        );
+        break;
       case 'customer.subscription.deleted':
+        await this.handleStripeSubDeleted(event.data.object);
+        break;
+      case 'customer.subscription.updated':
         await this.handleStripeSubUpdated(event.data.object);
         break;
       default:
-        console.warn(`Unhandled event type: ${event.type}`);
     }
 
     return {
@@ -105,7 +125,22 @@ export class StripeService {
     };
   }
 
-  private async handleStripeSubUpdated(data) {
+  private async handleInvoicePayment(stripeSubscription, newStatus) {
+    if (!stripeSubscription) {
+      return;
+    }
+
+    const subscription = await this.subscriptionService.findSubscription(
+      stripeSubscription.id,
+      [SubscriptionStatusEnum.INCOMPLETE],
+    );
+
+    await this.subscriptionService.updateSubscription(subscription, {
+      status: newStatus,
+    });
+  }
+
+  private async handleStripeSubDeleted(data) {
     if (data.status == 'canceled') {
       const canceled_at = new Date(data.canceled_at * 1000);
       const subscription = await this.subscriptionRepository.findOneBy({
@@ -116,16 +151,37 @@ export class StripeService {
         status: SubscriptionStatusEnum.CANCELED,
         canceled_at,
       });
-    } else {
-      console.log('normal', data, 'normal');
     }
+  }
 
-    console.log(data);
+  private async handleStripeSubUpdated(data) {
+    if (data.status == 'active') {
+      const subscription =
+        await this.subscriptionService.findActiveSubscription(data.id);
+      console.log(subscription, subscription.team);
 
-    // if (!subscription)
-    // throw new NotFoundException('Couldn’t find subscription matches id.');
+      if (data.plan != subscription.plan) {
+        const newPlan = await this.planRepository.findOneBy({
+          stripe_id: data.plan.id,
+        });
 
-    //   await this.subscriptionService.cancelSubscription(team, plan);
+        await this.subscriptionService.updateSubscription(subscription, {
+          status: SubscriptionStatusEnum.CHANGED,
+        });
+
+        const newSubscription = await this.subscriptionRepository.create({
+          status: SubscriptionStatusEnum.ACTIVE,
+          total_credit_hours: newPlan.monthly_credit_hours,
+          remaining_credit_hours: subscription.remaining_credit_hours,
+          daily_deducted_hours: newPlan.daily_deducted_hours,
+          start_at: new Date(),
+          stripe_id: subscription.stripe_id,
+          team: subscription.team,
+          plan: newPlan,
+        });
+        await this.subscriptionRepository.save(newSubscription);
+      }
+    }
   }
 
   private async getWebhookEventRelatedModels(event): Promise<[Team, Plan]> {
