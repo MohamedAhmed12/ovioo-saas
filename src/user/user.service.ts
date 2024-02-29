@@ -75,6 +75,7 @@ export class UserService {
   }): Promise<User> {
     const user = await this.UserRepository.createQueryBuilder('users')
       .select('users')
+      .leftJoinAndSelect('users.profile', 'profile')
       .leftJoinAndSelect('users.teams', 'team')
       .leftJoinAndSelect(
         'team.subscriptions',
