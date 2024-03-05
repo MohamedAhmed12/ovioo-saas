@@ -110,6 +110,9 @@ export class StripeService {
           SubscriptionStatusEnum.INCOMPLETE,
         );
         break;
+      case 'charge.succeeded':
+        await this.handleChargeSucceeded(event.data.object);
+        break;
       case 'customer.subscription.deleted':
         await this.handleStripeSubDeleted(event.data.object);
         break;
@@ -140,6 +143,15 @@ export class StripeService {
     });
   }
 
+  private async handleChargeSucceeded(data) {
+    const team = await this.teamRepository.findOneBy({
+      stripe_client_reference_id: data?.customer,
+    });
+
+    team.card_last4 = data.payment_method_details.card.last4;
+    this.teamRepository.save(team);
+  }
+
   private async handleStripeSubDeleted(data) {
     if (data.status == 'canceled') {
       const canceled_at = new Date(data.canceled_at * 1000);
@@ -158,7 +170,6 @@ export class StripeService {
     if (data.status == 'active') {
       const subscription =
         await this.subscriptionService.findActiveSubscription(data.id);
-      console.log(subscription, subscription.team);
 
       if (data.plan != subscription.plan) {
         const newPlan = await this.planRepository.findOneBy({

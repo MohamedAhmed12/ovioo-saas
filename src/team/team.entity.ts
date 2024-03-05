@@ -31,6 +31,10 @@ export class Team extends BaseEntity {
   @Field(() => String)
   stripe_client_reference_id: string;
 
+  @Column('text', { nullable: true })
+  @Field(() => String, { nullable: true })
+  card_last4: string;
+
   @ManyToMany(() => User, (member) => member.teams)
   @Field(() => [User], { defaultValue: [] })
   members: User[];
