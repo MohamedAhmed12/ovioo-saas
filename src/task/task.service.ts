@@ -130,6 +130,18 @@ export class TaskService {
     if (task.status == TaskStatusEnum.DONE)
       throw new ForbiddenException('You Can’t update done task.');
 
+    const fields = ['title', 'description', 'status'];
+    fields.forEach((field) => {
+      if (data[field] && data[field] !== task[field]) {
+        this.notificationService.sendNotification({
+          content: `Changed ${field} from ${task[field]} to ${data[field]}.`,
+          action: '',
+          userId: authUser.id,
+        });
+        task[field] = data[field];
+      }
+    });
+
     await this.taskRepository.update(task.id, data);
     return task;
   }
