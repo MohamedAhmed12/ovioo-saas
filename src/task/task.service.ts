@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
+import { NotificationService } from 'src/notification/notification.service';
 import { Project } from 'src/project/project.entity';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
@@ -16,7 +17,6 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
-import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class TaskService {
@@ -91,13 +91,6 @@ export class TaskService {
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {
-    const Allprojects = await this.projectRepository.find();
-
-    if (Allprojects.length === 0)
-      throw new NotFoundException(
-        'Please create a project to be able to create a task.',
-      );
-
     const type = await this.taskTypeRepository.findOneBy({ id: data.type_id });
 
     if (!type)
@@ -123,7 +116,6 @@ export class TaskService {
       where: {
         id: data.id,
       },
-      relations: ['project'],
     });
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
