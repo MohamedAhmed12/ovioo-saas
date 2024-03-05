@@ -16,6 +16,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatusEnum } from './enums/task-status.enum';
 import { TaskType } from './task-type.entity';
 import { Task } from './task.entity';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class TaskService {
@@ -29,6 +30,7 @@ export class TaskService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly assetService: AssetService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async listTaskTypes(): Promise<TaskType[]> {
@@ -96,22 +98,6 @@ export class TaskService {
         'Please create a project to be able to create a task.',
       );
 
-    const project = await this.projectRepository.findOne({
-      where: {
-        id: data.project_id,
-      },
-      relations: ['team'],
-    });
-
-    if (!project)
-      throw new GraphQLError('Couldn’t find the selected project', {
-        extensions: {
-          originalError: {
-            message: [{ project: 'Couldn’t find the selected project' }],
-          },
-        },
-      });
-
     const type = await this.taskTypeRepository.findOneBy({ id: data.type_id });
 
     if (!type)
@@ -126,7 +112,6 @@ export class TaskService {
     const idleDesigner = await this.findIdleDesigner();
 
     const task = await this.taskRepository.create(data);
-    task.project = project;
     task.team = authUser.teams[0];
     task.type = type;
     task.designer = idleDesigner;

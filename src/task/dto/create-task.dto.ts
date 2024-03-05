@@ -17,11 +17,6 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-  project_id: number;
-
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
   type_id: number;
 
   @IsOptional()
