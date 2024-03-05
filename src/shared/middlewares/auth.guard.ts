@@ -49,6 +49,7 @@ export class AuthGuard implements CanActivate {
           email,
           provider,
         },
+        relations: ['teams'],
       });
 
       return authUser;

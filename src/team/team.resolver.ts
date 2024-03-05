@@ -17,6 +17,12 @@ export class TeamResolver {
 
   @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
+  async deleteTeam(@Args('id') teamId: string) {
+    return await this.teamService.deleteTeam(+teamId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
   async transferOwnership(
     @Args('id') memberId: string,
     @Context('user') authUser: AuthGuardUserDto,

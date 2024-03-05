@@ -27,7 +27,11 @@ export class Team extends BaseEntity {
   @Field(() => Number)
   owner_id: number;
 
-  @ManyToMany(() => User, (user) => user.teams, { cascade: ['update'] })
+  @Column('text')
+  @Field(() => String)
+  stripe_client_reference_id: string;
+
+  @ManyToMany(() => User, (member) => member.teams)
   @Field(() => [User], { defaultValue: [] })
   members: User[];
 

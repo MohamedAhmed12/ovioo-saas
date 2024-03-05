@@ -41,5 +41,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: listen --api-key {STRIPE_API_KEY} --forward-to nest:3000/api/stripe/webhooks
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+
 volumes:
   postgres_data:

@@ -5,13 +5,13 @@ FROM node:20.10.0-alpine as development
 WORKDIR /usr/src/app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Install nestjs/cli globally
 RUN npm install -g @nestjs/cli
 
 # Install app dependencies only if NODE_ENV is not set to "development"
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Bundle app source
 COPY . .

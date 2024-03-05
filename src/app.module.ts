@@ -6,6 +6,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { adminJSConfig } from './admin_options';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AssetModule } from './asset/asset.module';
@@ -17,29 +18,13 @@ import { Plan } from './plan/plan.entity';
 import { PlanModule } from './plan/plan.module';
 import { PlanSeeder } from './plan/plan.seed';
 import { ProfileModule } from './profile/profile.module';
-import { Project } from './project/project.entity';
 import { ProjectModule } from './project/project.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { TaskType } from './task/task-type.entity';
 import { TaskTypeSeeder } from './task/task-type.seed';
-import { Task } from './task/task.entity';
 import { TaskModule } from './task/task.module';
-import { Team } from './team/team.entity';
 import { TeamModule } from './team/team.module';
-import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
-
-const DEFAULT_ADMIN = {
-  email: 'admin@example.com',
-  password: 'password',
-};
-
-const authenticate = async (email: string, password: string) => {
-  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
-    return Promise.resolve(DEFAULT_ADMIN);
-  }
-  return null;
-};
 
 @Module({
   imports: [
@@ -96,39 +81,8 @@ const authenticate = async (email: string, password: string) => {
               Database: AdminJSTypeorm.Database,
             });
           });
-          return {
-            adminJsOptions: {
-              rootPath: '/admin',
-              resources: [
-                Task,
-                TaskType,
-                Project,
-                Team,
-                {
-                  resource: User,
-                  options: {
-                    properties: {
-                      bio: {
-                        isVisible: {
-                          list: false,
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-            // auth: {
-            //   authenticate,
-            //   cookieName: 'adminjs',
-            //   cookiePassword: 'secret',
-            // },
-            // sessionOptions: {
-            //   resave: true,
-            //   saveUninitialized: true,
-            //   secret: 'secret',
-            // },
-          };
+
+          return adminJSConfig;
         },
       }),
     ),

@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -141,6 +142,8 @@ export class TaskService {
     });
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
+    if (task.status == TaskStatusEnum.DONE)
+      throw new ForbiddenException('You Can’t update done task.');
 
     await this.taskRepository.update(task.id, data);
     return task;

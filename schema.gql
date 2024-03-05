@@ -48,6 +48,82 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""teams"""
+type Team {
+  id: ID!
+  name: String
+  owner_id: Float!
+  stripe_client_reference_id: String!
+  members: [User!]!
+  projects: [Project!]!
+  tasks: [Task!]!
+  subscriptions: [OviooSubscription!]!
+}
+
+type task_types {
+  id: ID!
+  title: String
+  info: [String!]
+  extraInfo: String
+  plan: String
+}
+
+"""tasks"""
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+  designer_fees: Float
+  type: task_types!
+  project: Project!
+  team: Team!
+  designer: User
+  assets: [Asset!]!
+  messages: [Message!]!
+  unreadMessagesCount: Float
+  subtasks: [Task!]!
+  parent: Task!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""project"""
+type Project {
+  id: ID!
+  title: String!
+  description: String!
+  team: Team!
+  tasks: [Task!]!
+  assets: [Asset!]!
+}
+
+"""asset"""
+type Asset {
+  id: ID!
+  src: String!
+  alt: String!
+  type: String!
+  project: Project
+  task: Task!
+  message: Message!
+}
+
+"""message"""
+type Message {
+  id: ID!
+  content: String
+  voice_note_src: String
+  status: String
+  received_by: [String!]!
+  read_by: [String!]!
+  sender: User
+  task: Task!
+  asset: Asset
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
 """notifications"""
 type Notification {
   id: ID!
@@ -85,6 +161,7 @@ type User {
   isActive: Boolean!
   provider: String!
   role: String
+  designer_credit: Float
   created_at: DateTime!
   updated_at: DateTime!
   profile: Profile!
@@ -92,81 +169,13 @@ type User {
   messages: [Message!]!
   notifications: [Notification!]!
   assignedTasks: [Task!]!
+  designer_transactions: [DesignerTransaction!]!
 }
 
-"""teams"""
-type Team {
-  id: ID!
-  name: String
-  owner_id: Float!
-  members: [User!]!
-  projects: [Project!]!
-  tasks: [Task!]!
-  subscriptions: [OviooSubscription!]!
-}
-
-"""project"""
-type Project {
-  id: ID!
-  title: String!
-  description: String!
-  team: Team!
-  tasks: [Task!]!
-  assets: [Asset!]!
-}
-
-type task_types {
-  id: ID!
-  title: String
-  info: [String!]
-  extraInfo: String
-  plan: String
-}
-
-"""tasks"""
-type Task {
-  id: ID!
-  title: String!
-  description: String
-  status: String
-  designer_fees: Float
-  type: task_types!
-  project: Project!
-  team: Team!
-  designer: User
-  assets: [Asset!]!
-  messages: [Message!]!
-  unreadMessagesCount: Float
-  subtasks: [Task!]!
-  parent: Task!
-  created_at: DateTime!
-  updated_at: DateTime!
-}
-
-"""message"""
-type Message {
-  id: ID!
-  content: String
-  voice_note_src: String
-  status: String
-  received_by: [String!]!
-  read_by: [String!]!
-  sender: User
-  task: Task!
-  asset: Asset
-  created_at: DateTime!
-  updated_at: DateTime!
-}
-
-"""asset"""
-type Asset {
-  id: ID!
-  src: String!
-  alt: String!
-  type: String!
-  project: Project
-  task: Task!
-  message: Message!
+"""designer_transactions"""
+type DesignerTransaction {
+  designerId: Float!
+  designer: User!
 }
 
 type TaskMsgsStatusChangedSubsResponseDto {
@@ -193,6 +202,9 @@ input TaskType {
 type Query {
   getHello: String!
   me: User!
+  listExtraBundles(planId: String!): [PlanExtraBundle!]!
+  generateCustomerSecret: String!
+  getManageSubscriptionURL: String!
   findProfile: Profile!
   getUserTeam: Team!
   listTaskTypes: [task_types!]!
@@ -206,7 +218,6 @@ type Query {
   listUnreadMessages: [Task!]!
   listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
-  listExtraBundles(planId: String!): [PlanExtraBundle!]!
 }
 
 input ListMessageDto {
@@ -234,7 +245,10 @@ type Mutation {
   deleteMember(member: DeleteMemberDto!): Boolean!
   findOrCreateSsoUser(user: CreateSsoUserDto!): User!
   toggleUserStatus(isActive: Boolean!): Boolean!
+  deductRemainingHours(data: DeductRemainingHoursDto!): OviooSubscription!
+  addExtraBundle(data: AddExtraBundleDto!): OviooSubscription!
   updateProfile(profile: UpdateProfileDto!): Profile!
+  deleteTeam(id: String!): Boolean!
   transferOwnership(id: String!): Boolean!
   createTask(data: CreateTaskDto!): Task!
   updateTask(data: UpdateTaskDto!): Task!
@@ -251,9 +265,6 @@ type Mutation {
   readTaskMessages(taskId: String!): Boolean!
   receiveTaskMessages(taskId: String!): Boolean!
   sendNotification(data: NotificationDto!): Notification!
-  createSubscription(planId: String!): OviooSubscription!
-  deductRemainingHours(data: DeductRemainingHoursDto!): OviooSubscription!
-  addExtraBundle(data: AddExtraBundleDto!): OviooSubscription!
 }
 
 input LoginDto {
@@ -304,6 +315,16 @@ input CreateSsoUserDto {
   email: String!
   avatar: String
   provider: String!
+}
+
+input DeductRemainingHoursDto {
+  id: String!
+  deducted_hours: Float!
+}
+
+input AddExtraBundleDto {
+  id: String!
+  extra_bundle_id: String!
 }
 
 input UpdateProfileDto {
@@ -388,16 +409,6 @@ input NotificationDto {
   action: String
   userId: String
   created_at: DateTime
-}
-
-input DeductRemainingHoursDto {
-  id: String!
-  deducted_hours: Float!
-}
-
-input AddExtraBundleDto {
-  id: String!
-  extra_bundle_id: String!
 }
 
 type Subscription {

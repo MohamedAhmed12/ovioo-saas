@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import { GraphQLError } from 'graphql';
 import { Profile } from 'src/profile/profile.entity';
+import { SubscriptionStatusEnum } from 'src/subscription/enums/subscription-status.enum';
 import { TeamService } from 'src/team/team.service';
 import { DeepPartial, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -72,13 +73,18 @@ export class UserService {
     email: string;
     provider: string;
   }): Promise<User> {
-    const user = await this.UserRepository.findOne({
-      where: {
-        email,
-        provider,
-      },
-      relations: ['profile'],
-    });
+    const user = await this.UserRepository.createQueryBuilder('users')
+      .select('users')
+      .leftJoinAndSelect('users.profile', 'profile')
+      .leftJoinAndSelect('users.teams', 'team')
+      .leftJoinAndSelect(
+        'team.subscriptions',
+        'subscription',
+        'subscription.status = :status',
+        { status: SubscriptionStatusEnum.ACTIVE },
+      )
+      .where('users.email = :email', { email })
+      .getOne();
 
     if (!user)
       throw new UnauthorizedException(
@@ -314,8 +320,17 @@ export class UserService {
       company_name: data.company,
     });
 
-    user.teams = [await this.teamService.createTeam(user.id)];
+    const team = await this.teamService.createTeam({ owner_id: user.id });
+    user.teams = [team];
 
     return await this.UserRepository.save(user);
+  }
+
+  async getDesigners() {
+    return await this.UserRepository.find({
+      where: {
+        role: UserRoleEnum.Designer,
+      },
+    });
   }
 }
