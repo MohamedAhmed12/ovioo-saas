@@ -7,7 +7,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -27,6 +26,10 @@ export class Team extends BaseEntity {
   @Column('int')
   @Field(() => Number)
   owner_id: number;
+
+  @Column('text')
+  @Field(() => String)
+  stripe_client_reference_id: string;
 
   @ManyToMany(() => User, (member) => member.teams)
   @Field(() => [User], { defaultValue: [] })

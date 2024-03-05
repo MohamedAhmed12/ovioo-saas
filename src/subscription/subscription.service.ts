@@ -1,13 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { Plan } from 'src/plan/plan.entity';
-import { User } from 'src/user/user.entity';
-import { Not, Repository } from 'typeorm';
+import { Team } from 'src/team/team.entity';
+import { In, Not, Repository } from 'typeorm';
 import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
 @Injectable()
 export class SubscriptionService {
@@ -20,23 +25,49 @@ export class SubscriptionService {
     private readonly planRepository: Repository<Plan>,
   ) {}
 
-  async createSubscription(
-    authUser: User,
-    planId: string,
+  async findActiveSubscription(stripe_id: string): Promise<OviooSubscription> {
+    return await this.findSubscription(stripe_id, [
+      SubscriptionStatusEnum.ACTIVE,
+      SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
+    ]);
+  }
+
+  async findSubscription(
+    stripe_id: string,
+    statuses: SubscriptionStatusEnum[],
   ): Promise<OviooSubscription> {
-    const plan = await this.planRepository.findOneBy({ id: +planId });
+    const subscription = await this.subscriptionRepository.findOne({
+      where: {
+        stripe_id,
+        status: In(statuses),
+      },
+      relations: ['team', 'plan'],
+    });
 
-    if (!plan) throw new NotFoundException('Couldn’t find plan matches id.');
+    if (!subscription)
+      throw new NotFoundException(
+        'Couldn’t find active subscription matches this id.',
+      );
 
+    return subscription;
+  }
+
+  async createSubscription(
+    stripe_id: string,
+    status: SubscriptionStatusEnum,
+    team: Team,
+    plan: Plan,
+  ): Promise<OviooSubscription> {
     const subscription = this.subscriptionRepository.create({
+      status,
       total_credit_hours: plan.monthly_credit_hours,
       remaining_credit_hours: plan.monthly_credit_hours,
       daily_deducted_hours: plan.daily_deducted_hours,
       start_at: new Date(),
+      stripe_id,
+      team: team,
+      plan: plan,
     });
-
-    subscription.team = authUser.teams[0];
-    subscription.plan = plan;
 
     return await this.subscriptionRepository.save(subscription);
   }
@@ -53,13 +84,16 @@ export class SubscriptionService {
   }
 
   async handleDailySubscriptionUpdatesJob(): Promise<void> {
-    const nonExpiredSubs = await this.subscriptionRepository.find({
+    const activeSubs = await this.subscriptionRepository.find({
       where: {
-        status: Not(SubscriptionStatusEnum.EXPIRED),
+        status: In([
+          SubscriptionStatusEnum.ACTIVE,
+          SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
+        ]),
       },
     });
 
-    for (let sub of nonExpiredSubs) {
+    for (let sub of activeSubs) {
       this.expireOutdatedSubscription(sub);
 
       if (sub.status == SubscriptionStatusEnum.ACTIVE) {
@@ -68,7 +102,7 @@ export class SubscriptionService {
       }
     }
 
-    this.subscriptionRepository.save(nonExpiredSubs);
+    this.subscriptionRepository.save(activeSubs);
   }
 
   async listExtraBundles(planId: string): Promise<PlanExtraBundle[]> {
@@ -94,8 +128,16 @@ export class SubscriptionService {
         'Couldn’t find subscription matches this id.',
       );
 
-    if (subscription.status == SubscriptionStatusEnum.EXPIRED)
-      throw new NotFoundException('This subscription has been expired.');
+    if (
+      [
+        SubscriptionStatusEnum.EXPIRED,
+        SubscriptionStatusEnum.CANCELED,
+      ].includes(subscription.status)
+    ) {
+      throw new NotFoundException(
+        `This subscription has been ${subscription.status}.`,
+      );
+    }
 
     const extraBundle = await this.planExtraBundleRepository.findOneBy({
       id: extra_bundle_id,
@@ -134,12 +176,9 @@ export class SubscriptionService {
         ? subscription.remaining_credit_hours
         : subscription.remaining_credit_hours - deducted_hours;
 
-    await this.subscriptionRepository.merge(subscription, {
+    return this.updateSubscription(subscription, {
       remaining_credit_hours,
     });
-    await this.subscriptionRepository.update(subscription.id, subscription);
-
-    return subscription;
   }
 
   private updateStatusBasedOnCredit(subscription: OviooSubscription): void {
@@ -149,5 +188,18 @@ export class SubscriptionService {
     ) {
       subscription.status = SubscriptionStatusEnum.INSUFFICIENT_CREDIT;
     }
+  }
+
+  async updateSubscription(
+    subscription: OviooSubscription,
+    data: UpdateSubscriptionDto,
+  ): Promise<OviooSubscription> {
+    if (subscription.status == SubscriptionStatusEnum.CANCELED)
+      throw new ForbiddenException('You Can’t update canceled subscription.');
+
+    await this.subscriptionRepository.merge(subscription, data);
+    await this.subscriptionRepository.update(subscription.id, subscription);
+
+    return subscription;
   }
 }

@@ -42,13 +42,19 @@ export class OviooSubscription extends BaseEntity {
   @Field(() => String, { nullable: true })
   status: SubscriptionStatusEnum;
 
-  @CreateDateColumn()
+  @Column({ type: 'timestamp' })
   @Field()
   start_at: Date;
 
-  @CreateDateColumn()
+  @Column({ type: 'timestamp' })
   @Field()
   expire_at: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  canceled_at: Date;
+
+  @Column('text')
+  stripe_id: string;
 
   @ManyToOne(() => Team, (team) => team.subscriptions, { onDelete: 'CASCADE' })
   @Field(() => Team)
