@@ -54,6 +54,7 @@ type Team {
   name: String
   owner_id: Float!
   stripe_client_reference_id: String!
+  card_last4: String
   members: [User!]!
   projects: [Project!]!
   tasks: [Task!]!
@@ -76,7 +77,7 @@ type Task {
   status: String
   designer_fees: Float
   type: task_types!
-  project: Project!
+  project: Project
   team: Team!
   designer: User
   assets: [Asset!]!
@@ -211,24 +212,24 @@ type Query {
   listTasks: [Task!]!
   showTask(id: String!): Task!
   findIdleDesigner: Float
+  listNotifications(data: ListNotificationsDto!): [Notification!]!
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
   listTaskMessages(data: ListMessageDto!): [Message!]!
   listUnreadMessages: [Task!]!
-  listNotifications(data: ListNotificationsDto!): [Notification!]!
   listPlans: [Plan!]!
 }
 
-input ListMessageDto {
-  task_id: String
-  team_id: String
+input ListNotificationsDto {
   page: Float!
   offsetPlus: Float
   limit: Float
 }
 
-input ListNotificationsDto {
+input ListMessageDto {
+  task_id: String
+  teamIds: [String!]
   page: Float!
   offsetPlus: Float
   limit: Float
@@ -253,6 +254,7 @@ type Mutation {
   createTask(data: CreateTaskDto!): Task!
   updateTask(data: UpdateTaskDto!): Task!
   deleteTask(id: String!): Boolean!
+  sendNotification(data: NotificationDto!): Notification!
   createAssets(data: CreateAssetDto!): [Asset!]!
   deleteAsset(asset: DeleteAssetDto!): Boolean!
   downloadAsset(alt: String!): String!
@@ -264,7 +266,6 @@ type Mutation {
   receiveAllSentMessages: Boolean!
   readTaskMessages(taskId: String!): Boolean!
   receiveTaskMessages(taskId: String!): Boolean!
-  sendNotification(data: NotificationDto!): Notification!
 }
 
 input LoginDto {
@@ -343,7 +344,6 @@ input UpdateProfileDto {
 input CreateTaskDto {
   title: String!
   status: String
-  project_id: String!
   type_id: String!
   parent_id: String
 }
@@ -359,6 +359,14 @@ input UpdateTaskDto {
 
 input UpdateTaskRelatedEntityDto {
   id: String
+}
+
+input NotificationDto {
+  content: String
+  is_read: Boolean
+  action: String
+  userId: String
+  created_at: DateTime
 }
 
 input CreateAssetDto {
@@ -390,7 +398,7 @@ input UpdateProjectDto {
 
 input SendMessageDto {
   task_id: String
-  team_id: String
+  teamIds: [String!]
   content: String
   voice_note_src: String
   asset: AssetDto
@@ -402,25 +410,16 @@ input UpdateMessageDto {
   status: String
 }
 
-input NotificationDto {
-  id: String
-  content: String
-  is_read: Boolean
-  action: String
-  userId: String
-  created_at: DateTime
-}
-
 type Subscription {
   userStatusChanged: ChangeUserStatusResponseDto!
   taskCreated: Task!
   taskUpdated(taskId: String!): Task!
+  notificationReceived(data: NotificationDto!): Notification!
   taskMsgsStatusChanged(teamId: String!): TaskMsgsStatusChangedSubsResponseDto!
   messageSent(data: MessageSentSubscriptionDto!): Message!
-  notificationReceived(data: NotificationDto!): Notification!
 }
 
 input MessageSentSubscriptionDto {
   task_id: String
-  team_id: String
+  teamIds: [String!]
 }
