@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
@@ -48,5 +48,21 @@ export class NotificationService {
   async sendNotification(data: NotificationDto): Promise<Notification> {
     const notification = await this.notificationRepository.create(data);
     return await this.notificationRepository.save(notification);
+  }
+
+  async markNotificationAsRead(id: string): Promise<boolean> {
+    const notification = await this.notificationRepository.findOneBy({
+      id: +id,
+    });
+
+    if (!notification)
+      throw new NotFoundException('Couldn’t find notification matches id.');
+
+    const res = await this.notificationRepository.update(notification.id, {
+      ...notification,
+      is_read: true,
+    });
+
+    return Boolean(res.affected == 1);
   }
 }

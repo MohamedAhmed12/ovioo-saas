@@ -46,6 +46,12 @@ export class NotificationResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  async markNotificationAsRead(@Args('id') id: string) {
+    return this.notificationService.markNotificationAsRead(id);
+  }
+
+  @UseGuards(AuthGuard)
   @Subscription((returns) => Notification, {
     filter: async (payload: any, variables: any, context: any) =>
       payload.notificationReceived.userId == context.user.id,
