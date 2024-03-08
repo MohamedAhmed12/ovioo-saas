@@ -135,7 +135,7 @@ export class TaskService {
           updatedFields.forEach((field) => {
             this.notificationResolver.sendNotification({
               content: `${authUser.fullname} Changed ${field} from ${task[field]} to ${data[field]}.`,
-              action: '',
+              action: `/dashboard/task?task=${task.id}`,
               userId: member.id,
             });
           });
