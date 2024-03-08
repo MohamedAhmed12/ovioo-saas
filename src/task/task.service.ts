@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
-import { NotificationService } from 'src/notification/notification.service';
+import { NotificationResolver } from 'src/notification/notification.resolver';
 import { Project } from 'src/project/project.entity';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
@@ -30,7 +30,7 @@ export class TaskService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly assetService: AssetService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationResolver: NotificationResolver,
   ) {}
 
   async listTaskTypes(): Promise<TaskType[]> {
@@ -116,26 +116,41 @@ export class TaskService {
       where: {
         id: data.id,
       },
+      relations: ['team', 'team.members'],
     });
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
     if (task.status == TaskStatusEnum.DONE)
       throw new ForbiddenException('You Can’t update done task.');
 
-    const fields = ['title', 'description', 'status'];
-    fields.forEach((field) => {
-      if (data[field] && data[field] !== task[field]) {
-        this.notificationService.sendNotification({
-          content: `Changed ${field} from ${task[field]} to ${data[field]}.`,
-          action: '',
-          userId: authUser.id,
-        });
-        task[field] = data[field];
-      }
-    });
+    const updatedFields = ['title', 'description', 'status'].filter(
+      (field) => data[field] && task[field] !== data[field],
+    );
 
-    await this.taskRepository.update(task.id, data);
-    return task;
+    const taskTeamMembers = (await task.team).members;
+
+    if (updatedFields.length > 0) {
+      taskTeamMembers.forEach((member) => {
+        if (member.id !== authUser.id) {
+          updatedFields.forEach((field) => {
+            this.notificationResolver.sendNotification({
+              content: `${authUser.fullname} Changed ${field} from ${task[field]} to ${data[field]}.`,
+              action: '',
+              userId: member.id,
+            });
+          });
+        }
+      });
+
+      const updateData = updatedFields.reduce((acc, field) => {
+        acc[field] = data[field];
+        return acc;
+      }, {});
+
+      await this.taskRepository.update(task.id, updateData);
+    }
+
+    return this.taskRepository.findOne({ where: { id: task.id } });
   }
 
   async deleteTask(id: string): Promise<boolean> {

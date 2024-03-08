@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
+import { ListNotificationsResponseDto } from './dto/list-notifications-response.dto';
 import { ListNotificationsDto } from './dto/list-notifications.dto';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './notification.entity';
@@ -18,10 +19,10 @@ export class NotificationService {
   async listNotifications(
     authUser: User,
     { page, offsetPlus = 0, limit = 10 }: ListNotificationsDto,
-  ) {
+  ): Promise<ListNotificationsResponseDto> {
     const offset = (page - 1) * limit + offsetPlus;
 
-    return await this.notificationRepository
+    const notifications = await this.notificationRepository
       .createQueryBuilder('notifications')
       .select('notifications')
       .where(`notifications.userId = ${authUser.id}`)
@@ -29,6 +30,19 @@ export class NotificationService {
       .skip(offset)
       .take(limit)
       .getMany();
+
+    const unreadCount = await this.notificationRepository
+      .createQueryBuilder('notifications')
+      .where(
+        'notifications.userId = :userId AND notifications.is_read = false',
+        { userId: authUser.id },
+      )
+      .getCount();
+
+    return {
+      notifications,
+      unreadCount,
+    };
   }
 
   async sendNotification(data: NotificationDto): Promise<Notification> {

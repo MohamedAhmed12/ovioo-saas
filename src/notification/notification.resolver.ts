@@ -10,6 +10,7 @@ import {
 import { PubSub } from 'graphql-subscriptions';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { User } from 'src/user/user.entity';
+import { ListNotificationsResponseDto } from './dto/list-notifications-response.dto';
 import { ListNotificationsDto } from './dto/list-notifications.dto';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './notification.entity';
@@ -24,7 +25,7 @@ export class NotificationResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => [Notification])
+  @Query(() => ListNotificationsResponseDto)
   async listNotifications(
     @Context('user') authUser: User,
     @Args('data') data: ListNotificationsDto,

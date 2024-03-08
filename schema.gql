@@ -184,6 +184,11 @@ type TaskMsgsStatusChangedSubsResponseDto {
   fullname: String!
 }
 
+type ListNotificationsResponseDto {
+  notifications: [Notification!]!
+  unreadCount: Float!
+}
+
 type ChangeUserStatusResponseDto {
   id: String!
   avatar: String
@@ -212,7 +217,7 @@ type Query {
   listTasks: [Task!]!
   showTask(id: String!): Task!
   findIdleDesigner: Float
-  listNotifications(data: ListNotificationsDto!): [Notification!]!
+  listNotifications(data: ListNotificationsDto!): ListNotificationsResponseDto!
   listAssets(id: String): [Asset!]!
   listProjects: [Project!]!
   showProject(id: String!): Project!
