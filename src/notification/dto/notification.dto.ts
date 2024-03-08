@@ -7,17 +7,12 @@ export class NotificationDto {
   @IsString()
   @IsOptional()
   @Field(() => String, { nullable: true })
-  id: number;
-
-  @IsString()
-  @IsOptional()
-  @Field(() => String, { nullable: true })
   content?: string;
 
   @IsBoolean()
   @IsOptional()
   @Field(() => Boolean, { nullable: true })
-  is_read: boolean;
+  is_read?: boolean;
 
   @IsString()
   @IsOptional()
