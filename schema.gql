@@ -260,7 +260,7 @@ type Mutation {
   updateTask(data: UpdateTaskDto!): Task!
   deleteTask(id: String!): Boolean!
   sendNotification(data: NotificationDto!): Notification!
-  markNotificationAsRead(id: String!): Boolean!
+  markNotificationAsRead(id: String!): Notification!
   createAssets(data: CreateAssetDto!): [Asset!]!
   deleteAsset(asset: DeleteAssetDto!): Boolean!
   downloadAsset(alt: String!): String!

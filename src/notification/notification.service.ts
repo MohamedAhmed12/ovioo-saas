@@ -50,7 +50,7 @@ export class NotificationService {
     return await this.notificationRepository.save(notification);
   }
 
-  async markNotificationAsRead(id: string): Promise<boolean> {
+  async markNotificationAsRead(id: string): Promise<Notification> {
     const notification = await this.notificationRepository.findOneBy({
       id: +id,
     });
@@ -58,11 +58,15 @@ export class NotificationService {
     if (!notification)
       throw new NotFoundException('Couldn’t find notification matches id.');
 
-    const res = await this.notificationRepository.update(notification.id, {
-      ...notification,
-      is_read: true,
-    });
+    const updatedNotification = await this.notificationRepository.merge(
+      notification,
+      { is_read: true },
+    );
+    await this.notificationRepository.update(
+      notification.id,
+      updatedNotification,
+    );
 
-    return Boolean(res.affected == 1);
+    return updatedNotification;
   }
 }

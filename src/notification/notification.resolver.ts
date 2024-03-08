@@ -46,7 +46,7 @@ export class NotificationResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Notification)
   async markNotificationAsRead(@Args('id') id: string) {
     return this.notificationService.markNotificationAsRead(id);
   }
