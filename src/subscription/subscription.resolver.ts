@@ -1,9 +1,8 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Cron } from '@nestjs/schedule';
 import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
-import { User } from 'src/user/user.entity';
 import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
 import { OviooSubscription } from './subscription.entity';

@@ -84,25 +84,25 @@ export class SubscriptionService {
   }
 
   async handleDailySubscriptionUpdatesJob(): Promise<void> {
-    const activeSubs = await this.subscriptionRepository.find({
-      where: {
-        status: In([
-          SubscriptionStatusEnum.ACTIVE,
-          SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
-        ]),
-      },
-    });
+    try {
+      const activeSubs = await this.subscriptionRepository.findBy({
+        status: SubscriptionStatusEnum.ACTIVE,
+      });
 
-    for (let sub of activeSubs) {
-      this.expireOutdatedSubscription(sub);
+      const updatePromises = activeSubs.map(async (sub) => {
+        const updatedSub = await this.processHoursDeduction(
+          sub,
+          sub.daily_deducted_hours,
+        );
+        this.updateStatusBasedOnCredit(updatedSub);
+        return updatedSub;
+      });
 
-      if (sub.status == SubscriptionStatusEnum.ACTIVE) {
-        sub = await this.processHoursDeduction(sub, sub.daily_deducted_hours);
-        this.updateStatusBasedOnCredit(sub);
-      }
+      const updatedSubs = await Promise.all(updatePromises);
+      await this.subscriptionRepository.save(updatedSubs);
+    } catch (error) {
+      console.error('Error updating daily subscription:', error);
     }
-
-    this.subscriptionRepository.save(activeSubs);
   }
 
   async listExtraBundles(planId: string): Promise<PlanExtraBundle[]> {
@@ -128,12 +128,7 @@ export class SubscriptionService {
         'Couldn’t find subscription matches this id.',
       );
 
-    if (
-      [
-        SubscriptionStatusEnum.EXPIRED,
-        SubscriptionStatusEnum.CANCELED,
-      ].includes(subscription.status)
-    ) {
+    if ([SubscriptionStatusEnum.CANCELED].includes(subscription.status)) {
       throw new NotFoundException(
         `This subscription has been ${subscription.status}.`,
       );
@@ -152,14 +147,6 @@ export class SubscriptionService {
     subscription.remaining_credit_hours += extraBundle.hours;
     subscription.status = SubscriptionStatusEnum.ACTIVE;
     return this.subscriptionRepository.save(subscription);
-  }
-
-  private expireOutdatedSubscription(subscription: OviooSubscription): void {
-    const now = new Date();
-
-    if (subscription.expire_at < now) {
-      subscription.status = SubscriptionStatusEnum.EXPIRED;
-    }
   }
 
   private async processHoursDeduction(
