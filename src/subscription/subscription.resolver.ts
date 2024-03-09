@@ -15,15 +15,6 @@ export class SubscriptionResolver {
 
   @UseGuards(AuthGuard)
   @Mutation(() => OviooSubscription)
-  async createSubscription(
-    @Context('user') authUser: User,
-    @Args('planId') planId: string,
-  ) {
-    return await this.subscriptionService.createSubscription(authUser, planId);
-  }
-
-  @UseGuards(AuthGuard)
-  @Mutation(() => OviooSubscription)
   async deductRemainingHours(@Args('data') data: DeductRemainingHoursDto) {
     return await this.subscriptionService.deductRemainingHours(data);
   }

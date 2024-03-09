@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { GraphQLError } from 'graphql';
 import { AssetService } from 'src/asset/asset.service';
+import { NotificationResolver } from 'src/notification/notification.resolver';
 import { Project } from 'src/project/project.entity';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { User } from 'src/user/user.entity';
@@ -29,6 +30,7 @@ export class TaskService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly assetService: AssetService,
+    private readonly notificationResolver: NotificationResolver,
   ) {}
 
   async listTaskTypes(): Promise<TaskType[]> {
@@ -89,29 +91,6 @@ export class TaskService {
   }
 
   async createTask(data: CreateTaskDto, authUser: User): Promise<Task> {
-    const Allprojects = await this.projectRepository.find();
-
-    if (Allprojects.length === 0)
-      throw new NotFoundException(
-        'Please create a project to be able to create a task.',
-      );
-
-    const project = await this.projectRepository.findOne({
-      where: {
-        id: data.project_id,
-      },
-      relations: ['team'],
-    });
-
-    if (!project)
-      throw new GraphQLError('Couldn’t find the selected project', {
-        extensions: {
-          originalError: {
-            message: [{ project: 'Couldn’t find the selected project' }],
-          },
-        },
-      });
-
     const type = await this.taskTypeRepository.findOneBy({ id: data.type_id });
 
     if (!type)
@@ -126,7 +105,6 @@ export class TaskService {
     const idleDesigner = await this.findIdleDesigner();
 
     const task = await this.taskRepository.create(data);
-    task.project = project;
     task.team = authUser.teams[0];
     task.type = type;
     task.designer = idleDesigner;
@@ -138,15 +116,41 @@ export class TaskService {
       where: {
         id: data.id,
       },
-      relations: ['project'],
+      relations: ['team', 'team.members'],
     });
 
     if (!task) throw new NotFoundException('Couldn’t find task matches id.');
     if (task.status == TaskStatusEnum.DONE)
       throw new ForbiddenException('You Can’t update done task.');
 
-    await this.taskRepository.update(task.id, data);
-    return task;
+    const updatedFields = ['title', 'description', 'status'].filter(
+      (field) => data[field] && task[field] !== data[field],
+    );
+
+    const taskTeamMembers = (await task.team).members;
+
+    if (updatedFields.length > 0) {
+      taskTeamMembers.forEach((member) => {
+        if (member.id !== authUser.id) {
+          updatedFields.forEach((field) => {
+            this.notificationResolver.sendNotification({
+              content: `${authUser.fullname} Changed ${field} from ${task[field]} to ${data[field]}.`,
+              action: `/dashboard/task?task=${task.id}`,
+              userId: member.id,
+            });
+          });
+        }
+      });
+
+      const updateData = updatedFields.reduce((acc, field) => {
+        acc[field] = data[field];
+        return acc;
+      }, {});
+
+      await this.taskRepository.update(task.id, updateData);
+    }
+
+    return this.taskRepository.findOne({ where: { id: task.id } });
   }
 
   async deleteTask(id: string): Promise<boolean> {

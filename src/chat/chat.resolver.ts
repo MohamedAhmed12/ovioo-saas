@@ -81,7 +81,7 @@ export class ChatResolver {
 
       if (variables.data?.teamIds) {
         const msgTeam = await msgTask.team;
-        return variables.data.teamIds.some((team) => team.id == msgTeam.id);
+        return variables.data.teamIds.some((id) => id == msgTeam.id);
       }
     },
   })

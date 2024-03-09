@@ -24,7 +24,7 @@ export class Notification extends BaseEntity {
   @Field(() => String, { nullable: true })
   action: string;
 
-  @Column('boolean', { default: false, nullable: true })
+  @Column('boolean', { default: false })
   @Field(() => Boolean, { nullable: true })
   is_read: boolean;
 
