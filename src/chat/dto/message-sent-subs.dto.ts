@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class MessageSentSubscriptionDto {
@@ -9,7 +9,7 @@ export class MessageSentSubscriptionDto {
   task_id?: number;
 
   @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  team_id?: number;
+  @IsArray()
+  @Field(() => [String], { nullable: true })
+  teamIds?: number[];
 }
