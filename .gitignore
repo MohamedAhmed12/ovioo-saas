@@ -36,6 +36,8 @@ lerna-debug.log*
 
 #env
 /.env
+.env.testing
+.env.production
 
 # admin js 
 /.adminjs
