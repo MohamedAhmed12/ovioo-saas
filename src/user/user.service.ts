@@ -219,7 +219,7 @@ export class UserService {
     },
     data: CreateMemberDto,
   ): Promise<User> {
-    const currentUser: User = await this.me({ email, provider });
+    const currentUser: User = await this.me({ email });
 
     let member = await this.UserRepository.findOne({
       where: { email: data.email },
@@ -282,7 +282,7 @@ export class UserService {
     },
     data: DeleteMemberDto,
   ): Promise<boolean> {
-    const currentUser: User = await this.me({ email, provider });
+    const currentUser: User = await this.me({ email });
     const member = await this.UserRepository.findOneBy({ id: data.id });
 
     if (!member) throw new NotFoundException();
