@@ -6,8 +6,8 @@ import { Team } from './team/team.entity';
 import { User } from './user/user.entity';
 
 const DEFAULT_ADMIN = {
-  email: 'admin@example.com',
-  password: 'password',
+  email: process.env.ADMIN_JS_EMAIL,
+  password: process.env.ADMIN_JS_PASSWORD,
 };
 
 const authenticate = async (email: string, password: string) => {
@@ -51,6 +51,6 @@ export const adminJSConfig = {
   sessionOptions: {
     resave: true,
     saveUninitialized: true,
-    secret: 'secret',
+    secret: process.env.ADMIN_JS_SECRET,
   },
 };

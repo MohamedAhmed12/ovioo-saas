@@ -66,13 +66,7 @@ export class UserService {
     return await this.createUseWithRelatedEntities(data);
   }
 
-  async me({
-    email,
-    provider,
-  }: {
-    email: string;
-    provider: string;
-  }): Promise<User> {
+  async me({ email }: { email: string }): Promise<User> {
     const user = await this.UserRepository.createQueryBuilder('users')
       .select('users')
       .leftJoinAndSelect('users.profile', 'profile')
@@ -80,8 +74,13 @@ export class UserService {
       .leftJoinAndSelect(
         'team.subscriptions',
         'subscription',
-        'subscription.status = :status',
-        { status: SubscriptionStatusEnum.ACTIVE },
+        'subscription.status NOT IN (:...statuses)',
+        {
+          statuses: [
+            SubscriptionStatusEnum.CANCELED,
+            SubscriptionStatusEnum.CHANGED,
+          ],
+        },
       )
       .where('users.email = :email', { email })
       .getOne();
@@ -220,7 +219,7 @@ export class UserService {
     },
     data: CreateMemberDto,
   ): Promise<User> {
-    const currentUser: User = await this.me({ email, provider });
+    const currentUser: User = await this.me({ email });
 
     let member = await this.UserRepository.findOne({
       where: { email: data.email },
@@ -283,7 +282,7 @@ export class UserService {
     },
     data: DeleteMemberDto,
   ): Promise<boolean> {
-    const currentUser: User = await this.me({ email, provider });
+    const currentUser: User = await this.me({ email });
     const member = await this.UserRepository.findOneBy({ id: data.id });
 
     if (!member) throw new NotFoundException();
