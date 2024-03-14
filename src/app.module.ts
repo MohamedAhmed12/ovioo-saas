@@ -60,7 +60,7 @@ import { UserModule } from './user/user.module';
         },
       },
       defaults: {
-        from: '<support@ovioo.com>',
+        from: '<info@ovioo.ai>',
       },
       template: {
         dir: process.cwd() + '/src/emails',
