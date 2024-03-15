@@ -18,10 +18,14 @@ services:
     depends_on:
       - nest
     volumes:
-      - .:/app
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/ssl/certs:/etc/nginx/certs
     command: [nginx, '-g', 'daemon off;']
 
-volumes:
-  postgres_data:
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: listen --api-key {STRIPE_API_KEY} --forward-to nest:3000/api/stripe/webhooks
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
