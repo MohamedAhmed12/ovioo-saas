@@ -11,9 +11,6 @@ const AppDataSource = new DataSource({
   synchronize: false,
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/db/migrations/*.js'],
-  ssl: {
-    rejectUnauthorized: false, // adjust after setup the ssl to RDS and domain to EC2
-  },
 });
 
 export default AppDataSource;
