@@ -8,8 +8,14 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - '3000:3000'
+    depends_on:
+      - postgres
     env_file:
       - .env
+    # Consider removing the volume mount for production
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
 
   nginx:
     image: nginx:1.25-alpine
@@ -22,6 +28,19 @@ services:
       - ./docker/nginx/ssl/certs:/etc/nginx/certs
     command: [nginx, '-g', 'daemon off;']
 
+  postgres:
+    container_name: postgres
+    image: 'postgres:16'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ovioo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   stripe-cli:
     image: stripe/stripe-cli:latest
     command: listen --api-key {STRIPE_API_KEY} --forward-to nest:3000/api/stripe/webhooks
@@ -29,3 +48,6 @@ services:
       - .env
     stdin_open: true
     tty: true
+
+volumes:
+  postgres_data:
