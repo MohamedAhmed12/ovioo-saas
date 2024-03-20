@@ -12,15 +12,9 @@ services:
       - postgres
     env_file:
       - .env
-    # Consider removing the volume mount for production
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
 
   nginx:
     image: nginx:1.25-alpine
-    ports:
-      - '80:80'
     depends_on:
       - nest
     volumes:
@@ -39,14 +33,6 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  stripe-cli:
-    image: stripe/stripe-cli:latest
-    command: listen --api-key {STRIPE_API_KEY} --forward-to nest:3000/api/stripe/webhooks
-    env_file:
-      - .env
-    stdin_open: true
-    tty: true
 
 volumes:
   postgres_data:
