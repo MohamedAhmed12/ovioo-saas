@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  nest:
+    container_name: nest
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:1.25-alpine
+    depends_on:
+      - nest
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/etc/nginx/conf.d/default.conf
+    command: [nginx, '-g', 'daemon off;']
+
+  postgres_testing:
+    container_name: postgres
+    image: 'postgres:16'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ovioo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
