@@ -20,11 +20,5 @@ export const ormConfig = () => {
     entities: [__dirname + '/**/*.entity.ts'],
   };
 
-  if (process.env.NODE_ENV == 'production') {
-    config['ssl'] = {
-      rejectUnauthorized: false, // adjust after setup the ssl to RDS and domain to EC2
-    };
-  }
-
   return process.env.NODE_ENV == 'test' ? testingConfig : config;
 };
