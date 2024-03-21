@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ "testing" ]
+    
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: deploy 
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: 91.108.112.154
+        username: root
+        key: ${{ secrets.ubuntu }}
+        script: |
+          cd demo/test
+          docker-compose -f docker-compose.prod.yml up -d
