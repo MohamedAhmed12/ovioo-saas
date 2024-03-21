@@ -19,4 +19,5 @@ jobs:
         key: ${{ secrets.ubuntu }}
         script: |
           cd websites/live
+          git pull
           docker-compose -f docker-compose.prod.yml up -d --build
