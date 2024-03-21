@@ -1,4 +1,4 @@
-name: CI
+name: Prod-CICD
 
 on:
   push:
