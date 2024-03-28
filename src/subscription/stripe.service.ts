@@ -147,9 +147,10 @@ export class StripeService {
     const team = await this.teamRepository.findOneBy({
       stripe_client_reference_id: data?.customer,
     });
-
-    team.card_last4 = data.payment_method_details.card.last4;
-    this.teamRepository.save(team);
+    if (team) {
+      team.card_last4 = data.payment_method_details.card.last4;
+      this.teamRepository.save(team);
+    }
   }
 
   private async handleStripeSubDeleted(data) {
