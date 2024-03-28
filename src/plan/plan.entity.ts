@@ -68,7 +68,7 @@ export class Plan extends BaseEntity {
   @Column('text', { nullable: true })
   stripe_id: string;
 
-  @OneToMany(() => TaskType, (taskTypes) => taskTypes.plan)
+  @OneToMany(() => TaskType, (taskTypes) => taskTypes.plan, { nullable: true })
   taskTypes: TaskType[];
 
   @OneToMany(() => OviooSubscription, (subscription) => subscription.plan)
