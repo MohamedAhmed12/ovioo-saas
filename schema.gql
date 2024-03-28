@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type task_types {
+  id: ID!
+  title: String
+  info: [String!]
+  extraInfo: String
+  plan: Plan!
+}
+
 """plan-extra-bundles"""
 type PlanExtraBundle {
   id: ID!
@@ -59,14 +67,6 @@ type Team {
   projects: [Project!]!
   tasks: [Task!]!
   subscriptions: [OviooSubscription!]!
-}
-
-type task_types {
-  id: ID!
-  title: String
-  info: [String!]
-  extraInfo: String
-  plan: String
 }
 
 """tasks"""
@@ -194,15 +194,6 @@ type ChangeUserStatusResponseDto {
   avatar: String
   fullname: String!
   isActive: Boolean!
-}
-
-"""task-types"""
-input TaskType {
-  id: ID!
-  title: String
-  info: [String!]
-  extraInfo: String
-  plan: String
 }
 
 type Query {

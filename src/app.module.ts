@@ -89,7 +89,6 @@ import { UserModule } from './user/user.module';
   ],
   providers: [AppResolver, AppService, TaskTypeSeeder, PlanSeeder],
 })
-
 export class AppModule implements OnModuleInit {
   constructor(
     private readonly taskTypeSeeder: TaskTypeSeeder,
@@ -97,7 +96,7 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    this.taskTypeSeeder.seed();
     this.planSeeder.seed();
+    this.taskTypeSeeder.seed();
   }
 }

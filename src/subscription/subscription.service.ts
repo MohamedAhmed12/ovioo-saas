@@ -181,7 +181,7 @@ export class SubscriptionService {
     subscription: OviooSubscription,
     data: UpdateSubscriptionDto,
   ): Promise<OviooSubscription> {
-    if (subscription.status == SubscriptionStatusEnum.CANCELED)
+    if (subscription?.status == SubscriptionStatusEnum.CANCELED)
       throw new ForbiddenException('You Can’t update canceled subscription.');
 
     await this.subscriptionRepository.merge(subscription, data);

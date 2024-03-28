@@ -2,15 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TaskType } from './task-type.entity';
+import { Plan } from 'src/plan/plan.entity';
 
 @Injectable()
 export class TaskTypeSeeder {
   constructor(
     @InjectRepository(TaskType)
     private readonly taskTypeRepository: Repository<TaskType>,
+    @InjectRepository(Plan)
+    private readonly planRepository: Repository<Plan>,
   ) {}
 
   async seed() {
+    const proPlan = await this.planRepository.findOneBy({ title: 'Pro' });
+    const standardPlan = await this.planRepository.findOneBy({
+      title: 'Standard',
+    });
+
     const taskTypes = [
       {
         title: 'Webflow',
@@ -23,14 +31,14 @@ export class TaskTypeSeeder {
         ],
         extraInfo:
           'We use Webflow in order to make a great website in a short time.',
-        plan: 'pro',
+        planId: proPlan.id,
       },
 
       {
         title: 'Logo & Identity',
         info: ['Logo Design', 'Brand Guides', 'Signage'],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Website & App',
@@ -47,7 +55,7 @@ export class TaskTypeSeeder {
           'Brand Guides',
         ],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Landing Page',
@@ -62,13 +70,13 @@ export class TaskTypeSeeder {
           'Product Launch',
         ],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Mobile App',
         info: ['App design', 'iOS App', 'Android App'],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Presentation',
@@ -81,7 +89,7 @@ export class TaskTypeSeeder {
           'Resumes',
         ],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Custom Illustration',
@@ -97,7 +105,7 @@ export class TaskTypeSeeder {
           'Advertising Design',
         ],
         extraInfo: null,
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Animation',
@@ -109,7 +117,7 @@ export class TaskTypeSeeder {
         ],
         extraInfo:
           'The Animation task type is still in beta mode. There might be delays with the updates.',
-        plan: 'pro',
+        planId: proPlan.id,
       },
       {
         title: 'Print & Packing',
@@ -127,7 +135,7 @@ export class TaskTypeSeeder {
           'Merchandise',
         ],
         extraInfo: null,
-        plan: 'standard',
+        planId: standardPlan.id,
       },
       {
         title: 'Banner & Digital Ads',
@@ -146,25 +154,25 @@ export class TaskTypeSeeder {
           'Media Content',
         ],
         extraInfo: null,
-        plan: 'standard',
+        planId: standardPlan.id,
       },
       {
         title: 'Email',
         info: ['Email Design', 'Email Signature'],
         extraInfo: null,
-        plan: 'standard',
+        planId: standardPlan.id,
       },
       {
         title: 'Book',
         info: ['Book Cover', 'E-Book', 'Magazine'],
         extraInfo: null,
-        plan: 'standard',
+        planId: standardPlan.id,
       },
       {
         title: 'Photo & Image',
         info: ['Photo Editing', 'Collage', 'Photo Retouching'],
         extraInfo: null,
-        plan: 'standard',
+        planId: standardPlan.id,
       },
     ];
 
