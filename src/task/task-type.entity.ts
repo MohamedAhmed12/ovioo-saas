@@ -1,8 +1,10 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Plan } from 'src/plan/plan.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -10,7 +12,6 @@ import { Task } from './task.entity';
 
 @Entity('task_types')
 @ObjectType('task_types')
-@InputType({ description: 'task-types' })
 export class TaskType extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
@@ -28,9 +29,12 @@ export class TaskType extends BaseEntity {
   @Field(() => String, { nullable: true })
   extraInfo: string;
 
-  @Column()
-  @Field(() => String, { nullable: true })
-  plan: string;
+  @Column('int')
+  planId: number;
+
+  @ManyToOne(() => Plan, (plan) => plan.taskTypes, { cascade: true })
+  @Field(() => Plan)
+  plan: Plan;
 
   @OneToMany(() => Task, (task) => task.type)
   tasks: Task[];
