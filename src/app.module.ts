@@ -96,7 +96,7 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    this.taskTypeSeeder.seed();
     this.planSeeder.seed();
+    this.taskTypeSeeder.seed();
   }
 }

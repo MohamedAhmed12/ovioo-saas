@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { OviooSubscription } from 'src/subscription/subscription.entity';
+import { TaskType } from 'src/task/task-type.entity';
 import {
   BaseEntity,
   Column,
@@ -66,6 +67,9 @@ export class Plan extends BaseEntity {
 
   @Column('text', { nullable: true })
   stripe_id: string;
+
+  @OneToMany(() => TaskType, (taskTypes) => taskTypes.plan)
+  taskTypes: TaskType[];
 
   @OneToMany(() => OviooSubscription, (subscription) => subscription.plan)
   @Field(() => [OviooSubscription], { defaultValue: [] })
