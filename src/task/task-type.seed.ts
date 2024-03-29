@@ -14,9 +14,9 @@ export class TaskTypeSeeder {
   ) {}
 
   async seed() {
-    const proPlan = await this.planRepository.findOneBy({ title: 'Pro' });
+    const proPlan = await this.planRepository.findOneBy({ title: 'pro' });
     const standardPlan = await this.planRepository.findOneBy({
-      title: 'Standard',
+      title: 'standard',
     });
 
     const taskTypes = [
