@@ -32,7 +32,10 @@ export class TaskType extends BaseEntity {
   @Column('int')
   planId: number;
 
-  @ManyToOne(() => Plan, (plan) => plan.taskTypes, { cascade: true })
+  @ManyToOne(() => Plan, (plan) => plan.taskTypes, {
+    cascade: true,
+    eager: true,
+  })
   @Field(() => Plan)
   plan: Plan;
 
