@@ -4,6 +4,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -36,6 +37,7 @@ export class TaskType extends BaseEntity {
     cascade: true,
     eager: true,
   })
+  @JoinColumn({ name: 'planId' })
   @Field(() => Plan)
   plan: Plan;
 
