@@ -172,7 +172,7 @@ export class StripeService {
       const subscription =
         await this.subscriptionService.findActiveSubscription(data.id);
 
-      if (data.plan != subscription.plan) {
+      if (data.plan.id != subscription.plan.stripe_id) {
         const newPlan = await this.planRepository.findOneBy({
           stripe_id: data.plan.id,
         });
