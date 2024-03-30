@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "adept-bridge-418812",
+  "private_key_id": "badfcb0231a75ae85990385773cff7ce95045201",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD0RIsq1e5Tzy4E\najzBYkXW7UQuB7iT05A06LOyxhBlzcNXz/ZVAtsFLj268KiAgi6XXdG/R7APJMTW\ny3Kme1sADR3ohuPcJV4gnmQkxbFrjYI9PkOU0v1pCtmexFFFGAXXN6XPlR2qg5u1\n8tCMmBXnIT/EFRKvAZOgdX0FjCWgU4CO0ihUl7IOxBDj22toBo7dyCbOuAtvRZYN\n1rOWEjTWWpxF9zHyPMwcgoIAW7Aq22NvlYx4p+KgO7VyLwwJDN7bzHeMW+FKlDOf\nd8qfp2e6FmwjfnfIz30J6bHfPNKYFKLdq0t3hqAZARPujAKhj19IithTEQr0qRUs\nlqtxUuvzAgMBAAECggEASDdBi7L+yHFekfiUqLm0myO/ffpTZATuw+2uPuLWszpf\nj8UQdzamaQQwROXkc0XJn3+hxLLdhsSgmz4/0Z9zmnLGTloe4JV9nBgn1EVMPFd0\nU0Xmtgeg2t7V0t4Ihuxgwa2WjGXyBNju/p5gcMh/5TrLvt1aDjphmlVR1oOGFj01\nzpv3ekP0vGpvW/lvSLEyEX/K/92lzToDVUeNvHmJK8UQQ0Q2OHnbFdFbb1lRTkt3\nYv7sDJZdKxi40s25iFPAr4x4N+E6ByRn3NMnP/9SWlkoR8bvfsqbTKVm67MjqMm5\ngN/ZeYP/FCO0nQ0EfsMcpFD1b3mvB5hlmkDL6FD9rQKBgQD6YiM8fpJNv64RH8jo\nYn3uOlk2b0BkjDSk6odapivVLyToCyJ7FE8OEjxlED1PbWWRGOiKRLrV978ORZ3l\nMNKNtrgL+H/ZZZvlcaEiHYNZA8U0MF4yoVihFEUQUCHaKrgR+NWuLe+hbFlPviAf\nfBNp8PbaYyxiHgz2JoXUKafNbQKBgQD5v0lITsPTEJ8MotofsBn+yd7bIbJcFfGP\nsrG1R4JA50tRwJGdT7N3sANVWlZ04ZK8JFhXh4lFerNC+DzuMECyzuEDYqMGxeh4\nVlkXdykHAcs8IDD16lkmSkKh9DvHcUzrILWHmc9uWGAQp0lZWwN0V5pqoY+ahNGG\nFGcah8ii3wKBgQC+twe96W8JN6qfsoU2tObVEa6obt8udzkWMOn+mzoh/PHwqaKO\n+24n+q30EQWSPXKyrbVatHVXy4jElzRoweJvPTE9NQA1GFdB0mZ49N/6aovIb9sg\nV5OJxkXA4jiW1Bk230HrlWPEoiH5Qol3Uev7syZkPEwvRFJ9H+SqMTx2lQKBgQCP\nzbz8jZ3kImXyeLLwHA5bzxErTDPPIjN9cn8wyoQNqyCLaj5uPj4wZIEG3IV7t4cu\nHh9gBwLbptMhdJ5g6BfY3ZZixKDqfXpmEBIsmMhe6IGFlWObtdyvV4MWjfL93BdW\nK/dapQ3zk59891YcxXMvwmF/lJeDeYbLlWPoutakMQKBgB901A0uRlFyDoWyEj82\nhHihNi4ET/MyGDh7j3Gn289GWp9HiOIWqhz0/tzR6zvd1uV1Tfl/NxtTxC6/UC7h\n8kHMCD1LTzBLg78MMW4VA6YIviYPxM73O2uVsVD6PPJhvUU5IkzrI69InBfeEyjd\nO7OyMLlemZaYnuG32AnaAQF0\n-----END PRIVATE KEY-----\n",
+  "client_email": "ovioo-49@adept-bridge-418812.iam.gserviceaccount.com",
+  "client_id": "117414860077886108314",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ovioo-49%40adept-bridge-418812.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
