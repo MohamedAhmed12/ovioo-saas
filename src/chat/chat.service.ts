@@ -28,7 +28,6 @@ export class ChatService {
     { page, offsetPlus = 0, limit = 10, task_id }: ListMessageDto,
   ): Promise<Message[]> {
     let messages: Message[];
-    console.log(11);
 
     if (page == 1) {
       messages = await this.listTaskUnreadMessages(authUser, task_id);
@@ -36,7 +35,6 @@ export class ChatService {
         return messages;
       }
     }
-    console.log(22);
 
     const offset = (page - 1) * limit + offsetPlus;
     return await this.messageRepository
@@ -60,7 +58,6 @@ export class ChatService {
       .skip(offset)
       .take(limit)
       .getMany();
-    console.log(33);
   }
 
   private async listTaskUnreadMessages(
@@ -125,8 +122,15 @@ export class ChatService {
   }
 
   async sendMessage(authUser: User, data: SendMessageDto): Promise<Message> {
-    const msg = await this.messageRepository.create(data);
-    msg.task = await this.getMsgTask(data.task_id);
+    const msgTask = await this.getMsgTask(data.task_id);
+    const msg = await this.messageRepository.create({
+      ...data,
+      asset: {
+        ...data.asset,
+        task: msgTask,
+      },
+    });
+    msg.task = msgTask;
     msg.sender = await this.getMsgSender(authUser.id);
 
     return await this.messageRepository.save(msg);
