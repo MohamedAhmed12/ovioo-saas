@@ -1,4 +1,4 @@
-import { Storage } from '@google-cloud/storage';
+import { Bucket, Storage } from '@google-cloud/storage';
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,6 +7,7 @@ import { UploadAssetDto } from './dto/upload-asset.dto';
 @Injectable()
 export class UploadService {
   private storage: Storage;
+  private bucket: Bucket;
 
   constructor() {
     // Path google key file
@@ -25,6 +26,7 @@ export class UploadService {
         projectId: credentials.project_id,
         credentials,
       });
+      this.bucket = this.storage.bucket(process.env.GCS_BUCKET);
     } else {
       console.error('Service account key file not found');
       throw new Error('Service account key file not found');
@@ -38,13 +40,11 @@ export class UploadService {
     const filesPaths = [];
 
     for (const file of files) {
-      const bucketName = process.env.GCS_BUCKET;
       const fileName =
         inDirectory.toLowerCase() == 'true'
           ? `${path}/${String(file.originalname)}`
           : path;
-      const bucket = this.storage.bucket(bucketName);
-      const fileHandle = bucket.file(fileName);
+      const fileHandle = this.bucket.file(fileName);
 
       try {
         await fileHandle.save(file.buffer, {
@@ -55,11 +55,11 @@ export class UploadService {
         });
 
         // Construct the file path or URL as needed
-        const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+        const publicUrl = `https://storage.googleapis.com/${process.env.GCS_BUCKET}/${fileName}`;
 
         filesPaths.push({
           type: file.mimetype,
-          alt: file.originalname,
+          alt: fileName,
           gcsPath: publicUrl,
         });
       } catch (error) {
