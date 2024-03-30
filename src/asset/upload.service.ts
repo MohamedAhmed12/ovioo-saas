@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { Storage } from '@google-cloud/storage';
-import { UploadAssetDto } from './dto/upload-asset.dto';
+import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { UploadAssetDto } from './dto/upload-asset.dto';
 
 @Injectable()
 export class UploadService {
@@ -56,8 +56,10 @@ export class UploadService {
 
         // Construct the file path or URL as needed
         const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+
         filesPaths.push({
           type: file.mimetype,
+          alt: file.originalname,
           gcsPath: publicUrl,
         });
       } catch (error) {
