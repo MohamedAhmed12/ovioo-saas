@@ -106,11 +106,21 @@ export class AssetService {
     }
   }
 
-  async downloadAsset(Key: string): Promise<string> {
-    return this.s3.getSignedUrl('getObject', {
-      Bucket: process.env.S3_BUCKET,
-      Key,
-      ResponseContentDisposition: `attachment; filename="${Key}"`,
-    });
+  async downloadAsset(key: string): Promise<string> {
+    const file = this.bucket.file(key);
+
+    try {
+      const [url] = await file.getSignedUrl({
+        version: 'v4',
+        action: 'read',
+        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+        responseDisposition: `attachment; filename="${key}"`,
+      });
+
+      return url;
+    } catch (error) {
+      console.error(`Error generating signed URL for ${key}:`, error);
+      throw error;
+    }
   }
 }
