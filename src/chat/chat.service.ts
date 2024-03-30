@@ -28,6 +28,7 @@ export class ChatService {
     { page, offsetPlus = 0, limit = 10, task_id }: ListMessageDto,
   ): Promise<Message[]> {
     let messages: Message[];
+    console.log(11);
 
     if (page == 1) {
       messages = await this.listTaskUnreadMessages(authUser, task_id);
@@ -35,6 +36,7 @@ export class ChatService {
         return messages;
       }
     }
+    console.log(22);
 
     const offset = (page - 1) * limit + offsetPlus;
     return await this.messageRepository
@@ -45,18 +47,20 @@ export class ChatService {
         'sender.fullname',
         'sender.avatar',
         'sender.role',
+        'asset.id',
         'asset.src',
         'asset.type',
         'asset.alt',
       ])
       .leftJoin('messages.task', 'task')
       .leftJoin('messages.sender', 'sender')
-      .leftJoin('messages.asset', 'asset')
+      .leftJoin('messages.asset', 'asset', 'asset.id = messages.assetId')
       .where(`task.id = ${task_id}`)
       .orderBy('messages.created_at', 'DESC')
       .skip(offset)
       .take(limit)
       .getMany();
+    console.log(33);
   }
 
   private async listTaskUnreadMessages(
