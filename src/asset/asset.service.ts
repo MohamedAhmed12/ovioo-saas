@@ -51,7 +51,7 @@ export class AssetService {
 
     const options = {
       where: {
-        project: {
+        task: {
           team: {
             id: firstTeam.id,
           },
@@ -59,7 +59,7 @@ export class AssetService {
       },
     };
 
-    id && (options.where.project['id'] = id);
+    // id && (options.where.project['id'] = id);
 
     return await this.assetRepository.find(options);
   }
