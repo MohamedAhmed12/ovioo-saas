@@ -125,13 +125,17 @@ export class ChatService {
     const msgTask = await this.getMsgTask(data.task_id);
     const msg = await this.messageRepository.create({
       ...data,
-      asset: {
-        ...data.asset,
-        task: msgTask,
-      },
+      task: msgTask,
+      sender: await this.getMsgSender(authUser.id),
     });
-    msg.task = msgTask;
-    msg.sender = await this.getMsgSender(authUser.id);
+
+    if (data?.asset) {
+      const assets = await this.assetService.createAssets({
+        task_id: msgTask.id,
+        assets: [data.asset],
+      });
+      msg.asset = assets[0];
+    }
 
     return await this.messageRepository.save(msg);
   }
