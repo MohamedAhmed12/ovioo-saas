@@ -1,16 +1,9 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { config as AWSConfig } from 'aws-sdk';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  AWSConfig.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_KEY_SECRET,
-    region: process.env.AWS_REGION,
-  });
-
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.enableCors();

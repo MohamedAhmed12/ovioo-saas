@@ -1,7 +1,6 @@
 import { Bucket, Storage } from '@google-cloud/storage';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { S3 } from 'aws-sdk';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Task } from 'src/task/task.entity';
@@ -13,7 +12,6 @@ import { DeleteAssetDto } from './dto/delete-asset.dto';
 
 @Injectable()
 export class AssetService {
-  private s3: S3 = new S3();
   private storage: Storage;
   private bucket: Bucket;
 
