@@ -7,12 +7,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PlanExtraBundle } from 'src/plan/plan-extra-bundle.entity';
 import { Plan } from 'src/plan/plan.entity';
 import { Team } from 'src/team/team.entity';
-import { In, Not, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AddExtraBundleDto } from './dto/add-extra-bundle.dto';
 import { DeductRemainingHoursDto } from './dto/deduct-remaining-hours.dto';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { SubscriptionStatusEnum } from './enums/subscription-status.enum';
 import { OviooSubscription } from './subscription.entity';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
 @Injectable()
 export class SubscriptionService {

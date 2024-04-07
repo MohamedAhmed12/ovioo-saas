@@ -50,8 +50,10 @@ export class TaskService {
     const task = await this.taskRepository
       .createQueryBuilder('task')
       .leftJoinAndSelect('task.type', 'type')
+      .leftJoinAndSelect('task.assets', 'asset')
       .leftJoinAndSelect('task.team', 'team')
       .leftJoinAndSelect('team.members', 'member')
+      .leftJoinAndSelect('task.designer', 'designer')
       .where('task.id = :id', { id: +id })
       .getOne();
     const taskTeam = await task.team;

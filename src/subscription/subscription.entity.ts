@@ -5,7 +5,6 @@ import {
   BaseEntity,
   BeforeInsert,
   Column,
-  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,

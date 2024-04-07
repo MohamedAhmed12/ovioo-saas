@@ -29,6 +29,7 @@
     "@adminjs/nestjs": "^6.1.0",
     "@adminjs/typeorm": "^5.0.0",
     "@apollo/server": "^4.10.0",
+    "@google-cloud/storage": "^7.9.0",
     "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/apollo": "^12.0.9",
     "@nestjs/common": "^10.0.0",

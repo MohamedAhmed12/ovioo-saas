@@ -375,6 +375,7 @@ input AssetDto {
   src: String!
   alt: String!
   type: String!
+  task_id: String
 }
 
 input DeleteAssetDto {
