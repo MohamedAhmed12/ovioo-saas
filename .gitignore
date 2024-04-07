@@ -43,4 +43,4 @@ lerna-debug.log*
 /.adminjs
 
 # google key
-/.google-cloud-key.json
+/google-cloud-key.json
