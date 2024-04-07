@@ -45,13 +45,14 @@ export class ChatService {
         'sender.fullname',
         'sender.avatar',
         'sender.role',
+        'asset.id',
         'asset.src',
         'asset.type',
         'asset.alt',
       ])
       .leftJoin('messages.task', 'task')
       .leftJoin('messages.sender', 'sender')
-      .leftJoin('messages.asset', 'asset')
+      .leftJoin('messages.asset', 'asset', 'asset.id = messages.assetId')
       .where(`task.id = ${task_id}`)
       .orderBy('messages.created_at', 'DESC')
       .skip(offset)
@@ -121,8 +122,15 @@ export class ChatService {
   }
 
   async sendMessage(authUser: User, data: SendMessageDto): Promise<Message> {
-    const msg = await this.messageRepository.create(data);
-    msg.task = await this.getMsgTask(data.task_id);
+    const msgTask = await this.getMsgTask(data.task_id);
+    const msg = await this.messageRepository.create({
+      ...data,
+      asset: {
+        ...data.asset,
+        task: msgTask,
+      },
+    });
+    msg.task = msgTask;
     msg.sender = await this.getMsgSender(authUser.id);
 
     return await this.messageRepository.save(msg);

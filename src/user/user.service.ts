@@ -79,6 +79,7 @@ export class UserService {
         {
           statuses: [
             SubscriptionStatusEnum.CANCELED,
+            SubscriptionStatusEnum.INCOMPLETE,
             SubscriptionStatusEnum.CHANGED,
           ],
         },

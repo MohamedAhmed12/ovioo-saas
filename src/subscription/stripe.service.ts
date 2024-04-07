@@ -135,7 +135,11 @@ export class StripeService {
 
     const subscription = await this.subscriptionService.findSubscription(
       stripeSubscription.id,
-      [SubscriptionStatusEnum.INCOMPLETE],
+      [
+        SubscriptionStatusEnum.ACTIVE,
+        SubscriptionStatusEnum.INSUFFICIENT_CREDIT,
+        SubscriptionStatusEnum.INCOMPLETE,
+      ],
     );
 
     await this.subscriptionService.updateSubscription(subscription, {

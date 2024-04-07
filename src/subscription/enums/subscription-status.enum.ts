@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum SubscriptionStatusEnum {
-  ACTIVE = 'Active',
-  INSUFFICIENT_CREDIT = 'Insufficient credit',
+  ACTIVE = 'active',
+  INSUFFICIENT_CREDIT = 'insufficient credit',
   INCOMPLETE = 'incomplete',
-  CANCELED = 'Canceled',
+  CANCELED = 'canceled',
   CHANGED = 'changed',
 }
 
