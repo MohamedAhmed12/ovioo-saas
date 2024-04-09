@@ -25,7 +25,6 @@ import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
 
-
 @Injectable()
 export class UserService {
   constructor(
@@ -84,6 +83,8 @@ export class UserService {
           ],
         },
       )
+      .leftJoinAndSelect('subscription.plan', 'plan')
+      .addSelect('plan.title')
       .where('users.email = :email', { email })
       .getOne();
 
