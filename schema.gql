@@ -59,7 +59,7 @@ scalar DateTime
 """teams"""
 type Team {
   id: ID!
-  name: String
+  name: String!
   owner_id: Float!
   stripe_client_reference_id: String!
   card_last4: String
@@ -275,7 +275,7 @@ input RegisterDto {
   password: String!
   fullname: String!
   password_confirmation: String!
-  company: String
+  company: String!
   phone: Float
   provider: String!
 }

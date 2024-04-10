@@ -19,8 +19,8 @@ export class Team extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column('text', { default: '' })
-  @Field(() => String, { nullable: true })
+  @Column('text')
+  @Field(() => String)
   name: string;
 
   @Column('int')

@@ -7,4 +7,9 @@ export class CreateTeamDto {
   @IsString()
   @Field(() => String)
   owner_id: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field(() => String)
+  name: string;
 }
