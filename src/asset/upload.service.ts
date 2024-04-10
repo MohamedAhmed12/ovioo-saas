@@ -54,6 +54,13 @@ export class UploadService {
           },
         });
 
+        const [fileSaved] = await this.bucket.file(fileName).exists();
+        console.log(fileSaved);
+
+        if (!fileSaved) {
+          throw new Error(`Error uploading file ${file.originalname}`);
+        }
+
         // Construct the file path or URL as needed
         const publicUrl = `https://storage.googleapis.com/${process.env.GCS_BUCKET}/${fileName}`;
 
@@ -63,10 +70,24 @@ export class UploadService {
           gcsPath: publicUrl,
         });
       } catch (error) {
-        console.error(`Error uploading file ${file.originalname}:`, error);
+        throw new Error(`Error uploading file ${file.originalname}:`, error);
       }
     }
 
     return filesPaths;
+  }
+
+  async cleanDirectory(path: string) {
+    console.log(1111, path);
+
+    const [files] = await this.bucket.getFiles({
+      prefix: path + '/',
+    });
+
+    await Promise.all(
+      files.map(async (file) => {
+        await file.delete();
+      }),
+    );
   }
 }
