@@ -25,7 +25,6 @@ import { AuthProviderEnum } from './enums/auth-provider.enum';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { User } from './user.entity';
 
-
 @Injectable()
 export class UserService {
   constructor(
@@ -84,6 +83,8 @@ export class UserService {
           ],
         },
       )
+      .leftJoinAndSelect('subscription.plan', 'plan')
+      .addSelect('plan.title')
       .where('users.email = :email', { email })
       .getOne();
 
@@ -321,7 +322,10 @@ export class UserService {
       company_name: data.company,
     });
 
-    const team = await this.teamService.createTeam({ owner_id: user.id });
+    const team = await this.teamService.createTeam({
+      name: data.company || user.fullname,
+      owner_id: user.id,
+    });
     user.teams = [team];
 
     return await this.UserRepository.save(user);
