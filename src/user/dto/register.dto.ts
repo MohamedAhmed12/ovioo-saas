@@ -26,10 +26,10 @@ export class RegisterDto extends LoginDto {
   })
   password_confirmation: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  @Field(() => String, { nullable: true })
-  company?: string;
+  @Field(() => String)
+  company: string;
 
   @IsOptional()
   @IsNumber()

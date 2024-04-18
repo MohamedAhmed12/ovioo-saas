@@ -12,6 +12,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { UploadAssetDto } from './dto/upload-asset.dto';
 import { UploadService } from './upload.service';
+import { cleanAssetDirectoryDto } from './dto/clean-asset-directory.dto';
 
 @Controller('api')
 export class UploadController {
@@ -30,5 +31,13 @@ export class UploadController {
     @Body() data: UploadAssetDto,
   ) {
     return this.uploadService.uploadFiles(files, data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('directory/clean')
+  async cleanDirectory(@Body() { path }: cleanAssetDirectoryDto) {
+    console.log(1212, path);
+
+    return this.uploadService.cleanDirectory(path);
   }
 }
