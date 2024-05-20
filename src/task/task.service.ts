@@ -53,6 +53,8 @@ export class TaskService {
       .leftJoinAndSelect('task.assets', 'asset')
       .leftJoinAndSelect('task.team', 'team')
       .leftJoinAndSelect('team.members', 'member')
+      .leftJoinAndSelect('team.subscriptions', 'subscriptions')
+      .addSelect('subscriptions.status')
       .leftJoinAndSelect('task.designer', 'designer')
       .where('task.id = :id', { id: +id })
       .getOne();
