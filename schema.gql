@@ -224,7 +224,7 @@ type Query {
   listTaskMessages(data: ListMessageDto!): [Message!]!
   listUnreadMessages: [Task!]!
   listPlans: [Plan!]!
-  listPortfolio(category: String! = "All"): [Portfolio!]!
+  listPortfolio(category: String): [Portfolio!]!
 }
 
 input ListNotificationsDto {

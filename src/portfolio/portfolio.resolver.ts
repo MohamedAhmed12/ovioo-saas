@@ -1,6 +1,4 @@
-import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { AuthGuard } from 'src/shared/middlewares/auth.guard';
 import { Portfolio } from './portfolio.entity';
 import { PortfolioService } from './portfolio.service';
 
@@ -8,12 +6,11 @@ import { PortfolioService } from './portfolio.service';
 export class PortfolioResolver {
   constructor(private readonly portfolioService: PortfolioService) {}
 
-  @UseGuards(new AuthGuard())
   @Query(() => [Portfolio])
   async listPortfolio(
-    @Args('category', { type: () => String, defaultValue: 'All' })
+    @Args('category', { type: () => String, nullable: true })
     category: string,
   ) {
-    return this.portfolioService.find(category);
+    return this.portfolioService.find(category || 'all');
   }
 }
