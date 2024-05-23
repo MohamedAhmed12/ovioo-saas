@@ -196,6 +196,15 @@ type ChangeUserStatusResponseDto {
   isActive: Boolean!
 }
 
+"""portfolios"""
+type Portfolio {
+  id: ID!
+  src: String!
+  alt: String!
+  type: String!
+  categories: [String!]!
+}
+
 type Query {
   getHello: String!
   me: User!
@@ -215,6 +224,7 @@ type Query {
   listTaskMessages(data: ListMessageDto!): [Message!]!
   listUnreadMessages: [Task!]!
   listPlans: [Plan!]!
+  listPortfolio(category: String): [Portfolio!]!
 }
 
 input ListNotificationsDto {
